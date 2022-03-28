@@ -1,0 +1,59 @@
+{
+  "name": "@playt/client",
+  "version": "1.0.0",
+  "description": "A client for the PLAYT API",
+  "engines": {
+    "node": ">= 12.0.0",
+    "npm": ">= 7.0.0"
+  },
+  "author": "Leon Machens",
+  "license": "MIT",
+  "keywords": [
+    "fetch",
+    "client",
+    "playt"
+  ],
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    "browser": "./dist/esm/index.js",
+    "import": "./dist/esm/index.js",
+    "require": "./dist/cjs/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/playt-net/client"
+  },
+  "bugs": {
+    "url": "https://github.com/playt-net/client/issues"
+  },
+  "homepage": "https://github.com/playt-net/client#readme",
+  "scripts": {
+    "clean": "rimraf './dist'",
+    "build": "npm run clean && tsc --project tsconfig.esm.json && tsc --project tsconfig.cjs.json",
+    "prepare": "npm run build",
+    "generate": "openapi-typescript https://playt-backend-xbwjl.ondigitalocean.app/v3/api-docs --output src/types.ts",
+    "test": "jest",
+    "typecheck": "tsc --noEmit --project tsconfig.json"
+  },
+  "dependencies": {
+    "openapi-typescript-fetch": "^1.1.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "@typescript-eslint/eslint-plugin": "^5.16.0",
+    "@typescript-eslint/parser": "^5.16.0",
+    "eslint": "^8.12.0",
+    "eslint-config-prettier": "^8.5.0",
+    "jest": "^27.5.1",
+    "openapi-typescript": "^5.2.0",
+    "prettier": "^2.6.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^27.1.4",
+    "typescript": "^4.6.3",
+    "whatwg-fetch": "^3.6.2"
+  }
+}
