@@ -2,7 +2,7 @@ name: Check API changes
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * 1-5'
   workflow_dispatch:
 
 jobs:
@@ -11,13 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm ci
+      - run: npm run generate
       - name: Create pull request for API changes
         uses: technote-space/create-pr-action@v2
         with:
-          EXECUTE_COMMANDS: |
-            npm ci
-            npm run generate
           COMMIT_MESSAGE: '🏷️ Update types'
-          COMMIT_NAME: 'GitHub Actions'
           PR_BRANCH_NAME: 'feat/api-${PR_ID}'
           PR_TITLE: '👽️ Update client to API changes'
