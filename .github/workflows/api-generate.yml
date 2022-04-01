@@ -14,11 +14,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: npm ci
-      - run: npm run generate
       - name: Create pull request for API changes
         uses: technote-space/create-pr-action@v2
         with:
+          EXECUTE_COMMANDS: |
+            npm ci
+            npm run generate
           COMMIT_MESSAGE: '🏷️ Update types'
           PR_BRANCH_NAME: 'feat/api-${PR_ID}'
           PR_TITLE: '👽️ Update client to API changes'
