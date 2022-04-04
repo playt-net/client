@@ -13,13 +13,13 @@ export type UserAuth = {
 export type PLAYTClientProps = {
   clientCredentials?: ClientCredentials;
   userAuth?: UserAuth;
-  onRefreshAuth?: (userAuth: UserAuth) => void;
+  onRequestRefresh?: () => Promise<UserAuth | null>;
   apiHost?: string;
 };
 export const PlaytClient = ({
   clientCredentials,
   userAuth,
-  onRefreshAuth,
+  onRequestRefresh,
   apiHost = 'https://playt-backend-xbwjl.ondigitalocean.app',
 }: PLAYTClientProps) => {
   const fetcher = Fetcher.for<paths>();
@@ -41,16 +41,11 @@ export const PlaytClient = ({
     } catch (error) {
       const { status } = error as ApiError;
 
-      if (status === 401 && userAuth?.refreshToken) {
-        const { ok, data } = await postAuthRefresh({
-          refreshToken: userAuth.refreshToken,
-        });
-        if (ok && data) {
-          userAuth.accessToken = data.accessToken;
-          userAuth.refreshToken = data.refreshToken;
-          if (onRefreshAuth) {
-            onRefreshAuth(userAuth);
-          }
+      if (status === 401 && userAuth?.refreshToken && onRequestRefresh) {
+        const refreshedUserAuth = await onRequestRefresh();
+        if (refreshedUserAuth) {
+          userAuth.accessToken = refreshedUserAuth.accessToken;
+          userAuth.refreshToken = refreshedUserAuth.refreshToken;
           init.headers.set('Authorization', `Bearer ${userAuth.accessToken}`);
           const response = await next(url, init);
           return response;
