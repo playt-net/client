@@ -4,7 +4,7 @@ import type { paths } from './types';
 const fetcher = Fetcher.for<paths>();
 
 fetcher.configure({
-  baseUrl: 'https://playt-backend-xbwjl.ondigitalocean.app/v3',
+  baseUrl: 'https://playt-backend-xbwjl.ondigitalocean.app',
   init: {
     headers: {
       'Content-Type': 'application/json',
