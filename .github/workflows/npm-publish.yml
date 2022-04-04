@@ -13,10 +13,15 @@ jobs:
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - run: npm run typecheck
-      - run: npm run build
-      - run: npm test
-      - run: npm publish --access public
+      - name: Install Dependencies
+        run: npm ci
+      - name: Run typechecks
+        run: npm run typecheck
+      - name: Build ESM and CJS
+        run: npm run build
+      - name: Run tests
+        run: npm test
+      - name: Publish npm package
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
