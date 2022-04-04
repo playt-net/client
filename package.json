@@ -34,7 +34,7 @@
   "scripts": {
     "clean": "rimraf './dist'",
     "build": "npm run clean && tsc --project tsconfig.esm.json && tsc --project tsconfig.cjs.json",
-    "generate": "openapi-typescript https://playt-backend-xbwjl.ondigitalocean.app/v3/api-docs --output src/types.ts",
+    "generate": "openapi-typescript https://playt-backend-xbwjl.ondigitalocean.app/v3/api-docs --output src/types.ts --prettier-config .prettierrc.json",
     "test": "jest",
     "typecheck": "tsc --noEmit --project tsconfig.json"
   },
