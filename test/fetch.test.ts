@@ -1,51 +1,15 @@
 import { ApiError } from 'openapi-typescript-fetch';
 import 'whatwg-fetch';
-import {
-  deleteBasket,
-  deleteGame,
-  deleteGameApiKey,
-  deleteMatch,
-  deletePurchasable,
-  getBasket,
-  getCurrentUser,
-  getGame,
-  getGames,
-  getMatch,
-  getMatches,
-  getPurchasable,
-  getPurchasables,
-  getReplay,
-  getTutorial,
-  getTutorials,
-  getUser,
-  getWallet,
-  patchBasketItems,
-  patchCurrentUser,
-  postAuthRefresh,
-  postBasketItems,
-  postCheckoutFast,
-  postGame,
-  postLogin,
-  postMatchJoin,
-  postPurchasable,
-  postRegister,
-  postReplay,
-  postScore,
-  postTutorial,
-  putCurrentUser,
-  putGame,
-  putGameApiKey,
-  putPurchasable,
-  putTutorial,
-} from '../src/index';
+import { PlaytClient } from '../src/index';
 
+const client = PlaytClient({});
 /**
  * These tests should not replace backend tests, but make sure that the services are available.
  */
 describe('fetch', () => {
   it('postRegister', async () => {
     try {
-      await postRegister({
+      await client.postRegister({
         email: 'invalid_mail',
         password: 'pw',
       });
@@ -58,7 +22,7 @@ describe('fetch', () => {
   });
   it('postAuthRefresh', async () => {
     try {
-      await postAuthRefresh({
+      await client.postAuthRefresh({
         refreshToken: 'fail!',
       });
       throw Error('Should fail without credentials');
@@ -70,7 +34,7 @@ describe('fetch', () => {
   });
   it('postLogin', async () => {
     try {
-      await postLogin({
+      await client.postLogin({
         email: 'invalid_mail',
         password: 'pw',
       });
@@ -83,7 +47,7 @@ describe('fetch', () => {
   });
   it('getCurrentUser', async () => {
     try {
-      await getCurrentUser({});
+      await client.getCurrentUser({});
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -93,7 +57,7 @@ describe('fetch', () => {
   });
   it('putCurrentUser', async () => {
     try {
-      await putCurrentUser({
+      await client.putCurrentUser({
         username: '',
         firstname: '',
         lastname: '',
@@ -108,7 +72,7 @@ describe('fetch', () => {
   });
   it('patchCurrentUser', async () => {
     try {
-      await patchCurrentUser({
+      await client.patchCurrentUser({
         username: '',
         avatarUrl: '',
       });
@@ -121,7 +85,7 @@ describe('fetch', () => {
   });
   it('getUser', async () => {
     try {
-      await getUser({ id: '1' });
+      await client.getUser({ id: '1' });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -131,7 +95,7 @@ describe('fetch', () => {
   });
   it('getTutorials', async () => {
     try {
-      await getTutorials({ gameId: '1', pageable: {} });
+      await client.getTutorials({ gameId: '1', pageable: {} });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -141,7 +105,7 @@ describe('fetch', () => {
   });
   it('postTutorial', async () => {
     try {
-      await postTutorial({ gameId: '1' });
+      await client.postTutorial({ gameId: '1' });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -151,7 +115,7 @@ describe('fetch', () => {
   });
   it('getTutorial', async () => {
     try {
-      await getTutorial({ id: '1' });
+      await client.getTutorial({ id: '1' });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -161,7 +125,7 @@ describe('fetch', () => {
   });
   it('putTutorial', async () => {
     try {
-      await putTutorial({ id: '1', finished: true });
+      await client.putTutorial({ id: '1', finished: true });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -170,9 +134,7 @@ describe('fetch', () => {
     }
   });
   it('getPurchasables', async () => {
-    const { ok, status, statusText, data } = await getPurchasables({
-      pageable: {},
-    });
+    const { ok, status, statusText, data } = await client.getPurchasables({});
     expect(data.empty).toEqual(false);
     expect(ok).toBe(true);
     expect(status).toBe(200);
@@ -180,7 +142,7 @@ describe('fetch', () => {
   });
   it('postPurchasable', async () => {
     try {
-      await postPurchasable({
+      await client.postPurchasable({
         title: '',
         description: '',
         iconUrl: '',
@@ -200,7 +162,7 @@ describe('fetch', () => {
   });
   it('getPurchasable', async () => {
     try {
-      await getPurchasable({
+      await client.getPurchasable({
         id: '-1',
       });
       throw Error('Should fail for not existing item');
@@ -212,7 +174,7 @@ describe('fetch', () => {
   });
   it('putPurchasable', async () => {
     try {
-      await putPurchasable({
+      await client.putPurchasable({
         id: '0',
         title: '',
         description: '',
@@ -233,7 +195,7 @@ describe('fetch', () => {
   });
   it('deletePurchasable', async () => {
     try {
-      await deletePurchasable({
+      await client.deletePurchasable({
         id: '0',
       });
       throw Error('Should fail without credentials');
@@ -244,7 +206,7 @@ describe('fetch', () => {
     }
   });
   it('getGames', async () => {
-    const { ok, status, statusText, data } = await getGames({ pageable: {} });
+    const { ok, status, statusText, data } = await client.getGames({});
     expect(data.empty).toEqual(false);
     expect(ok).toBe(true);
     expect(status).toBe(200);
@@ -252,7 +214,17 @@ describe('fetch', () => {
   });
   it('postGame', async () => {
     try {
-      await postGame({ title: '' });
+      await client.postGame({
+        title: '',
+        subtitle: '',
+        icon: '',
+        bannerUrl: '',
+        description: '',
+        gameUrl: '',
+        tutorialVideoUrl: '',
+        genre: '',
+        matchTiers: [],
+      });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -262,7 +234,7 @@ describe('fetch', () => {
   });
   it('getGame', async () => {
     try {
-      await getGame({
+      await client.getGame({
         id: '-1',
       });
       throw Error('Should fail for not existing item');
@@ -274,7 +246,18 @@ describe('fetch', () => {
   });
   it('putGame', async () => {
     try {
-      await putGame({ id: '-1', title: '' });
+      await client.putGame({
+        id: '-1',
+        title: '',
+        subtitle: '',
+        icon: '',
+        bannerUrl: '',
+        description: '',
+        gameUrl: '',
+        tutorialVideoUrl: '',
+        genre: '',
+        matchTiers: [],
+      });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -284,7 +267,7 @@ describe('fetch', () => {
   });
   it('deleteGame', async () => {
     try {
-      await deleteGame({ id: '-1' });
+      await client.deleteGame({ id: '-1' });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -294,7 +277,7 @@ describe('fetch', () => {
   });
   it('putGameApiKey', async () => {
     try {
-      await putGameApiKey({ id: '-1' });
+      await client.putGameApiKey({ id: '-1' });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -304,7 +287,7 @@ describe('fetch', () => {
   });
   it('deleteGameApiKey', async () => {
     try {
-      await deleteGameApiKey({ id: '-1' });
+      await client.deleteGameApiKey({ id: '-1' });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -314,7 +297,7 @@ describe('fetch', () => {
   });
   it('getMatches', async () => {
     try {
-      await getMatches({ playerToken: '' });
+      await client.getMatches({ playerToken: '' });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -324,7 +307,7 @@ describe('fetch', () => {
   });
   it('getMatch', async () => {
     try {
-      await getMatch({ id: '' });
+      await client.getMatch({ id: '' });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -334,7 +317,7 @@ describe('fetch', () => {
   });
   it('deleteMatch', async () => {
     try {
-      await deleteMatch({ id: '' });
+      await client.deleteMatch({ id: '' });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -344,7 +327,41 @@ describe('fetch', () => {
   });
   it('postMatchJoin', async () => {
     try {
-      await postMatchJoin({ playerToken: '' });
+      await client.postMatchJoin({ playerToken: '' });
+      throw Error('Should fail without credentials');
+    } catch (error) {
+      const { status, statusText } = error as ApiError;
+      expect(status).toBe(401);
+      expect(statusText).toBe('Unauthorized');
+    }
+  });
+  it('postMatchmakingSearch', async () => {
+    try {
+      await client.postMatchmakingSearch({
+        gameId: '1',
+        matchTier: 'a',
+        denominationTier: '1',
+      });
+      throw Error('Should fail without credentials');
+    } catch (error) {
+      const { status, statusText } = error as ApiError;
+      expect(status).toBe(401);
+      expect(statusText).toBe('Unauthorized');
+    }
+  });
+  it('postMatchmakingCancel', async () => {
+    try {
+      await client.postMatchmakingCancel({ ticketId: '1' });
+      throw Error('Should fail without credentials');
+    } catch (error) {
+      const { status, statusText } = error as ApiError;
+      expect(status).toBe(401);
+      expect(statusText).toBe('Unauthorized');
+    }
+  });
+  it('getMatchmakingTicket', async () => {
+    try {
+      await client.getMatchmakingTicket({ id: '1' });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -354,7 +371,7 @@ describe('fetch', () => {
   });
   it('getReplay', async () => {
     try {
-      await getReplay({
+      await client.getReplay({
         matchId: '1',
         userId: '1',
       });
@@ -367,7 +384,7 @@ describe('fetch', () => {
   });
   it('postReplay', async () => {
     try {
-      await postReplay({ matchId: '1', userId: '1', payload: 'a' });
+      await client.postReplay({ matchId: '1', userId: '1', payload: 'a' });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -377,7 +394,7 @@ describe('fetch', () => {
   });
   it('postScore', async () => {
     try {
-      await postScore({ id: '1', playerToken: '1', score: 1 });
+      await client.postScore({ id: '1', playerToken: '1', score: 1 });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -387,7 +404,7 @@ describe('fetch', () => {
   });
   it('getBasket', async () => {
     try {
-      await getBasket({});
+      await client.getBasket({});
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -397,7 +414,17 @@ describe('fetch', () => {
   });
   it('deleteBasket', async () => {
     try {
-      await deleteBasket({});
+      await client.deleteBasket({});
+      throw Error('Should fail without credentials');
+    } catch (error) {
+      const { status, statusText } = error as ApiError;
+      expect(status).toBe(401);
+      expect(statusText).toBe('Unauthorized');
+    }
+  });
+  it('deleteBasketItem', async () => {
+    try {
+      await client.deleteBasketItem({ itemId: '1' });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -407,7 +434,7 @@ describe('fetch', () => {
   });
   it('postBasketItems', async () => {
     try {
-      await postBasketItems({ purchasableId: '1', amount: 1 });
+      await client.postBasketItems({ purchasableId: '1', amount: 1 });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -417,7 +444,7 @@ describe('fetch', () => {
   });
   it('patchBasketItems', async () => {
     try {
-      await patchBasketItems({ purchasableId: '1', amount: 1 });
+      await client.patchBasketItems({ purchasableId: '1', amount: 1 });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -427,7 +454,7 @@ describe('fetch', () => {
   });
   it('postCheckoutFast', async () => {
     try {
-      await postCheckoutFast({ purchasableId: '1' });
+      await client.postCheckoutFast({ purchasableId: '1' });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
@@ -437,7 +464,7 @@ describe('fetch', () => {
   });
   it('getWallet', async () => {
     try {
-      await getWallet({});
+      await client.getWallet({});
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;

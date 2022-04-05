@@ -35,6 +35,12 @@ export interface paths {
     get: operations['search'];
     post: operations['create_1'];
   };
+  '/matchmaking/search': {
+    post: operations['searchMatch'];
+  };
+  '/matchmaking/cancel': {
+    post: operations['cancelSearch'];
+  };
   '/match/{matchId}/replay/{userId}': {
     get: operations['findReplay'];
     post: operations['saveReplay'];
@@ -71,6 +77,9 @@ export interface paths {
   '/user/{id}': {
     get: operations['getById'];
   };
+  '/matchmaking/ticket/{id}': {
+    get: operations['getTicketStatus'];
+  };
   '/match': {
     get: operations['getByParams'];
   };
@@ -81,6 +90,9 @@ export interface paths {
   '/basket': {
     get: operations['getCurrentBasket'];
     delete: operations['deleteCurrentBasket'];
+  };
+  '/basket/items/{itemId}': {
+    delete: operations['deleteItemInBasket'];
   };
 }
 
@@ -223,8 +235,8 @@ export interface components {
       oldPrice?: number;
     };
     PurchasableResponse: {
-      id?: string;
-      title?: string;
+      id: string;
+      title: string;
       description?: string;
       iconUrl?: string;
       bannerUrl?: string;
@@ -245,15 +257,15 @@ export interface components {
       updatedAt?: string;
     };
     UpdateGameRequest: {
-      title?: string;
-      subtitle?: string;
-      icon?: string;
-      banner?: string;
-      description?: string;
-      tutorialVideo?: string;
-      genre?: string;
-      matchTiers?: string[];
-      gameUrl?: string;
+      title: string;
+      subtitle: string;
+      icon: string;
+      bannerUrl: string;
+      description: string;
+      tutorialVideoUrl?: string;
+      genre: string;
+      matchTiers: string[];
+      gameUrl: string;
     };
     /** @description Game holds all belongings of a game. */
     Game: {
@@ -319,6 +331,21 @@ export interface components {
       /** Format: int32 */
       oldPrice?: number;
     };
+    SearchMatchRequest: {
+      gameId: string;
+      matchTier: string;
+      denominationTier: string;
+    };
+    TicketResponse: {
+      id?: string;
+      playerToken?: string;
+      playerIds?: string[];
+      ticketIds?: string[];
+      status?: string;
+    };
+    CancelSearchRequest: {
+      ticketId: string;
+    };
     /** @description Writes a replay to the storage for a given match and player in that match. Replays can be written only once before a match is finished for a given player. This is indicated by submitted a final score for the player. */
     SaveReplayRequest: {
       /** @description Should be a base64 encoded string for binary data, an escaped json string, or a csv string. This data can be retrieved later in matches for replays that are completed or bot replays that were assigned to a match. The payload can also be metadata containing an ID/URL/Redirect that creates a foreign key relationship for a replay storage that is used by the game. Payloads can not be larger than ~16MB. If that is exceeded, an internal error will occur. */
@@ -383,41 +410,41 @@ export interface components {
       finalSnapshot?: boolean;
     };
     CreateGameRequest: {
-      title?: string;
-      subtitle?: string;
-      icon?: string;
-      banner?: string;
-      description?: string;
-      tutorialVideo?: string;
-      genre?: string;
-      matchTiers?: string[];
-      gameUrl?: string;
+      title: string;
+      subtitle: string;
+      icon: string;
+      bannerUrl: string;
+      description: string;
+      tutorialVideoUrl: string;
+      genre: string;
+      matchTiers: string[];
+      gameUrl: string;
     };
     FastCheckoutRequest: {
       purchasableId: string;
     };
     CheckoutItemResponse: {
-      purchasableId?: string;
+      purchasableId: string;
       /** Format: int32 */
       amount?: number;
     };
     CheckoutResponse: {
-      items?: components['schemas']['CheckoutItemResponse'][];
-      status?: string;
+      items: components['schemas']['CheckoutItemResponse'][];
+      status: string;
     };
-    AddItemRequest: {
-      purchasableId?: string;
+    'Add Item': {
+      purchasableId: string;
       /** Format: int32 */
       amount?: number;
     };
-    BasketItemResponse: {
-      purchasableId?: string;
+    Basket: {
+      userId: string;
+      items: components['schemas']['Basket Item'][];
+    };
+    'Basket Item': {
+      purchasableId: string;
       /** Format: int32 */
       amount?: number;
-    };
-    BasketResponse: {
-      userId?: string;
-      items?: components['schemas']['BasketItemResponse'][];
     };
     /** @description Register request to create a new user through the auth service */
     Register: {
@@ -450,8 +477,8 @@ export interface components {
       lastname?: string;
       avatarUrl?: string;
     };
-    UpdateItemRequest: {
-      purchasableId?: string;
+    'Update Item': {
+      purchasableId: string;
       /** Format: int32 */
       amount?: number;
     };
@@ -496,14 +523,14 @@ export interface components {
       totalElements?: number;
       /** Format: int32 */
       totalPages?: number;
-      sort?: components['schemas']['Sort'];
-      /** Format: int32 */
-      number?: number;
-      pageable?: components['schemas']['PageableObject'];
       first?: boolean;
       last?: boolean;
       /** Format: int32 */
+      number?: number;
+      sort?: components['schemas']['Sort'];
+      /** Format: int32 */
       numberOfElements?: number;
+      pageable?: components['schemas']['PageableObject'];
       /** Format: int32 */
       size?: number;
       content?: components['schemas']['TutorialProgress'][];
@@ -530,14 +557,14 @@ export interface components {
       totalElements?: number;
       /** Format: int32 */
       totalPages?: number;
-      sort?: components['schemas']['Sort'];
-      /** Format: int32 */
-      number?: number;
-      pageable?: components['schemas']['PageableObject'];
       first?: boolean;
       last?: boolean;
       /** Format: int32 */
+      number?: number;
+      sort?: components['schemas']['Sort'];
+      /** Format: int32 */
       numberOfElements?: number;
+      pageable?: components['schemas']['PageableObject'];
       /** Format: int32 */
       size?: number;
       content?: { [key: string]: unknown }[];
@@ -974,7 +1001,12 @@ export interface operations {
   search: {
     parameters: {
       query: {
-        pageable: components['schemas']['Pageable'];
+        /** Zero-based page index (0..N) */
+        page?: number;
+        /** The size of the page to be returned */
+        size?: number;
+        /** Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported. */
+        sort?: string[];
         amount?: number;
         oldPrice?: number;
         bonus?: number;
@@ -1036,6 +1068,62 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': components['schemas']['CreatePurchasableRequest'];
+      };
+    };
+  };
+  searchMatch: {
+    responses: {
+      /** Created ticket */
+      201: {
+        content: {
+          'application/json': components['schemas']['TicketResponse'];
+        };
+      };
+      /** Ticket search request data invalid */
+      400: {
+        content: {
+          'application/json': components['schemas']['Error Response'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['Error Response'];
+        };
+      };
+      /** Could not add to ticket search */
+      409: {
+        content: {
+          'application/json': components['schemas']['Error Response'];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SearchMatchRequest'];
+      };
+    };
+  };
+  cancelSearch: {
+    responses: {
+      /** Cancellation was successful */
+      200: unknown;
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['Error Response'];
+        };
+      };
+      /** Ticket was not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['Error Response'];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CancelSearchRequest'];
       };
     };
   };
@@ -1160,7 +1248,12 @@ export interface operations {
   search_1: {
     parameters: {
       query: {
-        pageable: components['schemas']['Pageable'];
+        /** Zero-based page index (0..N) */
+        page?: number;
+        /** The size of the page to be returned */
+        size?: number;
+        /** Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported. */
+        sort?: string[];
         matchTiers?: string[];
         playerCount?: number;
         bannerUrl?: string;
@@ -1265,7 +1358,7 @@ export interface operations {
       /** Item added to basket */
       200: {
         content: {
-          'application/json': components['schemas']['BasketResponse'];
+          'application/json': components['schemas']['Basket'];
         };
       };
       /** Invalid request */
@@ -1295,7 +1388,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['AddItemRequest'];
+        'application/json': components['schemas']['Add Item'];
       };
     };
   };
@@ -1304,7 +1397,7 @@ export interface operations {
       /** Item updated in basket */
       200: {
         content: {
-          'application/json': components['schemas']['BasketResponse'];
+          'application/json': components['schemas']['Basket'];
         };
       };
       /** Invalid request */
@@ -1334,7 +1427,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['UpdateItemRequest'];
+        'application/json': components['schemas']['Update Item'];
       };
     };
   };
@@ -1474,6 +1567,33 @@ export interface operations {
       };
     };
   };
+  getTicketStatus: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** Current ticket status */
+      200: {
+        content: {
+          'application/json': components['schemas']['TicketResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['Error Response'];
+        };
+      };
+      /** Ticket was not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['Error Response'];
+        };
+      };
+    };
+  };
   getByParams: {
     parameters: {
       query: {
@@ -1538,7 +1658,7 @@ export interface operations {
       /** Current user basket */
       200: {
         content: {
-          'application/json': components['schemas']['BasketResponse'];
+          'application/json': components['schemas']['Basket'];
         };
       };
       /** Unauthorized */
@@ -1561,6 +1681,33 @@ export interface operations {
       200: unknown;
       /** Unauthorized */
       401: {
+        content: {
+          'application/json': components['schemas']['Error Response'];
+        };
+      };
+    };
+  };
+  deleteItemInBasket: {
+    parameters: {
+      path: {
+        itemId: string;
+      };
+    };
+    responses: {
+      /** Item deleted from basket */
+      200: {
+        content: {
+          'application/json': components['schemas']['Basket'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['Error Response'];
+        };
+      };
+      /** Could not delete item from basket */
+      409: {
         content: {
           'application/json': components['schemas']['Error Response'];
         };
