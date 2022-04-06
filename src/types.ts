@@ -52,7 +52,7 @@ export interface paths {
     post: operations['joinMatch'];
   };
   '/game': {
-    get: operations['search_1'];
+    get: operations['search_2'];
     post: operations['create_2'];
   };
   '/checkout/fast': {
@@ -76,6 +76,9 @@ export interface paths {
   };
   '/user/{id}': {
     get: operations['getById'];
+  };
+  '/notification': {
+    get: operations['search_1'];
   };
   '/matchmaking/ticket/{id}': {
     get: operations['getTicketStatus'];
@@ -259,7 +262,7 @@ export interface components {
     UpdateGameRequest: {
       title: string;
       subtitle: string;
-      icon: string;
+      iconUrl: string;
       bannerUrl: string;
       description: string;
       tutorialVideoUrl?: string;
@@ -389,6 +392,7 @@ export interface components {
       scoreSnapshots?: components['schemas']['ScoreSnapshotResponse'][];
       seed?: string;
       availableReplays?: components['schemas']['AvailableReplayResponse'][];
+      playerStates?: { [key: string]: string };
     };
     MatchResultResponse: {
       winners?: components['schemas']['ParticipantResultResponse'][];
@@ -398,7 +402,7 @@ export interface components {
       userId?: string;
       /** Format: int32 */
       score?: number;
-      displayName?: string;
+      username?: string;
       avatarUrl?: string;
     };
     ScoreSnapshotResponse: {
@@ -412,7 +416,7 @@ export interface components {
     CreateGameRequest: {
       title: string;
       subtitle: string;
-      icon: string;
+      iconUrl: string;
       bannerUrl: string;
       description: string;
       tutorialVideoUrl: string;
@@ -525,32 +529,32 @@ export interface components {
       totalPages?: number;
       first?: boolean;
       last?: boolean;
-      /** Format: int32 */
-      number?: number;
       sort?: components['schemas']['Sort'];
-      /** Format: int32 */
-      numberOfElements?: number;
-      pageable?: components['schemas']['PageableObject'];
       /** Format: int32 */
       size?: number;
       content?: components['schemas']['TutorialProgress'][];
+      /** Format: int32 */
+      number?: number;
+      /** Format: int32 */
+      numberOfElements?: number;
+      pageable?: components['schemas']['PageableObject'];
       empty?: boolean;
     };
     PageableObject: {
       sort?: components['schemas']['Sort'];
+      /** Format: int64 */
+      offset?: number;
       /** Format: int32 */
       pageNumber?: number;
       /** Format: int32 */
       pageSize?: number;
       paged?: boolean;
       unpaged?: boolean;
-      /** Format: int64 */
-      offset?: number;
     };
     Sort: {
+      empty?: boolean;
       sorted?: boolean;
       unsorted?: boolean;
-      empty?: boolean;
     };
     Page: {
       /** Format: int64 */
@@ -559,15 +563,15 @@ export interface components {
       totalPages?: number;
       first?: boolean;
       last?: boolean;
-      /** Format: int32 */
-      number?: number;
       sort?: components['schemas']['Sort'];
-      /** Format: int32 */
-      numberOfElements?: number;
-      pageable?: components['schemas']['PageableObject'];
       /** Format: int32 */
       size?: number;
       content?: { [key: string]: unknown }[];
+      /** Format: int32 */
+      number?: number;
+      /** Format: int32 */
+      numberOfElements?: number;
+      pageable?: components['schemas']['PageableObject'];
       empty?: boolean;
     };
     /** @description A finished replay that was found. */
@@ -1245,7 +1249,7 @@ export interface operations {
       };
     };
   };
-  search_1: {
+  search_2: {
     parameters: {
       query: {
         /** Zero-based page index (0..N) */
@@ -1432,6 +1436,11 @@ export interface operations {
     };
   };
   register: {
+    parameters: {
+      header: {
+        Authorization: string;
+      };
+    };
     responses: {
       /** The user was created */
       201: {
@@ -1459,6 +1468,11 @@ export interface operations {
     };
   };
   refresh: {
+    parameters: {
+      header: {
+        Authorization: string;
+      };
+    };
     responses: {
       /** The Refresh was successful */
       201: {
@@ -1486,6 +1500,11 @@ export interface operations {
     };
   };
   login: {
+    parameters: {
+      header: {
+        Authorization: string;
+      };
+    };
     responses: {
       /** The login was successful */
       201: {
@@ -1563,6 +1582,34 @@ export interface operations {
       404: {
         content: {
           'application/json': components['schemas']['UserResponse'];
+        };
+      };
+    };
+  };
+  search_1: {
+    parameters: {
+      query: {
+        /** If set then only notifications from the specified type will be returned */
+        type?: string;
+        /** Zero-based page index (0..N) */
+        page?: number;
+        /** The size of the page to be returned */
+        size?: number;
+        /** Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported. */
+        sort?: string[];
+      };
+    };
+    responses: {
+      /** Returns a paginated array of notifications */
+      200: {
+        content: {
+          'application/json': components['schemas']['Page'][];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['Error Response'];
         };
       };
     };
