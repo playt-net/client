@@ -2,7 +2,12 @@ import { ApiError } from 'openapi-typescript-fetch';
 import 'whatwg-fetch';
 import { PlaytClient } from '../src/index';
 
-const client = PlaytClient({});
+const client = PlaytClient({
+  clientCredentials: {
+    clientId: 'API_CLIENT_ID',
+    clientSecret: 'API_CLIENT_SECRET',
+  },
+});
 /**
  * These tests should not replace backend tests, but make sure that the services are available.
  */
@@ -217,7 +222,7 @@ describe('fetch', () => {
       await client.postGame({
         title: '',
         subtitle: '',
-        icon: '',
+        iconUrl: '',
         bannerUrl: '',
         description: '',
         gameUrl: '',
@@ -250,7 +255,7 @@ describe('fetch', () => {
         id: '-1',
         title: '',
         subtitle: '',
-        icon: '',
+        iconUrl: '',
         bannerUrl: '',
         description: '',
         gameUrl: '',
@@ -465,6 +470,16 @@ describe('fetch', () => {
   it('getWallet', async () => {
     try {
       await client.getWallet({});
+      throw Error('Should fail without credentials');
+    } catch (error) {
+      const { status, statusText } = error as ApiError;
+      expect(status).toBe(401);
+      expect(statusText).toBe('Unauthorized');
+    }
+  });
+  it('getNotifications', async () => {
+    try {
+      await client.getNotifications({});
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;

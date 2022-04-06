@@ -52,7 +52,7 @@ export interface paths {
     post: operations['joinMatch'];
   };
   '/game': {
-    get: operations['search_1'];
+    get: operations['search_2'];
     post: operations['create_2'];
   };
   '/checkout/fast': {
@@ -76,6 +76,9 @@ export interface paths {
   };
   '/user/{id}': {
     get: operations['getById'];
+  };
+  '/notification': {
+    get: operations['search_1'];
   };
   '/matchmaking/ticket/{id}': {
     get: operations['getTicketStatus'];
@@ -102,12 +105,12 @@ export interface components {
      * @description System-wide error response object
      * @example [object Object]
      */
-    'Error Response': {
+    ErrorResponse: {
       /**
        * @description Error status name
        * @enum {string}
        */
-      status?:
+      status:
         | '100 CONTINUE'
         | '101 SWITCHING_PROTOCOLS'
         | '102 PROCESSING'
@@ -180,7 +183,7 @@ export interface components {
        * Format: int32
        * @description Internal status code
        */
-      statusCode?: number;
+      statusCode: number;
       /** @description Error reason */
       error?: { [key: string]: unknown } | null;
     };
@@ -191,19 +194,19 @@ export interface components {
       avatarUrl: string;
     };
     UserResponse: {
-      id?: string;
-      username?: string;
-      firstname?: string;
-      lastname?: string;
-      avatarUrl?: string;
+      id: string;
+      username: string;
+      firstname: string;
+      lastname: string;
+      avatarUrl: string;
     };
     /** @description UpdateTutorial holds the required information to update a TutorialProgress */
-    UpdateTutorial: {
+    UpdateTutorialRequest: {
       /** @description State of the tutorial */
       finished?: boolean;
     };
     /** @description TutorialProgress contains the current state of a given game tutorial for a player */
-    TutorialProgress: {
+    TutorialProgressResponse: {
       /** @description Tutorial id */
       id: string;
       /** @description Tutorial user */
@@ -224,9 +227,9 @@ export interface components {
       bannerUrl: string;
       type: string;
       /** Format: int32 */
-      price: number;
+      price?: number;
       /** Format: int32 */
-      amount: number;
+      amount?: number;
       properties: { [key: string]: string };
       tags: string[];
       /** Format: int32 */
@@ -237,20 +240,20 @@ export interface components {
     PurchasableResponse: {
       id: string;
       title: string;
-      description?: string;
-      iconUrl?: string;
-      bannerUrl?: string;
-      type?: string;
+      description: string;
+      iconUrl: string;
+      bannerUrl: string;
+      type: string;
       /** Format: int32 */
       oldPrice?: number;
       /** Format: int32 */
-      price?: number;
+      price: number;
       /** Format: int32 */
       bonus?: number;
       /** Format: int32 */
       amount?: number;
-      properties?: { [key: string]: string };
-      tags?: string[];
+      properties: { [key: string]: string };
+      tags: string[];
       /** Format: date-time */
       createdAt?: string;
       /** Format: date-time */
@@ -259,7 +262,7 @@ export interface components {
     UpdateGameRequest: {
       title: string;
       subtitle: string;
-      icon: string;
+      iconUrl: string;
       bannerUrl: string;
       description: string;
       tutorialVideoUrl?: string;
@@ -268,49 +271,49 @@ export interface components {
       gameUrl: string;
     };
     /** @description Game holds all belongings of a game. */
-    Game: {
+    GameResponse: {
       /** @description Game id */
       id: string;
       /** @description Game title */
       title: string;
       /** @description Game subtitle */
-      subtitle?: string;
+      subtitle: string;
       /** @description Game icon url */
-      iconUrl?: string;
+      iconUrl: string;
       /** @description Game banner url */
-      bannerUrl?: string;
+      bannerUrl: string;
       /** @description Game description */
-      description?: string;
+      description: string;
       /** @description Game tutorial video */
-      tutorialVideoUrl?: string;
+      tutorialVideoUrl: string;
       /** @description Game genre */
-      genre?: string;
+      genre: string;
       /** @description Game genre */
-      gameUrl?: string;
+      gameUrl: string;
       /** @description Game genre */
-      matchTiers?: string[];
+      matchTiers: string[];
       /** @description Game owner */
       ownerId: string;
+      /** Format: int32 */
+      popularity?: number;
+      tags: string[];
+      /** Format: int32 */
+      playersCount?: number;
       /** Format: date-time */
       createdAt?: string;
       /** Format: date-time */
       updatedAt?: string;
       /** Format: int64 */
       version?: number;
-      /** Format: int32 */
-      popularity?: number;
-      tags?: string[];
-      /** Format: int32 */
-      playerCount?: number;
     };
     ApiKeyResponse: {
-      ownerId?: string;
-      gameId?: string;
-      value?: string;
+      ownerId: string;
+      gameId: string;
+      value: string;
       revoked?: boolean;
     };
     /** @description CreateTutorial holds the required information to create a TutorialProgress */
-    CreateTutorial: {
+    CreateTutorialRequest: {
       /** @description GameId of the tutorial */
       gameId: string;
     };
@@ -337,11 +340,11 @@ export interface components {
       denominationTier: string;
     };
     TicketResponse: {
-      id?: string;
-      playerToken?: string;
-      playerIds?: string[];
-      ticketIds?: string[];
-      status?: string;
+      id: string;
+      playerToken: string;
+      playerIds: string[];
+      ticketIds: string[];
+      status: string;
     };
     CancelSearchRequest: {
       ticketId: string;
@@ -361,58 +364,65 @@ export interface components {
       playerToken: string;
     };
     AvailableReplayResponse: {
-      matchId?: string;
-      userId?: string;
+      matchId: string;
+      userId: string;
     };
+    /** @description Wallet currencies */
     CurrencyResponse: {
-      fullQualifiedName?: string;
+      /** @description Id of currency in wallet */
+      identifier: string;
+      /**
+       * Format: int64
+       * @description Amount of given currency in wallet
+       */
       amount?: number;
     };
     MatchResponse: {
-      id?: string;
-      playerTokens?: string[];
-      matchState?: string;
-      matchingState?: string;
-      participants?: string[];
-      result?: components['schemas']['MatchResultResponse'];
-      matchTier?: string;
-      denominationTier?: string;
-      possibleWins?: components['schemas']['CurrencyResponse'][];
-      entryCosts?: components['schemas']['CurrencyResponse'][];
-      gameId?: string;
+      id: string;
+      playerTokens: string[];
+      matchState: string;
+      matchingState: string;
+      participants: string[];
+      result: components['schemas']['MatchResultResponse'];
+      matchTier: string;
+      denominationTier: string;
+      possibleWins: components['schemas']['CurrencyResponse'][];
+      entryCosts: components['schemas']['CurrencyResponse'][];
+      gameId: string;
       /** Format: date-time */
-      timeoutAt?: string;
+      timeoutAt: string;
       /** Format: date-time */
       deletedAt?: string;
       /** Format: date-time */
       finishedAt?: string;
-      scoreSnapshots?: components['schemas']['ScoreSnapshotResponse'][];
-      seed?: string;
-      availableReplays?: components['schemas']['AvailableReplayResponse'][];
+      scoreSnapshots: components['schemas']['ScoreSnapshotResponse'][];
+      seed: string;
+      availableReplays: components['schemas']['AvailableReplayResponse'][];
+      playerStates?: { [key: string]: string };
     };
     MatchResultResponse: {
-      winners?: components['schemas']['ParticipantResultResponse'][];
-      losers?: components['schemas']['ParticipantResultResponse'][];
+      winners: components['schemas']['ParticipantResultResponse'][];
+      losers: components['schemas']['ParticipantResultResponse'][];
     };
     ParticipantResultResponse: {
-      userId?: string;
+      userId: string;
       /** Format: int32 */
       score?: number;
-      displayName?: string;
+      username?: string;
       avatarUrl?: string;
     };
     ScoreSnapshotResponse: {
-      userId?: string;
+      userId: string;
       /** Format: int32 */
       score?: number;
       /** Format: date-time */
-      timestamp?: string;
+      timestamp: string;
       finalSnapshot?: boolean;
     };
     CreateGameRequest: {
       title: string;
       subtitle: string;
-      icon: string;
+      iconUrl: string;
       bannerUrl: string;
       description: string;
       tutorialVideoUrl: string;
@@ -432,40 +442,40 @@ export interface components {
       items: components['schemas']['CheckoutItemResponse'][];
       status: string;
     };
-    'Add Item': {
+    AddItemRequest: {
       purchasableId: string;
       /** Format: int32 */
       amount?: number;
     };
-    Basket: {
+    BasketItemResponse: {
+      purchasableId: string;
+      /** Format: int32 */
+      amount?: number;
+    };
+    BasketResponse: {
       userId: string;
-      items: components['schemas']['Basket Item'][];
-    };
-    'Basket Item': {
-      purchasableId: string;
-      /** Format: int32 */
-      amount?: number;
+      items: components['schemas']['BasketItemResponse'][];
     };
     /** @description Register request to create a new user through the auth service */
-    Register: {
+    RegisterRequest: {
       /** @description User's email */
       email: string;
       /** @description User's password. Must be a least 6 characters long. */
       password: string;
     };
     TokenResponse: {
-      userId?: string;
-      accessToken?: string;
-      refreshToken?: string;
-      expiresIn?: string;
+      userId: string;
+      accessToken: string;
+      refreshToken: string;
+      expiresIn: string;
     };
     /** @description TokenExchange request to exchange the token with a new access token */
-    TokenExchange: {
+    RefreshExchangeRequest: {
       /** @description Refresh token will be exchanged with an auth token */
       refreshToken: string;
     };
     /** @description Login request to login through the auth service */
-    Login: {
+    LoginRequest: {
       /** @description User's email */
       email: string;
       /** @description User's password. Must be a least 6 characters long. */
@@ -477,32 +487,13 @@ export interface components {
       lastname?: string;
       avatarUrl?: string;
     };
-    'Update Item': {
+    UpdateItemRequest: {
       purchasableId: string;
       /** Format: int32 */
       amount?: number;
     };
-    /** @description Wallet currencies */
-    'Currency Entry': {
-      /** @description Id of currency in wallet */
-      identifier: string;
-      /**
-       * Format: int64
-       * @description Amount of given currency in wallet
-       */
-      amount?: number;
-    };
-    /** @description Wallet holds all belongings of a user. It contains purchasables and currencies. */
-    Wallet: {
-      /** @description Wallet owner */
-      userId: string;
-      /** @description Wallet entries */
-      entries: components['schemas']['Wallet Entry'][];
-      /** @description Wallet currencies */
-      currencies: components['schemas']['Currency Entry'][];
-    };
     /** @description Wallet entries */
-    'Wallet Entry': {
+    WalletEntryResponse: {
       /** @description Id of purchasables in wallet */
       purchasableId: string;
       /**
@@ -511,6 +502,15 @@ export interface components {
        */
       amount?: number;
     };
+    /** @description Wallet holds all belongings of a user. It contains purchasables and currencies. */
+    WalletResponse: {
+      /** @description Wallet owner */
+      userId: string;
+      /** @description Wallet entries */
+      entries: components['schemas']['WalletEntryResponse'][];
+      /** @description Wallet currencies */
+      currencies: components['schemas']['CurrencyResponse'][];
+    };
     Pageable: {
       /** Format: int32 */
       page?: number;
@@ -518,32 +518,32 @@ export interface components {
       size?: number;
       sort?: string[];
     };
-    PageTutorialProgress: {
+    PageTutorialProgressResponse: {
       /** Format: int64 */
       totalElements?: number;
       /** Format: int32 */
       totalPages?: number;
       first?: boolean;
       last?: boolean;
+      sort?: components['schemas']['Sort'];
       /** Format: int32 */
       number?: number;
-      sort?: components['schemas']['Sort'];
       /** Format: int32 */
       numberOfElements?: number;
       pageable?: components['schemas']['PageableObject'];
       /** Format: int32 */
       size?: number;
-      content?: components['schemas']['TutorialProgress'][];
+      content?: components['schemas']['TutorialProgressResponse'][];
       empty?: boolean;
     };
     PageableObject: {
       sort?: components['schemas']['Sort'];
+      paged?: boolean;
+      unpaged?: boolean;
       /** Format: int32 */
       pageNumber?: number;
       /** Format: int32 */
       pageSize?: number;
-      paged?: boolean;
-      unpaged?: boolean;
       /** Format: int64 */
       offset?: number;
     };
@@ -559,9 +559,9 @@ export interface components {
       totalPages?: number;
       first?: boolean;
       last?: boolean;
+      sort?: components['schemas']['Sort'];
       /** Format: int32 */
       number?: number;
-      sort?: components['schemas']['Sort'];
       /** Format: int32 */
       numberOfElements?: number;
       pageable?: components['schemas']['PageableObject'];
@@ -595,7 +595,7 @@ export interface operations {
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -611,13 +611,13 @@ export interface operations {
       /** User update payload invalid */
       400: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -638,13 +638,13 @@ export interface operations {
       /** User update payload invalid */
       400: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -664,13 +664,13 @@ export interface operations {
       /** Tutorial loaded successfully. */
       200: {
         content: {
-          'application/json': components['schemas']['TutorialProgress'];
+          'application/json': components['schemas']['TutorialProgressResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -685,37 +685,37 @@ export interface operations {
       /** The tutorial was updated successfully */
       200: {
         content: {
-          'application/json': components['schemas']['TutorialProgress'];
+          'application/json': components['schemas']['TutorialProgressResponse'];
         };
       };
       /** Validation failed, e.g. finished is not set */
       400: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Tournament could not be found by the given id */
       404: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** If a tutorial could not be updated, a CONFLICT will be returned. */
       409: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['UpdateTutorial'];
+        'application/json': components['schemas']['UpdateTutorialRequest'];
       };
     };
   };
@@ -735,13 +735,13 @@ export interface operations {
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Purchasable was not found */
       404: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -762,7 +762,7 @@ export interface operations {
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -784,7 +784,7 @@ export interface operations {
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -799,19 +799,19 @@ export interface operations {
       /** Game was found */
       200: {
         content: {
-          'application/json': components['schemas']['Game'];
+          'application/json': components['schemas']['GameResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Game was not found */
       404: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -826,31 +826,31 @@ export interface operations {
       /** Game was updated */
       200: {
         content: {
-          'application/json': components['schemas']['Game'];
+          'application/json': components['schemas']['GameResponse'];
         };
       };
       /** Game could not be updated */
       400: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Game could not be found */
       404: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Game could not be updated */
       409: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -872,13 +872,13 @@ export interface operations {
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Game could not be found */
       404: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -899,19 +899,19 @@ export interface operations {
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Game could not be found */
       404: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Api-key not be created */
       409: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -932,13 +932,13 @@ export interface operations {
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Game could not be found */
       404: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -954,13 +954,13 @@ export interface operations {
       /** Tutorials loaded successfully. If there is already a tutorial for the user and gameId, that is not yet finished, no new tutorial will be created and the existing one will be returned. */
       200: {
         content: {
-          'application/json': components['schemas']['PageTutorialProgress'];
+          'application/json': components['schemas']['PageTutorialProgressResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -970,31 +970,31 @@ export interface operations {
       /** The tutorial was saved successfully */
       201: {
         content: {
-          'application/json': components['schemas']['TutorialProgress'];
+          'application/json': components['schemas']['TutorialProgressResponse'];
         };
       };
       /** Validation failed, e.g. gameId is empty */
       400: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** If a tutorial could not be created, a CONFLICT will be returned. */
       409: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['CreateTutorial'];
+        'application/json': components['schemas']['CreateTutorialRequest'];
       };
     };
   };
@@ -1033,7 +1033,7 @@ export interface operations {
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -1049,19 +1049,19 @@ export interface operations {
       /** Purchasable could not be created */
       400: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Purchasable could not be created */
       409: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -1082,19 +1082,19 @@ export interface operations {
       /** Ticket search request data invalid */
       400: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Could not add to ticket search */
       409: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -1111,13 +1111,13 @@ export interface operations {
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Ticket was not found */
       404: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -1144,25 +1144,25 @@ export interface operations {
       /** When the match is not found or the userId is not part of the match. */
       400: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** When the replay can not be found even though the match is finished. */
       404: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** When the player has not yet submitted a final score for the match where the replay stored for. */
       409: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -1180,19 +1180,19 @@ export interface operations {
       /** Validation failed, e.g. payload is empty */
       400: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** If a replay already exists for this match+user, the match was not found, the match is already finished for the user or the userId is not part of the match. */
       409: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -1214,7 +1214,7 @@ export interface operations {
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -1235,7 +1235,7 @@ export interface operations {
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -1245,7 +1245,7 @@ export interface operations {
       };
     };
   };
-  search_1: {
+  search_2: {
     parameters: {
       query: {
         /** Zero-based page index (0..N) */
@@ -1255,7 +1255,7 @@ export interface operations {
         /** Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported. */
         sort?: string[];
         matchTiers?: string[];
-        playerCount?: number;
+        playersCount?: number;
         bannerUrl?: string;
         description?: string;
         gameUrl?: string;
@@ -1282,7 +1282,7 @@ export interface operations {
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -1292,25 +1292,25 @@ export interface operations {
       /** Game was created */
       201: {
         content: {
-          'application/json': components['schemas']['Game'];
+          'application/json': components['schemas']['GameResponse'];
         };
       };
       /** Game could not be created */
       400: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Game could not be created */
       409: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -1331,19 +1331,19 @@ export interface operations {
       /** Basket could not be loaded */
       400: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Purchasable was not found */
       404: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -1358,37 +1358,37 @@ export interface operations {
       /** Item added to basket */
       200: {
         content: {
-          'application/json': components['schemas']['Basket'];
+          'application/json': components['schemas']['BasketResponse'];
         };
       };
       /** Invalid request */
       400: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Purchasable could not be found */
       404: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Could not add item to basket */
       409: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['Add Item'];
+        'application/json': components['schemas']['AddItemRequest'];
       };
     };
   };
@@ -1397,41 +1397,46 @@ export interface operations {
       /** Item updated in basket */
       200: {
         content: {
-          'application/json': components['schemas']['Basket'];
+          'application/json': components['schemas']['BasketResponse'];
         };
       };
       /** Invalid request */
       400: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Purchasable could not be found */
       404: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Could not update item in basket */
       409: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['Update Item'];
+        'application/json': components['schemas']['UpdateItemRequest'];
       };
     };
   };
   register: {
+    parameters: {
+      header: {
+        Authorization: string;
+      };
+    };
     responses: {
       /** The user was created */
       201: {
@@ -1442,23 +1447,28 @@ export interface operations {
       /** User creation failed */
       400: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['Register'];
+        'application/json': components['schemas']['RegisterRequest'];
       };
     };
   };
   refresh: {
+    parameters: {
+      header: {
+        Authorization: string;
+      };
+    };
     responses: {
       /** The Refresh was successful */
       201: {
@@ -1469,23 +1479,28 @@ export interface operations {
       /** Refresh failed */
       400: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['TokenExchange'];
+        'application/json': components['schemas']['RefreshExchangeRequest'];
       };
     };
   };
   login: {
+    parameters: {
+      header: {
+        Authorization: string;
+      };
+    };
     responses: {
       /** The login was successful */
       201: {
@@ -1496,19 +1511,19 @@ export interface operations {
       /** Login failed */
       400: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['Login'];
+        'application/json': components['schemas']['LoginRequest'];
       };
     };
   };
@@ -1517,25 +1532,25 @@ export interface operations {
       /** The current user's wallet */
       200: {
         content: {
-          'application/json': components['schemas']['Wallet'];
+          'application/json': components['schemas']['WalletResponse'];
         };
       };
       /** UserId missing */
       400: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Could not get user's wallet */
       409: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -1556,13 +1571,41 @@ export interface operations {
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** User not found by id */
       404: {
         content: {
           'application/json': components['schemas']['UserResponse'];
+        };
+      };
+    };
+  };
+  search_1: {
+    parameters: {
+      query: {
+        /** If set then only notifications from the specified type will be returned */
+        type?: string;
+        /** Zero-based page index (0..N) */
+        page?: number;
+        /** The size of the page to be returned */
+        size?: number;
+        /** Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported. */
+        sort?: string[];
+      };
+    };
+    responses: {
+      /** Returns a paginated array of notifications */
+      200: {
+        content: {
+          'application/json': components['schemas']['Page'][];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -1583,13 +1626,13 @@ export interface operations {
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Ticket was not found */
       404: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -1610,7 +1653,7 @@ export interface operations {
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -1631,7 +1674,7 @@ export interface operations {
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -1648,7 +1691,7 @@ export interface operations {
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -1658,19 +1701,19 @@ export interface operations {
       /** Current user basket */
       200: {
         content: {
-          'application/json': components['schemas']['Basket'];
+          'application/json': components['schemas']['BasketResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Basket could not be loaded */
       409: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -1682,7 +1725,7 @@ export interface operations {
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
@@ -1697,19 +1740,19 @@ export interface operations {
       /** Item deleted from basket */
       200: {
         content: {
-          'application/json': components['schemas']['Basket'];
+          'application/json': components['schemas']['BasketResponse'];
         };
       };
       /** Unauthorized */
       401: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
       /** Could not delete item from basket */
       409: {
         content: {
-          'application/json': components['schemas']['Error Response'];
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };
