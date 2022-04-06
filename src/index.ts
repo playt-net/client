@@ -26,7 +26,7 @@ export const PlaytClient = ({
 
   const authenticate: Middleware = async (url, init, next) => {
     try {
-      if (clientCredentials && url.startsWith('/auth')) {
+      if (clientCredentials && url.includes('/auth/')) {
         init.headers.set(
           'Authorization',
           `Basic ${Buffer.from(
@@ -154,6 +154,8 @@ export const PlaytClient = ({
 
   const getWallet = fetcher.path('/wallet').method('get').create();
 
+  const getNotifications = fetcher.path('/notification').method('get').create();
+
   return {
     deleteBasket,
     deleteBasketItem,
@@ -168,6 +170,7 @@ export const PlaytClient = ({
     getMatch,
     getMatches,
     getMatchmakingTicket,
+    getNotifications,
     getPurchasable,
     getPurchasables,
     getReplay,
