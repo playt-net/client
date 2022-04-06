@@ -39,7 +39,7 @@
     "typecheck": "tsc --noEmit --project tsconfig.json"
   },
   "dependencies": {
-    "openapi-typescript-fetch": "^1.1.2"
+    "openapi-typescript-fetch": "git+https://github.com/ajaishankar/openapi-typescript-fetch.git"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",
