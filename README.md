@@ -32,7 +32,7 @@ const client = PlaytClient({
 const { ok, data: user } = await client.getCurrentUser({});
 ```
 
-## Server side usage
+### Server side usage
 
 On server side, you have access to `/auth` routes for login, register and token refresh. This requires valid client credentials.
 
