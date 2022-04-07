@@ -6,7 +6,7 @@ An API client for PLAYT, written in Typescript.
 
 - Support for client and user authentication
 - Full support for all endpoints
-- Full typed request and response objects
+- Fully typed request and response objects
 
 ## Usage
 
