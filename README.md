@@ -14,7 +14,7 @@ An API client for PLAYT, written in Typescript.
 npm install @playt/client
 ```
 
-## Client side usage
+### Client side usage
 
 ```ts
 import { PlaytClient } from '@playt/client';
