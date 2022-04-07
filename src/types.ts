@@ -83,12 +83,15 @@ export interface paths {
   '/matchmaking/ticket/{id}': {
     get: operations['getTicketStatus'];
   };
-  '/match': {
-    get: operations['getByParams'];
-  };
   '/match/{id}': {
     get: operations['getById_3'];
     delete: operations['deleteById'];
+  };
+  '/match/playerToken/{playerToken}': {
+    get: operations['getByPlayerToken'];
+  };
+  '/match/history': {
+    get: operations['getHistoryForUser'];
   };
   '/basket': {
     get: operations['getCurrentBasket'];
@@ -270,6 +273,22 @@ export interface components {
       matchTiers: string[];
       gameUrl: string;
     };
+    CurrencyResponse: {
+      /** @description Id of currency in wallet */
+      identifier: string;
+      /**
+       * Format: int64
+       * @description Amount of given currency in wallet
+       */
+      amount?: number;
+    };
+    DenominationResponse: {
+      identifier: string;
+      /** Format: int32 */
+      totalPlayerCount?: number;
+      entryCost: components['schemas']['CurrencyResponse'][];
+      possibleWins: components['schemas']['CurrencyResponse'][];
+    };
     /** @description Game holds all belongings of a game. */
     GameResponse: {
       /** @description Game id */
@@ -291,7 +310,7 @@ export interface components {
       /** @description Game genre */
       gameUrl: string;
       /** @description Game genre */
-      matchTiers: string[];
+      matchTiers: components['schemas']['MatchTierResponse'][];
       /** @description Game owner */
       ownerId: string;
       /** Format: int32 */
@@ -303,8 +322,13 @@ export interface components {
       createdAt?: string;
       /** Format: date-time */
       updatedAt?: string;
-      /** Format: int64 */
-      version?: number;
+    };
+    /** @description Game genre */
+    MatchTierResponse: {
+      identifier: string;
+      playerPool: string;
+      realTime?: boolean;
+      denominations: components['schemas']['DenominationResponse'][];
     };
     ApiKeyResponse: {
       ownerId: string;
@@ -367,22 +391,12 @@ export interface components {
       matchId: string;
       userId: string;
     };
-    /** @description Wallet currencies */
-    CurrencyResponse: {
-      /** @description Id of currency in wallet */
-      identifier: string;
-      /**
-       * Format: int64
-       * @description Amount of given currency in wallet
-       */
-      amount?: number;
-    };
     MatchResponse: {
       id: string;
       playerTokens: string[];
       matchState: string;
       matchingState: string;
-      participants: string[];
+      participants: components['schemas']['ParticipantResponse'][];
       result: components['schemas']['MatchResultResponse'];
       matchTier: string;
       denominationTier: string;
@@ -403,6 +417,11 @@ export interface components {
     MatchResultResponse: {
       winners: components['schemas']['ParticipantResultResponse'][];
       losers: components['schemas']['ParticipantResultResponse'][];
+    };
+    ParticipantResponse: {
+      userId: string;
+      username: string;
+      avatarUrl: string;
     };
     ParticipantResultResponse: {
       userId: string;
@@ -523,9 +542,9 @@ export interface components {
       totalElements?: number;
       /** Format: int32 */
       totalPages?: number;
+      sort?: components['schemas']['Sort'];
       first?: boolean;
       last?: boolean;
-      sort?: components['schemas']['Sort'];
       /** Format: int32 */
       number?: number;
       /** Format: int32 */
@@ -538,12 +557,12 @@ export interface components {
     };
     PageableObject: {
       sort?: components['schemas']['Sort'];
-      paged?: boolean;
-      unpaged?: boolean;
       /** Format: int32 */
       pageNumber?: number;
       /** Format: int32 */
       pageSize?: number;
+      unpaged?: boolean;
+      paged?: boolean;
       /** Format: int64 */
       offset?: number;
     };
@@ -557,9 +576,9 @@ export interface components {
       totalElements?: number;
       /** Format: int32 */
       totalPages?: number;
+      sort?: components['schemas']['Sort'];
       first?: boolean;
       last?: boolean;
-      sort?: components['schemas']['Sort'];
       /** Format: int32 */
       number?: number;
       /** Format: int32 */
@@ -1637,27 +1656,6 @@ export interface operations {
       };
     };
   };
-  getByParams: {
-    parameters: {
-      query: {
-        playerToken: string;
-      };
-    };
-    responses: {
-      /** OK */
-      200: {
-        content: {
-          'application/json': components['schemas']['MatchResponse'];
-        };
-      };
-      /** Unauthorized */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-    };
-  };
   getById_3: {
     parameters: {
       path: {
@@ -1688,6 +1686,53 @@ export interface operations {
     responses: {
       /** Accepted */
       202: unknown;
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  getByPlayerToken: {
+    parameters: {
+      path: {
+        playerToken: string;
+      };
+    };
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          'application/json': components['schemas']['MatchResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  getHistoryForUser: {
+    parameters: {
+      query: {
+        /** Zero-based page index (0..N) */
+        page?: number;
+        /** The size of the page to be returned */
+        size?: number;
+        /** Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported. */
+        sort?: string[];
+      };
+    };
+    responses: {
+      /** Contains match history, can be empty. */
+      200: {
+        content: {
+          'application/json': components['schemas']['Page'];
+        };
+      };
       /** Unauthorized */
       401: {
         content: {

@@ -108,7 +108,11 @@ export const PlaytClient = ({
     .method('delete')
     .create();
 
-  const getMatches = fetcher.path('/match').method('get').create();
+  const getMatchByPlayerToken = fetcher
+    .path('/match/playerToken/{playerToken}')
+    .method('get')
+    .create();
+  const getMatchHistory = fetcher.path('/match/history').method('get').create();
   const getMatch = fetcher.path('/match/{id}').method('get').create();
   const deleteMatch = fetcher.path('/match/{id}').method('delete').create();
   const postMatchJoin = fetcher.path('/match/join').method('post').create();
@@ -168,7 +172,8 @@ export const PlaytClient = ({
     getGame,
     getGames,
     getMatch,
-    getMatches,
+    getMatchByPlayerToken,
+    getMatchHistory,
     getMatchmakingTicket,
     getNotifications,
     getPurchasable,
