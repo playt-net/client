@@ -68,4 +68,4 @@ const { ok, data: auth } = await client.postAuthRefresh({
 
 ## API
 
-The API is documentated on [Swagger](https://playt-backend-xbwjl.ondigitalocean.app/swagger-ui/index.html) and [OpenAPI](https://playt-backend-xbwjl.ondigitalocean.app/v3/api-docs). The client is generated from the OpenAPI specification and is fully typed.
+The API is documented on [Swagger](https://playt-backend-xbwjl.ondigitalocean.app/swagger-ui/index.html) and [OpenAPI](https://playt-backend-xbwjl.ondigitalocean.app/v3/api-docs). The client is generated from the OpenAPI specification and is fully typed.
