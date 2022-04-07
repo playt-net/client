@@ -382,7 +382,7 @@ export interface components {
       playerTokens: string[];
       matchState: string;
       matchingState: string;
-      participants: string[];
+      participants: components['schemas']['ParticipantResponse'][];
       result: components['schemas']['MatchResultResponse'];
       matchTier: string;
       denominationTier: string;
@@ -403,6 +403,11 @@ export interface components {
     MatchResultResponse: {
       winners: components['schemas']['ParticipantResultResponse'][];
       losers: components['schemas']['ParticipantResultResponse'][];
+    };
+    ParticipantResponse: {
+      userId?: string;
+      username?: string;
+      avatarUrl?: string;
     };
     ParticipantResultResponse: {
       userId: string;
@@ -538,12 +543,12 @@ export interface components {
     };
     PageableObject: {
       sort?: components['schemas']['Sort'];
-      paged?: boolean;
-      unpaged?: boolean;
       /** Format: int32 */
       pageNumber?: number;
       /** Format: int32 */
       pageSize?: number;
+      unpaged?: boolean;
+      paged?: boolean;
       /** Format: int64 */
       offset?: number;
     };
