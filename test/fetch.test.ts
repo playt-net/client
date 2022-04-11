@@ -229,6 +229,7 @@ describe('fetch', () => {
         tutorialVideoUrl: '',
         genre: '',
         matchTiers: [],
+        tags: [],
       });
       throw Error('Should fail without credentials');
     } catch (error) {
@@ -262,6 +263,7 @@ describe('fetch', () => {
         tutorialVideoUrl: '',
         genre: '',
         matchTiers: [],
+        tags: [],
       });
       throw Error('Should fail without credentials');
     } catch (error) {

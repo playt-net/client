@@ -272,6 +272,7 @@ export interface components {
       genre: string;
       matchTiers: string[];
       gameUrl: string;
+      tags: string[];
     };
     CurrencyResponse: {
       /** @description Id of currency in wallet */
@@ -448,6 +449,7 @@ export interface components {
       genre: string;
       matchTiers: string[];
       gameUrl: string;
+      tags: string[];
     };
     FastCheckoutRequest: {
       purchasableId: string;
@@ -557,21 +559,21 @@ export interface components {
     };
     PageableObject: {
       sort?: components['schemas']['Sort'];
+      paged?: boolean;
+      unpaged?: boolean;
       /** Format: int32 */
       pageNumber?: number;
       /** Format: int32 */
       pageSize?: number;
-      unpaged?: boolean;
-      paged?: boolean;
       /** Format: int64 */
       offset?: number;
     };
     Sort: {
-      sorted?: boolean;
       unsorted?: boolean;
+      sorted?: boolean;
       empty?: boolean;
     };
-    Page: {
+    PagePurchasableResponse: {
       /** Format: int64 */
       totalElements?: number;
       /** Format: int32 */
@@ -586,7 +588,32 @@ export interface components {
       pageable?: components['schemas']['PageableObject'];
       /** Format: int32 */
       size?: number;
-      content?: { [key: string]: unknown }[];
+      content?: components['schemas']['PurchasableResponse'][];
+      empty?: boolean;
+    };
+    /** @description NotificationResponse contains a type and a payload */
+    NotificationResponse: {
+      /** @enum {string} */
+      type?: 'match' | 'all';
+      /** @description Based on the type it contains an object such as MatchNotificationPayload when type is match */
+      payload?: { [key: string]: unknown };
+    };
+    PageNotificationResponse: {
+      /** Format: int64 */
+      totalElements?: number;
+      /** Format: int32 */
+      totalPages?: number;
+      sort?: components['schemas']['Sort'];
+      first?: boolean;
+      last?: boolean;
+      /** Format: int32 */
+      number?: number;
+      /** Format: int32 */
+      numberOfElements?: number;
+      pageable?: components['schemas']['PageableObject'];
+      /** Format: int32 */
+      size?: number;
+      content?: components['schemas']['NotificationResponse'][];
       empty?: boolean;
     };
     /** @description A finished replay that was found. */
@@ -598,6 +625,42 @@ export interface components {
        * @description The server time in UTC when the replay was saved.
        */
       createdAt: string;
+    };
+    PageMatchResponse: {
+      /** Format: int64 */
+      totalElements?: number;
+      /** Format: int32 */
+      totalPages?: number;
+      sort?: components['schemas']['Sort'];
+      first?: boolean;
+      last?: boolean;
+      /** Format: int32 */
+      number?: number;
+      /** Format: int32 */
+      numberOfElements?: number;
+      pageable?: components['schemas']['PageableObject'];
+      /** Format: int32 */
+      size?: number;
+      content?: components['schemas']['MatchResponse'][];
+      empty?: boolean;
+    };
+    PageGameResponse: {
+      /** Format: int64 */
+      totalElements?: number;
+      /** Format: int32 */
+      totalPages?: number;
+      sort?: components['schemas']['Sort'];
+      first?: boolean;
+      last?: boolean;
+      /** Format: int32 */
+      number?: number;
+      /** Format: int32 */
+      numberOfElements?: number;
+      pageable?: components['schemas']['PageableObject'];
+      /** Format: int32 */
+      size?: number;
+      content?: components['schemas']['GameResponse'][];
+      empty?: boolean;
     };
   };
 }
@@ -970,7 +1033,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Tutorials loaded successfully. If there is already a tutorial for the user and gameId, that is not yet finished, no new tutorial will be created and the existing one will be returned. */
+      /** OK */
       200: {
         content: {
           'application/json': components['schemas']['PageTutorialProgressResponse'];
@@ -1043,10 +1106,10 @@ export interface operations {
       };
     };
     responses: {
-      /** Contains search results, can be empty */
+      /** OK */
       200: {
         content: {
-          'application/json': components['schemas']['Page'];
+          'application/json': components['schemas']['PagePurchasableResponse'];
         };
       };
       /** Unauthorized */
@@ -1292,10 +1355,10 @@ export interface operations {
       };
     };
     responses: {
-      /** Contains search results, can be empty */
+      /** OK */
       200: {
         content: {
-          'application/json': components['schemas']['Page'];
+          'application/json': components['schemas']['PageGameResponse'];
         };
       };
       /** Unauthorized */
@@ -1615,10 +1678,10 @@ export interface operations {
       };
     };
     responses: {
-      /** Returns a paginated array of notifications */
+      /** OK */
       200: {
         content: {
-          'application/json': components['schemas']['Page'][];
+          'application/json': components['schemas']['PageNotificationResponse'];
         };
       };
       /** Unauthorized */
@@ -1727,10 +1790,10 @@ export interface operations {
       };
     };
     responses: {
-      /** Contains match history, can be empty. */
+      /** OK */
       200: {
         content: {
-          'application/json': components['schemas']['Page'];
+          'application/json': components['schemas']['PageMatchResponse'];
         };
       };
       /** Unauthorized */
