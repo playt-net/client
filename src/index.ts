@@ -1,6 +1,11 @@
-import { ApiError, Fetcher, Middleware } from 'openapi-typescript-fetch';
+import {
+  ApiError,
+  ApiResponse,
+  Fetcher,
+  Middleware,
+} from 'openapi-typescript-fetch';
 import type { paths, components, operations } from './types';
-export type { paths, components, operations };
+export type { paths, components, operations, ApiError, ApiResponse };
 
 export type ClientCredentials = {
   clientId: string;
