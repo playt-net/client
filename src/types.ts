@@ -281,13 +281,13 @@ export interface components {
        * Format: int64
        * @description Amount of given currency in wallet
        */
-      amount?: number;
+      amount: number;
     };
     DenominationResponse: {
       identifier: string;
       /** Format: int32 */
-      totalPlayerCount?: number;
-      entryCost: components['schemas']['CurrencyResponse'][];
+      totalPlayerCount: number;
+      entryCosts: components['schemas']['CurrencyResponse'][];
       possibleWins: components['schemas']['CurrencyResponse'][];
     };
     /** @description Game holds all belongings of a game. */
@@ -314,11 +314,11 @@ export interface components {
       matchTiers: components['schemas']['MatchTierResponse'][];
       /** @description Game owner */
       ownerId: string;
-      /** Format: int32 */
-      popularity?: number;
       tags: string[];
       /** Format: int32 */
       playersCount?: number;
+      /** Format: int32 */
+      popularity?: number;
       /** Format: date-time */
       createdAt?: string;
       /** Format: date-time */
@@ -483,12 +483,22 @@ export interface components {
       email: string;
       /** @description User's password. Must be a least 6 characters long. */
       password: string;
+      /**
+       * @description The account type (PLAYER, DEVELOPER or STAFF) for the user.
+       * @enum {string}
+       */
+      accountType: 'PLAYER' | 'DEVELOPER' | 'STAFF';
     };
-    TokenResponse: {
+    AuthToken: {
       userId: string;
       accessToken: string;
+      /** Format: int64 */
+      expiresIn: number;
+      /** Format: int64 */
+      refreshExpiresIn: number;
       refreshToken: string;
-      expiresIn: string;
+      /** Format: int64 */
+      notBeforePolicy: number;
     };
     /** @description TokenExchange request to exchange the token with a new access token */
     RefreshExchangeRequest: {
@@ -559,44 +569,52 @@ export interface components {
     };
     PageableObject: {
       sort?: components['schemas']['Sort'];
-      paged?: boolean;
-      unpaged?: boolean;
       /** Format: int32 */
       pageNumber?: number;
       /** Format: int32 */
       pageSize?: number;
+      paged?: boolean;
+      unpaged?: boolean;
       /** Format: int64 */
       offset?: number;
     };
     Sort: {
-      unsorted?: boolean;
       sorted?: boolean;
+      unsorted?: boolean;
       empty?: boolean;
     };
     PagePurchasableResponse: {
+      content: components['schemas']['PurchasableResponse'][];
+      /** Format: int32 */
+      totalPages: number;
       /** Format: int64 */
-      totalElements?: number;
+      totalElements: number;
+      first: boolean;
+      last: boolean;
       /** Format: int32 */
-      totalPages?: number;
-      sort?: components['schemas']['Sort'];
-      first?: boolean;
-      last?: boolean;
+      number: number;
       /** Format: int32 */
-      number?: number;
+      size: number;
       /** Format: int32 */
-      numberOfElements?: number;
-      pageable?: components['schemas']['PageableObject'];
-      /** Format: int32 */
-      size?: number;
-      content?: components['schemas']['PurchasableResponse'][];
-      empty?: boolean;
+      numberOfElements: number;
+      empty: boolean;
     };
+    MatchNotificationPayloadResponse: {
+      id: string;
+      name: string;
+      status: string;
+      possibleWins: components['schemas']['CurrencyResponse'][];
+      participants: components['schemas']['ParticipantResponse'][];
+    };
+    /** @description Based on the type it contains an object such as MatchNotificationPayload when type is match */
+    NotificationPayloadResponse: Partial<
+      components['schemas']['MatchNotificationPayloadResponse']
+    >;
     /** @description NotificationResponse contains a type and a payload */
     NotificationResponse: {
       /** @enum {string} */
-      type?: 'match' | 'all';
-      /** @description Based on the type it contains an object such as MatchNotificationPayload when type is match */
-      payload?: { [key: string]: unknown };
+      type: 'match';
+      payload: components['schemas']['NotificationPayloadResponse'];
     };
     PageNotificationResponse: {
       /** Format: int64 */
@@ -626,7 +644,22 @@ export interface components {
        */
       createdAt: string;
     };
-    PageMatchResponse: {
+    MatchHistoryResponse: {
+      id: string;
+      participants: components['schemas']['ParticipantResponse'][];
+      result: components['schemas']['MatchResultResponse'];
+      matchTier: string;
+      denominationTier: string;
+      possibleWins: components['schemas']['CurrencyResponse'][];
+      entryCosts: components['schemas']['CurrencyResponse'][];
+      gameId: string;
+      /** Format: date-time */
+      timeoutAt: string;
+      /** Format: date-time */
+      finishedAt: string;
+      playerStates: { [key: string]: string };
+    };
+    PageMatchHistoryResponse: {
       /** Format: int64 */
       totalElements?: number;
       /** Format: int32 */
@@ -641,26 +674,24 @@ export interface components {
       pageable?: components['schemas']['PageableObject'];
       /** Format: int32 */
       size?: number;
-      content?: components['schemas']['MatchResponse'][];
+      content?: components['schemas']['MatchHistoryResponse'][];
       empty?: boolean;
     };
     PageGameResponse: {
+      content: components['schemas']['GameResponse'][];
+      /** Format: int32 */
+      totalPages: number;
       /** Format: int64 */
-      totalElements?: number;
+      totalElements: number;
+      first: boolean;
+      last: boolean;
       /** Format: int32 */
-      totalPages?: number;
-      sort?: components['schemas']['Sort'];
-      first?: boolean;
-      last?: boolean;
+      number: number;
       /** Format: int32 */
-      number?: number;
+      size: number;
       /** Format: int32 */
-      numberOfElements?: number;
-      pageable?: components['schemas']['PageableObject'];
-      /** Format: int32 */
-      size?: number;
-      content?: components['schemas']['GameResponse'][];
-      empty?: boolean;
+      numberOfElements: number;
+      empty: boolean;
     };
   };
 }
@@ -1523,7 +1554,7 @@ export interface operations {
       /** The user was created */
       201: {
         content: {
-          'application/json': components['schemas']['TokenResponse'];
+          'application/json': components['schemas']['AuthToken'];
         };
       };
       /** User creation failed */
@@ -1555,7 +1586,7 @@ export interface operations {
       /** The Refresh was successful */
       201: {
         content: {
-          'application/json': components['schemas']['TokenResponse'];
+          'application/json': components['schemas']['AuthToken'];
         };
       };
       /** Refresh failed */
@@ -1587,7 +1618,7 @@ export interface operations {
       /** The login was successful */
       201: {
         content: {
-          'application/json': components['schemas']['TokenResponse'];
+          'application/json': components['schemas']['AuthToken'];
         };
       };
       /** Login failed */
@@ -1793,7 +1824,7 @@ export interface operations {
       /** OK */
       200: {
         content: {
-          'application/json': components['schemas']['PageMatchResponse'];
+          'application/json': components['schemas']['PageMatchHistoryResponse'];
         };
       };
       /** Unauthorized */
