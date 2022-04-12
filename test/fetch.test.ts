@@ -17,6 +17,7 @@ describe('fetch', () => {
       await client.postRegister({
         email: 'invalid_mail',
         password: 'pw',
+        accountType: 'PLAYER',
       });
       throw Error('Should fail without credentials');
     } catch (error) {
