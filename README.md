@@ -52,6 +52,7 @@ const client = PlaytClient({
 const { ok, data: auth } = await client.postRegister({
   email: 'user@playt.net',
   password: 'myAwesomePassword!!1',
+  accountType: 'PLAYER',
 });
 
 // Login a user
@@ -64,6 +65,19 @@ const { ok, data: auth } = await client.postLogin({
 const { ok, data: auth } = await client.postAuthRefresh({
   refreshToken: 'XXX',
 });
+```
+
+## API Key Usage
+
+When you want to connect an application to our API you must generate an API Key first.
+
+You can then use the client as follows:
+
+```ts
+import { PlaytClient } from '@playt/client';
+
+// Create a new client with API Key
+const client = PlaytClient({ apiKey: '<API_KEY>' });
 ```
 
 ## API
