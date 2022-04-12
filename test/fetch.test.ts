@@ -17,12 +17,13 @@ describe('fetch', () => {
       await client.postRegister({
         email: 'invalid_mail',
         password: 'pw',
+        accountType: 'PLAYER',
       });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
-      expect(status).toBe(409);
-      expect(statusText).toBe('Conflict');
+      expect(status).toBe(401);
+      expect(statusText).toBe('Unauthorized');
     }
   });
   it('postAuthRefresh', async () => {
@@ -33,8 +34,8 @@ describe('fetch', () => {
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
-      expect(status).toBe(409);
-      expect(statusText).toBe('Conflict');
+      expect(status).toBe(401);
+      expect(statusText).toBe('Unauthorized');
     }
   });
   it('postLogin', async () => {
@@ -43,11 +44,11 @@ describe('fetch', () => {
         email: 'invalid_mail',
         password: 'pw',
       });
-      throw Error('Should fail without credentials');
+      throw Error('Should fail with invalid crendentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
-      expect(status).toBe(409);
-      expect(statusText).toBe('Conflict');
+      expect(status).toBe(401);
+      expect(statusText).toBe('Unauthorized');
     }
   });
   it('getCurrentUser', async () => {
