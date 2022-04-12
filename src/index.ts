@@ -20,12 +20,14 @@ export type PLAYTClientProps = {
   clientCredentials?: ClientCredentials;
   userAuth?: UserAuth;
   onRequestRefresh?: () => Promise<UserAuth | null>;
+  apiKey?: string;
   apiHost?: string;
 };
 export const PlaytClient = ({
   clientCredentials,
   userAuth,
   onRequestRefresh,
+  apiKey,
   apiHost = 'https://playt-backend-xbwjl.ondigitalocean.app',
 }: PLAYTClientProps) => {
   const fetcher = Fetcher.for<paths>();
@@ -41,6 +43,8 @@ export const PlaytClient = ({
         );
       } else if (userAuth?.accessToken) {
         init.headers.set('Authorization', `Bearer ${userAuth.accessToken}`);
+      } else if (apiKey) {
+        init.headers.set('X-Api-Key', apiKey);
       }
       const response = await next(url, init);
       return response;
