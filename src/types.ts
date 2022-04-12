@@ -206,7 +206,7 @@ export interface components {
     /** @description UpdateTutorial holds the required information to update a TutorialProgress */
     UpdateTutorialRequest: {
       /** @description State of the tutorial */
-      finished?: boolean;
+      finished: boolean;
     };
     /** @description TutorialProgress contains the current state of a given game tutorial for a player */
     TutorialProgressResponse: {
@@ -217,11 +217,11 @@ export interface components {
       /** @description Tutorial game */
       gameId: string;
       /** @description Tutorial game */
-      finished?: boolean;
+      finished: boolean;
       /** Format: date-time */
-      createdAt?: string;
+      createdAt: string;
       /** Format: date-time */
-      updatedAt?: string;
+      updatedAt: string;
     };
     UpdatePurchasableRequest: {
       title: string;
@@ -232,7 +232,7 @@ export interface components {
       /** Format: int32 */
       price?: number;
       /** Format: int32 */
-      amount?: number;
+      amount: number;
       properties: { [key: string]: string };
       tags: string[];
       /** Format: int32 */
@@ -254,13 +254,12 @@ export interface components {
       /** Format: int32 */
       bonus?: number;
       /** Format: int32 */
-      amount?: number;
-      properties: { [key: string]: string };
+      amount: number;
       tags: string[];
       /** Format: date-time */
-      createdAt?: string;
+      createdAt: string;
       /** Format: date-time */
-      updatedAt?: string;
+      updatedAt: string;
     };
     UpdateGameRequest: {
       title: string;
@@ -268,7 +267,7 @@ export interface components {
       iconUrl: string;
       bannerUrl: string;
       description: string;
-      tutorialVideoUrl?: string;
+      tutorialVideoUrl: string;
       genre: string;
       matchTiers: string[];
       gameUrl: string;
@@ -310,32 +309,32 @@ export interface components {
       genre: string;
       /** @description Game genre */
       gameUrl: string;
-      /** @description Game genre */
+      /** @description Playable match tiers */
       matchTiers: components['schemas']['MatchTierResponse'][];
       /** @description Game owner */
       ownerId: string;
       tags: string[];
       /** Format: int32 */
-      playersCount?: number;
+      playersCount: number;
       /** Format: int32 */
-      popularity?: number;
+      popularity: number;
       /** Format: date-time */
-      createdAt?: string;
+      createdAt: string;
       /** Format: date-time */
-      updatedAt?: string;
+      updatedAt: string;
     };
-    /** @description Game genre */
+    /** @description Playable match tiers */
     MatchTierResponse: {
       identifier: string;
       playerPool: string;
-      realTime?: boolean;
+      realtime: boolean;
       denominations: components['schemas']['DenominationResponse'][];
     };
     ApiKeyResponse: {
       ownerId: string;
       gameId: string;
       value: string;
-      revoked?: boolean;
+      revoked: boolean;
     };
     /** @description CreateTutorial holds the required information to create a TutorialProgress */
     CreateTutorialRequest: {
@@ -395,8 +394,8 @@ export interface components {
     MatchResponse: {
       id: string;
       playerTokens: string[];
-      matchState: string;
-      matchingState: string;
+      /** @enum {string} */
+      matchState: 'creating' | 'running' | 'finished' | 'deleted';
       participants: components['schemas']['ParticipantResponse'][];
       result: components['schemas']['MatchResultResponse'];
       matchTier: string;
@@ -413,7 +412,7 @@ export interface components {
       scoreSnapshots: components['schemas']['ScoreSnapshotResponse'][];
       seed: string;
       availableReplays: components['schemas']['AvailableReplayResponse'][];
-      playerStates?: { [key: string]: string };
+      playerStates: { [key: string]: string };
     };
     MatchResultResponse: {
       winners: components['schemas']['ParticipantResultResponse'][];
@@ -427,9 +426,9 @@ export interface components {
     ParticipantResultResponse: {
       userId: string;
       /** Format: int32 */
-      score?: number;
-      username?: string;
-      avatarUrl?: string;
+      score: number;
+      username: string;
+      avatarUrl: string;
     };
     ScoreSnapshotResponse: {
       userId: string;
@@ -437,7 +436,7 @@ export interface components {
       score?: number;
       /** Format: date-time */
       timestamp: string;
-      finalSnapshot?: boolean;
+      finalSnapshot: boolean;
     };
     CreateGameRequest: {
       title: string;
@@ -457,7 +456,7 @@ export interface components {
     CheckoutItemResponse: {
       purchasableId: string;
       /** Format: int32 */
-      amount?: number;
+      amount: number;
     };
     CheckoutResponse: {
       items: components['schemas']['CheckoutItemResponse'][];
@@ -466,12 +465,12 @@ export interface components {
     AddItemRequest: {
       purchasableId: string;
       /** Format: int32 */
-      amount?: number;
+      amount: number;
     };
     BasketItemResponse: {
       purchasableId: string;
       /** Format: int32 */
-      amount?: number;
+      amount: number;
     };
     BasketResponse: {
       userId: string;
@@ -521,7 +520,7 @@ export interface components {
     UpdateItemRequest: {
       purchasableId: string;
       /** Format: int32 */
-      amount?: number;
+      amount: number;
     };
     /** @description Wallet entries */
     WalletEntryResponse: {
@@ -531,7 +530,7 @@ export interface components {
        * Format: int32
        * @description Amount of given purchasable in wallet
        */
-      amount?: number;
+      amount: number;
     };
     /** @description Wallet holds all belongings of a user. It contains purchasables and currencies. */
     WalletResponse: {
@@ -550,38 +549,20 @@ export interface components {
       sort?: string[];
     };
     PageTutorialProgressResponse: {
+      content: components['schemas']['TutorialProgressResponse'][];
+      /** Format: int32 */
+      totalPages: number;
       /** Format: int64 */
-      totalElements?: number;
+      totalElements: number;
+      first: boolean;
+      last: boolean;
       /** Format: int32 */
-      totalPages?: number;
-      sort?: components['schemas']['Sort'];
-      first?: boolean;
-      last?: boolean;
+      number: number;
       /** Format: int32 */
-      number?: number;
+      size: number;
       /** Format: int32 */
-      numberOfElements?: number;
-      pageable?: components['schemas']['PageableObject'];
-      /** Format: int32 */
-      size?: number;
-      content?: components['schemas']['TutorialProgressResponse'][];
-      empty?: boolean;
-    };
-    PageableObject: {
-      sort?: components['schemas']['Sort'];
-      /** Format: int32 */
-      pageNumber?: number;
-      /** Format: int32 */
-      pageSize?: number;
-      paged?: boolean;
-      unpaged?: boolean;
-      /** Format: int64 */
-      offset?: number;
-    };
-    Sort: {
-      sorted?: boolean;
-      unsorted?: boolean;
-      empty?: boolean;
+      numberOfElements: number;
+      empty: boolean;
     };
     PagePurchasableResponse: {
       content: components['schemas']['PurchasableResponse'][];
@@ -617,22 +598,20 @@ export interface components {
       payload: components['schemas']['NotificationPayloadResponse'];
     };
     PageNotificationResponse: {
+      content: components['schemas']['NotificationResponse'][];
+      /** Format: int32 */
+      totalPages: number;
       /** Format: int64 */
-      totalElements?: number;
+      totalElements: number;
+      first: boolean;
+      last: boolean;
       /** Format: int32 */
-      totalPages?: number;
-      sort?: components['schemas']['Sort'];
-      first?: boolean;
-      last?: boolean;
+      number: number;
       /** Format: int32 */
-      number?: number;
+      size: number;
       /** Format: int32 */
-      numberOfElements?: number;
-      pageable?: components['schemas']['PageableObject'];
-      /** Format: int32 */
-      size?: number;
-      content?: components['schemas']['NotificationResponse'][];
-      empty?: boolean;
+      numberOfElements: number;
+      empty: boolean;
     };
     /** @description A finished replay that was found. */
     FindReplayResponse: {
@@ -660,22 +639,20 @@ export interface components {
       playerStates: { [key: string]: string };
     };
     PageMatchHistoryResponse: {
+      content: components['schemas']['MatchHistoryResponse'][];
+      /** Format: int32 */
+      totalPages: number;
       /** Format: int64 */
-      totalElements?: number;
+      totalElements: number;
+      first: boolean;
+      last: boolean;
       /** Format: int32 */
-      totalPages?: number;
-      sort?: components['schemas']['Sort'];
-      first?: boolean;
-      last?: boolean;
+      number: number;
       /** Format: int32 */
-      number?: number;
+      size: number;
       /** Format: int32 */
-      numberOfElements?: number;
-      pageable?: components['schemas']['PageableObject'];
-      /** Format: int32 */
-      size?: number;
-      content?: components['schemas']['MatchHistoryResponse'][];
-      empty?: boolean;
+      numberOfElements: number;
+      empty: boolean;
     };
     PageGameResponse: {
       content: components['schemas']['GameResponse'][];
