@@ -65,8 +65,6 @@ describe('fetch', () => {
     try {
       await client.putCurrentUser({
         username: '',
-        firstname: '',
-        lastname: '',
         avatarUrl: '',
       });
       throw Error('Should fail without credentials');
@@ -412,7 +410,12 @@ describe('fetch', () => {
   });
   it('postScore', async () => {
     try {
-      await client.postScore({ id: '1', playerToken: '1', score: 1 });
+      await client.postScore({
+        id: '1',
+        playerToken: '1',
+        score: 1,
+        finalSnapshot: false,
+      });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
