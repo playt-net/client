@@ -65,8 +65,6 @@ describe('fetch', () => {
     try {
       await client.putCurrentUser({
         username: '',
-        firstname: '',
-        lastname: '',
         avatarUrl: '',
       });
       throw Error('Should fail without credentials');
@@ -92,11 +90,11 @@ describe('fetch', () => {
   it('getUser', async () => {
     try {
       await client.getUser({ id: '1' });
-      throw Error('Should fail without credentials');
+      throw Error('Should fail for unknown user');
     } catch (error) {
       const { status, statusText } = error as ApiError;
-      expect(status).toBe(401);
-      expect(statusText).toBe('Unauthorized');
+      expect(status).toBe(404);
+      expect(statusText).toBe('Not Found');
     }
   });
   it('getTutorials', async () => {
@@ -412,7 +410,12 @@ describe('fetch', () => {
   });
   it('postScore', async () => {
     try {
-      await client.postScore({ id: '1', playerToken: '1', score: 1 });
+      await client.postScore({
+        id: '1',
+        playerToken: '1',
+        score: 1,
+        finalSnapshot: false,
+      });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
