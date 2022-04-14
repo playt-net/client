@@ -192,15 +192,11 @@ export interface components {
     };
     UpdateUserRequest: {
       username: string;
-      firstname: string;
-      lastname: string;
       avatarUrl: string;
     };
     UserResponse: {
       id: string;
       username: string;
-      firstname: string;
-      lastname: string;
       avatarUrl: string;
     };
     /** @description UpdateTutorial holds the required information to update a TutorialProgress */
@@ -382,7 +378,7 @@ export interface components {
       /** Format: int32 */
       score: number;
       playerToken: string;
-      final?: boolean;
+      finalSnapshot: boolean;
     };
     JoinMatchRequest: {
       playerToken: string;
@@ -513,8 +509,6 @@ export interface components {
     };
     PatchUserRequest: {
       username?: string;
-      firstname?: string;
-      lastname?: string;
       avatarUrl?: string;
     };
     UpdateItemRequest: {
@@ -1316,8 +1310,8 @@ export interface operations {
   };
   joinMatch: {
     responses: {
-      /** Accepted */
-      202: {
+      /** OK */
+      200: {
         content: {
           'application/json': components['schemas']['MatchResponse'];
         };
