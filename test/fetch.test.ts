@@ -90,11 +90,11 @@ describe('fetch', () => {
   it('getUser', async () => {
     try {
       await client.getUser({ id: '1' });
-      throw Error('Should fail without credentials');
+      throw Error('Should fail for unknown user');
     } catch (error) {
       const { status, statusText } = error as ApiError;
-      expect(status).toBe(401);
-      expect(statusText).toBe('Unauthorized');
+      expect(status).toBe(404);
+      expect(statusText).toBe('Not Found');
     }
   });
   it('getTutorials', async () => {
