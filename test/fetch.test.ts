@@ -313,7 +313,7 @@ describe('fetch', () => {
   });
   it('getMatchHistory', async () => {
     try {
-      await client.getMatchHistory({});
+      await client.getMatchHistory({ id: '' });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;

@@ -122,7 +122,10 @@ export const PlaytClient = ({
     .path('/match/playerToken/{playerToken}')
     .method('get')
     .create();
-  const getMatchHistory = fetcher.path('/match/history').method('get').create();
+  const getMatchHistory = fetcher
+    .path('/match/history/{id}')
+    .method('get')
+    .create();
   const getMatch = fetcher.path('/match/{id}').method('get').create();
   const deleteMatch = fetcher.path('/match/{id}').method('delete').create();
   const postMatchJoin = fetcher.path('/match/join').method('post').create();

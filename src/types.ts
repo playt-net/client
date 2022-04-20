@@ -90,7 +90,7 @@ export interface paths {
   '/match/playerToken/{playerToken}': {
     get: operations['getByPlayerToken'];
   };
-  '/match/history': {
+  '/match/history/{id}': {
     get: operations['getHistoryForUser'];
   };
   '/basket': {
@@ -359,12 +359,17 @@ export interface components {
       matchTier: string;
       denominationTier: string;
     };
+    PlayerResponse: {
+      userId: string;
+      username: string;
+      avatarUrl: string;
+    };
     TicketResponse: {
       id: string;
       playerToken: string;
-      playerIds: string[];
       ticketIds: string[];
       status: string;
+      players: components['schemas']['PlayerResponse'][];
     };
     CancelSearchRequest: {
       ticketId: string;
@@ -1782,6 +1787,9 @@ export interface operations {
   };
   getHistoryForUser: {
     parameters: {
+      path: {
+        id: string;
+      };
       query: {
         /** Zero-based page index (0..N) */
         page?: number;
