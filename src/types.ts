@@ -48,6 +48,9 @@ export interface paths {
   '/match/{id}/score': {
     post: operations['updateScore'];
   };
+  '/match/{id}/abort': {
+    post: operations['abortPlayer'];
+  };
   '/match/join': {
     post: operations['joinMatch'];
   };
@@ -385,7 +388,7 @@ export interface components {
       playerToken: string;
       finalSnapshot: boolean;
     };
-    JoinMatchRequest: {
+    AbortPlayerRequest: {
       playerToken: string;
     };
     AvailableReplayResponse: {
@@ -411,7 +414,6 @@ export interface components {
       /** Format: date-time */
       finishedAt?: string;
       scoreSnapshots: components['schemas']['ScoreSnapshotResponse'][];
-      seed: string;
       availableReplays: components['schemas']['AvailableReplayResponse'][];
       playerStates: { [key: string]: string };
     };
@@ -438,6 +440,9 @@ export interface components {
       /** Format: date-time */
       timestamp: string;
       finalSnapshot: boolean;
+    };
+    JoinMatchRequest: {
+      playerToken: string;
     };
     CreateGameRequest: {
       title: string;
@@ -1313,6 +1318,44 @@ export interface operations {
       };
     };
   };
+  abortPlayer: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** Player was aborted and can no longer play */
+      202: {
+        content: {
+          'application/json': components['schemas']['MatchResponse'];
+        };
+      };
+      /** API Key is not valid */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Match with player token was not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AbortPlayerRequest'];
+      };
+    };
+  };
   joinMatch: {
     responses: {
       /** OK */
@@ -1733,7 +1776,7 @@ export interface operations {
       };
     };
     responses: {
-      /** OK */
+      /** Match with given id is found */
       200: {
         content: {
           'application/json': components['schemas']['MatchResponse'];
@@ -1741,6 +1784,12 @@ export interface operations {
       };
       /** Unauthorized */
       401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Match with given id can not be found */
+      404: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
         };
@@ -1771,7 +1820,7 @@ export interface operations {
       };
     };
     responses: {
-      /** OK */
+      /** Match with player token is found */
       200: {
         content: {
           'application/json': components['schemas']['MatchResponse'];
@@ -1779,6 +1828,12 @@ export interface operations {
       };
       /** Unauthorized */
       401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Match with player token can not be found */
+      404: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
         };
