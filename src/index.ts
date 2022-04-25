@@ -138,6 +138,7 @@ export const PlaytClient = ({
     .method('post')
     .create();
   const postScore = fetcher.path('/match/{id}/score').method('post').create();
+  const postAbort = fetcher.path('/match/{id}/abort').method('post').create();
 
   const postMatchmakingSearch = fetcher
     .path('/matchmaking/search')
@@ -210,6 +211,7 @@ export const PlaytClient = ({
     postRegister,
     postReplay,
     postScore,
+    postAbort,
     postTutorial,
     putCurrentUser,
     putGame,
