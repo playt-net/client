@@ -389,7 +389,7 @@ describe('fetch', () => {
     try {
       await client.getReplay({
         matchId: '1',
-        userId: '1',
+        playerToken: '1',
       });
       throw Error('Should fail without credentials');
     } catch (error) {
@@ -400,7 +400,7 @@ describe('fetch', () => {
   });
   it('postReplay', async () => {
     try {
-      await client.postReplay({ matchId: '1', userId: '1', payload: 'a' });
+      await client.postReplay({ matchId: '1', playerToken: '1', payload: 'a' });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
