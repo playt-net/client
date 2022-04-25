@@ -423,6 +423,19 @@ describe('fetch', () => {
       expect(statusText).toBe('Unauthorized');
     }
   });
+  it('postAbort', async () => {
+    try {
+      await client.postAbort({
+        id: '1',
+        playerToken: '1',
+      });
+      throw Error('Should fail without credentials');
+    } catch (error) {
+      const { status, statusText } = error as ApiError;
+      expect(status).toBe(401);
+      expect(statusText).toBe('Unauthorized');
+    }
+  });
   it('getBasket', async () => {
     try {
       await client.getBasket({});
