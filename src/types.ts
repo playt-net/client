@@ -41,7 +41,7 @@ export interface paths {
   '/matchmaking/cancel': {
     post: operations['cancelSearch'];
   };
-  '/match/{matchId}/replay/{userId}': {
+  '/match/{matchId}/replay/{playerToken}': {
     get: operations['findReplay'];
     post: operations['saveReplay'];
   };
@@ -403,7 +403,7 @@ export interface components {
       participants: components['schemas']['ParticipantResponse'][];
       result: components['schemas']['MatchResultResponse'];
       matchTier: string;
-      denominationTier: string;
+      denomination: components['schemas']['DenominationResponse'];
       possibleWins: components['schemas']['CurrencyResponse'][];
       entryCosts: components['schemas']['CurrencyResponse'][];
       gameId: string;
@@ -1225,7 +1225,7 @@ export interface operations {
     parameters: {
       path: {
         matchId: string;
-        userId: string;
+        playerToken: string;
       };
     };
     responses: {
@@ -1235,7 +1235,7 @@ export interface operations {
           'application/json': components['schemas']['FindReplayResponse'];
         };
       };
-      /** When the match is not found or the userId is not part of the match. */
+      /** When the match is not found or the playerToken is not part of the match. */
       400: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
@@ -1265,7 +1265,7 @@ export interface operations {
     parameters: {
       path: {
         matchId: string;
-        userId: string;
+        playerToken: string;
       };
     };
     responses: {
@@ -1283,7 +1283,7 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponse'];
         };
       };
-      /** If a replay already exists for this match+user, the match was not found, the match is already finished for the user or the userId is not part of the match. */
+      /** If a replay already exists for this match+player, the match was not found, the match is already finished for the user or the player is not part of the match. */
       409: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];

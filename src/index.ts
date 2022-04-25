@@ -130,11 +130,11 @@ export const PlaytClient = ({
   const deleteMatch = fetcher.path('/match/{id}').method('delete').create();
   const postMatchJoin = fetcher.path('/match/join').method('post').create();
   const getReplay = fetcher
-    .path('/match/{matchId}/replay/{userId}')
+    .path('/match/{matchId}/replay/{playerToken}')
     .method('get')
     .create();
   const postReplay = fetcher
-    .path('/match/{matchId}/replay/{userId}')
+    .path('/match/{matchId}/replay/{playerToken}')
     .method('post')
     .create();
   const postScore = fetcher.path('/match/{id}/score').method('post').create();
