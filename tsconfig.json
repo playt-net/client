@@ -3,15 +3,21 @@
     "baseUrl": "./src",
     "declaration": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "lib": ["dom", "dom.iterable", "ES2020"],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "moduleResolution": "Node",
-    "noImplicitReturns": true,
-    "removeComments": true,
-    "sourceMap": true,
     "strict": true,
-    "target": "ES2015",
-    "useDefineForClassFields": true
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "inlineSourceMap": false,
+    "listEmittedFiles": false,
+    "listFiles": false,
+    "noFallthroughCasesInSwitch": true,
+    "pretty": true,
+    "resolveJsonModule": true,
+    "rootDir": "src",
+    "skipLibCheck": true,
+    "traceResolution": false,
+    "types": ["node", "jest"]
   },
   "include": ["src", "test"]
 }

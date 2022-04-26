@@ -15,6 +15,7 @@
   ],
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
   "exports": {
     "browser": "./dist/esm/index.js",
     "import": "./dist/esm/index.js",
@@ -33,13 +34,13 @@
   "homepage": "https://github.com/playt-net/client#readme",
   "scripts": {
     "clean": "rimraf './dist'",
-    "build": "npm run clean && tsc --project tsconfig.esm.json && tsc --project tsconfig.cjs.json",
+    "build": "npm run clean && tsc --project tsconfig.esm.json && tsc --project tsconfig.cjs.json && ./fixup",
     "generate": "openapi-typescript https://playt-backend-xbwjl.ondigitalocean.app/v3/api-docs --output src/types.ts --prettier-config .prettierrc.json",
     "test": "jest",
     "typecheck": "tsc --noEmit --project tsconfig.json"
   },
   "dependencies": {
-    "openapi-typescript-fetch": "git+https://github.com/ajaishankar/openapi-typescript-fetch.git"
+    "openapi-typescript-fetch": "git+https://github.com/lmachens/openapi-typescript-fetch.git"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",
