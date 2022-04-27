@@ -132,7 +132,7 @@ export const PlaytClient = ({
   const deleteMatch = fetcher.path('/match/{id}').method('delete').create();
   const postMatchJoin = fetcher.path('/match/join').method('post').create();
   const getReplay = fetcher
-    .path('/match/{matchId}/replay/{playerToken}')
+    .path('/match/{matchId}/replay/{userId}')
     .method('get')
     .create();
   const postReplay = fetcher

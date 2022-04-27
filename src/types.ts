@@ -42,7 +42,6 @@ export interface paths {
     post: operations['cancelSearch'];
   };
   '/match/{matchId}/replay/{playerToken}': {
-    get: operations['findReplay'];
     post: operations['saveReplay'];
   };
   '/match/{id}/score': {
@@ -85,6 +84,9 @@ export interface paths {
   };
   '/matchmaking/ticket/{id}': {
     get: operations['getTicketStatus'];
+  };
+  '/match/{matchId}/replay/{userId}': {
+    get: operations['findReplay'];
   };
   '/match/{id}': {
     get: operations['getById_3'];
@@ -397,7 +399,7 @@ export interface components {
     };
     MatchResponse: {
       id: string;
-      playerTokens: string[];
+      players: string[];
       /** @enum {string} */
       matchState: 'creating' | 'running' | 'finished' | 'deleted';
       participants: components['schemas']['ParticipantResponse'][];
@@ -1221,46 +1223,6 @@ export interface operations {
       };
     };
   };
-  findReplay: {
-    parameters: {
-      path: {
-        matchId: string;
-        playerToken: string;
-      };
-    };
-    responses: {
-      /** The finished replay was found */
-      200: {
-        content: {
-          'application/json': components['schemas']['FindReplayResponse'];
-        };
-      };
-      /** When the match is not found or the playerToken is not part of the match. */
-      400: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-      /** Unauthorized */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-      /** When the replay can not be found even though the match is finished. */
-      404: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-      /** When the player has not yet submitted a final score for the match where the replay stored for. */
-      409: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-    };
-  };
   saveReplay: {
     parameters: {
       path: {
@@ -1763,6 +1725,46 @@ export interface operations {
       };
       /** Ticket was not found */
       404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  findReplay: {
+    parameters: {
+      path: {
+        matchId: string;
+        userId: string;
+      };
+    };
+    responses: {
+      /** The finished replay was found */
+      200: {
+        content: {
+          'application/json': components['schemas']['FindReplayResponse'];
+        };
+      };
+      /** When the match is not found or the playerToken is not part of the match. */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** When the replay can not be found even though the match is finished. */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** When the player has not yet submitted a final score for the match where the replay stored for. */
+      409: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
         };

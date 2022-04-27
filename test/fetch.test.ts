@@ -389,7 +389,7 @@ describe('fetch', () => {
     try {
       await client.getReplay({
         matchId: '1',
-        playerToken: '1',
+        userId: '1',
       });
       throw Error('Should fail without credentials');
     } catch (error) {
