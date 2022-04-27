@@ -1,11 +1,13 @@
-import {
-  ApiError,
+import type {
   ApiResponse,
-  Fetcher,
   Middleware,
+  ApiError as ApiErrorType,
 } from 'openapi-typescript-fetch';
+import { ApiError, Fetcher } from 'openapi-typescript-fetch';
+
 import type { paths, components, operations } from './types';
 export type { paths, components, operations, ApiResponse };
+
 export { ApiError };
 
 export type ClientCredentials = {
@@ -49,7 +51,7 @@ export const PlaytClient = ({
       const response = await next(url, init);
       return response;
     } catch (error) {
-      const { status } = error as ApiError;
+      const { status } = error as ApiErrorType;
 
       if (status === 401 && userAuth?.refreshToken && onRequestRefresh) {
         const refreshedUserAuth = await onRequestRefresh();
