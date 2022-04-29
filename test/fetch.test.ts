@@ -313,12 +313,14 @@ describe('fetch', () => {
   });
   it('getMatchHistory', async () => {
     try {
-      await client.getMatchHistory({ id: '' });
+      await client.getMatchHistory({
+        userId: '',
+      });
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
-      expect(status).toBe(401);
-      expect(statusText).toBe('Unauthorized');
+      expect(status).toBe(404);
+      expect(statusText).toBe('Not Found');
     }
   });
   it('getMatch', async () => {
