@@ -95,7 +95,13 @@ export interface paths {
   '/match/playerToken/{playerToken}': {
     get: operations['getByPlayerToken'];
   };
+  '/match/history': {
+    get: operations['searchHistory'];
+  };
   '/match/history/{id}': {
+    get: operations['getHistoryById'];
+  };
+  '/match/history/user/{userId}': {
     get: operations['getHistoryForUser'];
   };
   '/basket': {
@@ -491,10 +497,10 @@ export interface components {
       /** @description User's password. Must be a least 6 characters long. */
       password: string;
       /**
-       * @description The account type (PLAYER, DEVELOPER or STAFF) for the user.
+       * @description The account type for the user.
        * @enum {string}
        */
-      accountType: 'PLAYER' | 'DEVELOPER' | 'STAFF';
+      accountType: 'player' | 'developer' | 'staff';
     };
     AuthToken: {
       userId: string;
@@ -506,6 +512,13 @@ export interface components {
       refreshToken: string;
       /** Format: int64 */
       notBeforePolicy: number;
+      /**
+       * @description A user can have multiple roles. Though normally only one of those is defined to reflect the account type but can also be other roles.
+       * @enum {array}
+       */
+      roles: 'ROLE_PLAYER' | 'ROLE_DEVELOPER' | 'ROLE_STAFF';
+      /** @description The account types for the user. Normally only one. This will contain only roles that represent account types without any prefix. */
+      accountTypes: ('player' | 'developer' | 'staff')[];
     };
     /** @description TokenExchange request to exchange the token with a new access token */
     RefreshExchangeRequest: {
@@ -1245,7 +1258,7 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponse'];
         };
       };
-      /** If a replay already exists for this match+player, the match was not found, the match is already finished for the user or the player is not part of the match. */
+      /** If a replay already exists for this match+player, the match was not found, the match is already finished (final score submitted or aborted) for the user or the player is not part of the match. */
       409: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
@@ -1293,7 +1306,7 @@ export interface operations {
           'application/json': components['schemas']['MatchResponse'];
         };
       };
-      /** Playertoken is valid but the match id is invalid */
+      /** API Key is not valid */
       400: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
@@ -1763,7 +1776,7 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponse'];
         };
       };
-      /** When the player has not yet submitted a final score for the match where the replay stored for. */
+      /** When the player has not yet submitted a final score for the match where the replay should be stored for. */
       409: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
@@ -1842,10 +1855,79 @@ export interface operations {
       };
     };
   };
-  getHistoryForUser: {
+  searchHistory: {
+    parameters: {
+      query: {
+        /** Zero-based page index (0..N) */
+        page?: number;
+        /** The size of the page to be returned */
+        size?: number;
+        /** Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported. */
+        sort?: string[];
+        gameId?: string;
+        timeoutAt?: string;
+        denominationTier?: string;
+        playerStates?: {
+          [key: string]: 'JOINING' | 'PLAYING' | 'ABORTED' | 'FINISHED';
+        };
+        finishedAt?: string;
+        result?: string;
+        createdAt?: string;
+        possibleWins?: string;
+        entryCosts?: string;
+        id?: string;
+        matchId?: string;
+        matchTier?: string;
+        participants?: string;
+        updatedAt?: string;
+      };
+    };
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          'application/json': components['schemas']['PageMatchHistoryResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  getHistoryById: {
     parameters: {
       path: {
         id: string;
+      };
+    };
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          'application/json': components['schemas']['MatchHistoryResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** MatchHistory was not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  getHistoryForUser: {
+    parameters: {
+      path: {
+        userId: string;
       };
       query: {
         /** Zero-based page index (0..N) */
