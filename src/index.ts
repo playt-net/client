@@ -125,7 +125,7 @@ export const PlaytClient = ({
     .method('get')
     .create();
   const getMatchHistory = fetcher
-    .path('/match/history/{id}')
+    .path('/match/history/user/{userId}')
     .method('get')
     .create();
   const getMatch = fetcher.path('/match/{id}').method('get').create();
