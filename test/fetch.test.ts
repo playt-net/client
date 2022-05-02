@@ -2,16 +2,51 @@ import { ApiError } from 'openapi-typescript-fetch';
 import 'whatwg-fetch';
 import { PlaytClient } from '../src/index';
 
-const client = PlaytClient({
+const client = new PlaytClient({
   clientCredentials: {
     clientId: 'API_CLIENT_ID',
     clientSecret: 'API_CLIENT_SECRET',
   },
 });
+
 /**
  * These tests should not replace backend tests, but make sure that the services are available.
  */
 describe('fetch', () => {
+  it('multiple clients', async () => {
+    const client1 = new PlaytClient({
+      clientCredentials: {
+        clientId: 'API_CLIENT_ID_1',
+        clientSecret: 'API_CLIENT_SECRET_1',
+      },
+    });
+    const client2 = new PlaytClient({
+      clientCredentials: {
+        clientId: 'API_CLIENT_ID_2',
+        clientSecret: 'API_CLIENT_SECRET_2',
+      },
+    });
+    const { ok: ok1 } = await client1.getGames({});
+    const { ok: ok2 } = await client2.getGames({});
+    expect(ok1).toBe(true);
+    expect(ok2).toBe(true);
+  });
+  it('updates props', async () => {
+    try {
+      const client = new PlaytClient({});
+      const { ok } = await client.getGames({});
+      expect(ok).toBe(true);
+      client.setProps({
+        apiHost: client.apiHost + '/do/not/exist',
+      });
+      await client.getGames({});
+      throw Error('Should fail with invalid apiHost');
+    } catch (error) {
+      const { status, statusText } = error as ApiError;
+      expect(status).toBe(401);
+      expect(statusText).toBe('Unauthorized');
+    }
+  });
   it('postRegister', async () => {
     try {
       await client.postRegister({

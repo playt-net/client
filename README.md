@@ -21,7 +21,7 @@ import { PlaytClient } from '@playt/client';
 
 // Create a new client with User Credentials (client side)
 // You need to authenticate with the server first to receive access and refresh tokens
-const client = PlaytClient({
+const client = new PlaytClient({
   userAuth: {
     accessToken: 'XXX',
     refreshToken: 'XXX',
@@ -40,7 +40,7 @@ On server side, you have access to `/auth` routes for login, register and token 
 import { PlaytClient } from '@playt/client';
 
 // Create a new client with Client Credentials (server side)
-const client = PlaytClient({
+const client = new PlaytClient({
   clientCredentials: {
     clientId: 'API_CLIENT_ID',
     clientSecret: 'API_CLIENT_SECRET',
@@ -77,7 +77,20 @@ You can then use the client as follows:
 import { PlaytClient } from '@playt/client';
 
 // Create a new client with API Key
-const client = PlaytClient({ apiKey: '<API_KEY>' });
+const client = new PlaytClient({ apiKey: '<API_KEY>' });
+```
+
+## Updating props
+
+You can update the client props at any time by calling `setProps`:
+
+```ts
+import { PlaytClient } from '@playt/client';
+
+// Create a new client with API Key
+const client = new PlaytClient({ apiKey: '<API_KEY>' });
+// Update apiKey
+client.setProps({ apiKey: '<NEW_API_KEY>' });
 ```
 
 ## API

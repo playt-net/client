@@ -25,40 +25,78 @@ export type PLAYTClientProps = {
   apiKey?: string;
   apiHost?: string;
 };
-export const PlaytClient = ({
-  clientCredentials,
-  userAuth,
-  onRequestRefresh,
-  apiKey,
-  apiHost = 'https://playt-backend-xbwjl.ondigitalocean.app',
-}: PLAYTClientProps) => {
-  const fetcher = Fetcher.for<paths>();
 
-  const authenticate: Middleware = async (url, init, next) => {
+export class PlaytClient {
+  clientCredentials?: ClientCredentials;
+  userAuth?: UserAuth;
+  onRequestRefresh?: () => Promise<UserAuth | null>;
+  apiKey?: string;
+  apiHost?: string;
+  fetcher = Fetcher.for<paths>();
+
+  constructor(props: PLAYTClientProps) {
+    this.setProps(props);
+  }
+
+  setProps({
+    clientCredentials,
+    userAuth,
+    onRequestRefresh,
+    apiKey,
+    apiHost = 'https://playt-backend-xbwjl.ondigitalocean.app',
+  }: PLAYTClientProps) {
+    this.clientCredentials = clientCredentials;
+    this.userAuth = userAuth;
+    this.onRequestRefresh = onRequestRefresh;
+    this.apiKey = apiKey;
+    this.apiHost = apiHost;
+
+    this.fetcher.configure({
+      baseUrl: this.apiHost,
+      init: {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+      use: [this.authenticate],
+    });
+  }
+
+  authenticate: Middleware = async (url, init, next) => {
     try {
-      if (clientCredentials && url.includes('/auth/')) {
+      if (this.clientCredentials && url.includes('/auth/')) {
         init.headers.set(
           'Authorization',
           `Basic ${Buffer.from(
-            `${clientCredentials.clientId}:${clientCredentials.clientSecret}`
+            `${this.clientCredentials.clientId}:${this.clientCredentials.clientSecret}`
           ).toString('base64')}`
         );
-      } else if (userAuth?.accessToken) {
-        init.headers.set('Authorization', `Bearer ${userAuth.accessToken}`);
-      } else if (apiKey) {
-        init.headers.set('X-Api-Key', apiKey);
+      } else if (this.userAuth?.accessToken) {
+        init.headers.set(
+          'Authorization',
+          `Bearer ${this.userAuth.accessToken}`
+        );
+      } else if (this.apiKey) {
+        init.headers.set('X-Api-Key', this.apiKey);
       }
       const response = await next(url, init);
       return response;
     } catch (error) {
       const { status } = error as ApiErrorType;
 
-      if (status === 401 && userAuth?.refreshToken && onRequestRefresh) {
-        const refreshedUserAuth = await onRequestRefresh();
+      if (
+        status === 401 &&
+        this.userAuth?.refreshToken &&
+        this.onRequestRefresh
+      ) {
+        const refreshedUserAuth = await this.onRequestRefresh();
         if (refreshedUserAuth) {
-          userAuth.accessToken = refreshedUserAuth.accessToken;
-          userAuth.refreshToken = refreshedUserAuth.refreshToken;
-          init.headers.set('Authorization', `Bearer ${userAuth.accessToken}`);
+          this.userAuth.accessToken = refreshedUserAuth.accessToken;
+          this.userAuth.refreshToken = refreshedUserAuth.refreshToken;
+          init.headers.set(
+            'Authorization',
+            `Bearer ${this.userAuth.accessToken}`
+          );
           const response = await next(url, init);
           return response;
         }
@@ -67,158 +105,102 @@ export const PlaytClient = ({
     }
   };
 
-  fetcher.configure({
-    baseUrl: apiHost,
-    init: {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    },
-    use: [authenticate],
-  });
+  postRegister = this.fetcher.path('/auth/register').method('post').create();
+  postAuthRefresh = this.fetcher.path('/auth/refresh').method('post').create();
+  postLogin = this.fetcher.path('/auth/login').method('post').create();
 
-  const postRegister = fetcher.path('/auth/register').method('post').create();
-  const postAuthRefresh = fetcher.path('/auth/refresh').method('post').create();
-  const postLogin = fetcher.path('/auth/login').method('post').create();
+  getCurrentUser = this.fetcher.path('/user').method('get').create();
+  putCurrentUser = this.fetcher.path('/user').method('put').create();
+  patchCurrentUser = this.fetcher.path('/user').method('patch').create();
+  getUser = this.fetcher.path('/user/{id}').method('get').create();
 
-  const getCurrentUser = fetcher.path('/user').method('get').create();
-  const putCurrentUser = fetcher.path('/user').method('put').create();
-  const patchCurrentUser = fetcher.path('/user').method('patch').create();
-  const getUser = fetcher.path('/user/{id}').method('get').create();
+  getTutorials = this.fetcher.path('/tutorial').method('get').create();
+  postTutorial = this.fetcher.path('/tutorial').method('post').create();
+  getTutorial = this.fetcher.path('/tutorial/{id}').method('get').create();
+  putTutorial = this.fetcher.path('/tutorial/{id}').method('put').create();
 
-  const getTutorials = fetcher.path('/tutorial').method('get').create();
-  const postTutorial = fetcher.path('/tutorial').method('post').create();
-  const getTutorial = fetcher.path('/tutorial/{id}').method('get').create();
-  const putTutorial = fetcher.path('/tutorial/{id}').method('put').create();
-
-  const getPurchasables = fetcher.path('/purchasable').method('get').create();
-  const postPurchasable = fetcher.path('/purchasable').method('post').create();
-  const getPurchasable = fetcher
+  getPurchasables = this.fetcher.path('/purchasable').method('get').create();
+  postPurchasable = this.fetcher.path('/purchasable').method('post').create();
+  getPurchasable = this.fetcher
     .path('/purchasable/{id}')
     .method('get')
     .create();
-  const putPurchasable = fetcher
+  putPurchasable = this.fetcher
     .path('/purchasable/{id}')
     .method('put')
     .create();
-  const deletePurchasable = fetcher
+  deletePurchasable = this.fetcher
     .path('/purchasable/{id}')
     .method('delete')
     .create();
 
-  const getGames = fetcher.path('/game').method('get').create();
-  const postGame = fetcher.path('/game').method('post').create();
-  const getGame = fetcher.path('/game/{id}').method('get').create();
-  const putGame = fetcher.path('/game/{id}').method('put').create();
-  const deleteGame = fetcher.path('/game/{id}').method('delete').create();
-  const putGameApiKey = fetcher
+  getGames = this.fetcher.path('/game').method('get').create();
+  postGame = this.fetcher.path('/game').method('post').create();
+  getGame = this.fetcher.path('/game/{id}').method('get').create();
+  putGame = this.fetcher.path('/game/{id}').method('put').create();
+  deleteGame = this.fetcher.path('/game/{id}').method('delete').create();
+  putGameApiKey = this.fetcher
     .path('/game/{id}/api-key')
     .method('put')
     .create();
-  const deleteGameApiKey = fetcher
+  deleteGameApiKey = this.fetcher
     .path('/game/{id}/api-key')
     .method('delete')
     .create();
 
-  const getMatchByPlayerToken = fetcher
+  getMatchByPlayerToken = this.fetcher
     .path('/match/playerToken/{playerToken}')
     .method('get')
     .create();
-  const getMatchHistory = fetcher
+  getMatchHistory = this.fetcher
     .path('/match/history/user/{userId}')
     .method('get')
     .create();
-  const getMatch = fetcher.path('/match/{id}').method('get').create();
-  const deleteMatch = fetcher.path('/match/{id}').method('delete').create();
-  const postMatchJoin = fetcher.path('/match/join').method('post').create();
-  const getReplay = fetcher
+  getMatch = this.fetcher.path('/match/{id}').method('get').create();
+  deleteMatch = this.fetcher.path('/match/{id}').method('delete').create();
+  postMatchJoin = this.fetcher.path('/match/join').method('post').create();
+  getReplay = this.fetcher
     .path('/match/{matchId}/replay/{userId}')
     .method('get')
     .create();
-  const postReplay = fetcher
+  postReplay = this.fetcher
     .path('/match/{matchId}/replay/{playerToken}')
     .method('post')
     .create();
-  const postScore = fetcher.path('/match/{id}/score').method('post').create();
-  const postAbort = fetcher.path('/match/{id}/abort').method('post').create();
+  postScore = this.fetcher.path('/match/{id}/score').method('post').create();
+  postAbort = this.fetcher.path('/match/{id}/abort').method('post').create();
 
-  const postMatchmakingSearch = fetcher
+  postMatchmakingSearch = this.fetcher
     .path('/matchmaking/search')
     .method('post')
     .create();
-  const postMatchmakingCancel = fetcher
+  postMatchmakingCancel = this.fetcher
     .path('/matchmaking/cancel')
     .method('post')
     .create();
-  const getMatchmakingTicket = fetcher
+  getMatchmakingTicket = this.fetcher
     .path('/matchmaking/ticket/{id}')
     .method('get')
     .create();
 
-  const getBasket = fetcher.path('/basket').method('get').create();
-  const deleteBasketItem = fetcher
+  getBasket = this.fetcher.path('/basket').method('get').create();
+  deleteBasketItem = this.fetcher
     .path('/basket/items/{itemId}')
     .method('delete')
     .create();
-  const deleteBasket = fetcher.path('/basket').method('delete').create();
-  const postBasketItems = fetcher.path('/basket/items').method('post').create();
-  const patchBasketItems = fetcher
+  deleteBasket = this.fetcher.path('/basket').method('delete').create();
+  postBasketItems = this.fetcher.path('/basket/items').method('post').create();
+  patchBasketItems = this.fetcher
     .path('/basket/items')
     .method('patch')
     .create();
 
-  const postCheckoutFast = fetcher
+  postCheckoutFast = this.fetcher
     .path('/checkout/fast')
     .method('post')
     .create();
 
-  const getWallet = fetcher.path('/wallet').method('get').create();
+  getWallet = this.fetcher.path('/wallet').method('get').create();
 
-  const getNotifications = fetcher.path('/notification').method('get').create();
-
-  return {
-    deleteBasket,
-    deleteBasketItem,
-    deleteGame,
-    deleteGameApiKey,
-    deleteMatch,
-    deletePurchasable,
-    getBasket,
-    getCurrentUser,
-    getGame,
-    getGames,
-    getMatch,
-    getMatchByPlayerToken,
-    getMatchHistory,
-    getMatchmakingTicket,
-    getNotifications,
-    getPurchasable,
-    getPurchasables,
-    getReplay,
-    getTutorial,
-    getTutorials,
-    getUser,
-    getWallet,
-    patchBasketItems,
-    patchCurrentUser,
-    postAuthRefresh,
-    postBasketItems,
-    postCheckoutFast,
-    postGame,
-    postLogin,
-    postMatchJoin,
-    postMatchmakingCancel,
-    postMatchmakingSearch,
-    postPurchasable,
-    postRegister,
-    postReplay,
-    postScore,
-    postAbort,
-    postTutorial,
-    putCurrentUser,
-    putGame,
-    putGameApiKey,
-    putPurchasable,
-    putTutorial,
-  };
-};
+  getNotifications = this.fetcher.path('/notification').method('get').create();
+}
