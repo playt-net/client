@@ -405,7 +405,6 @@ export interface components {
     };
     MatchResponse: {
       id: string;
-      players: string[];
       /** @enum {string} */
       matchState: 'creating' | 'running' | 'finished' | 'deleted';
       participants: components['schemas']['ParticipantResponse'][];
@@ -423,7 +422,6 @@ export interface components {
       finishedAt?: string;
       scoreSnapshots: components['schemas']['ScoreSnapshotResponse'][];
       availableReplays: components['schemas']['AvailableReplayResponse'][];
-      playerStates: { [key: string]: string };
     };
     MatchResultResponse: {
       winners: components['schemas']['ParticipantResultResponse'][];
@@ -433,13 +431,13 @@ export interface components {
       userId: string;
       username: string;
       avatarUrl: string;
+      /** @enum {string} */
+      playerMatchState: 'joining' | 'playing' | 'aborted' | 'finished';
     };
     ParticipantResultResponse: {
       userId: string;
       /** Format: int32 */
       score: number;
-      username: string;
-      avatarUrl: string;
     };
     ScoreSnapshotResponse: {
       userId: string;
@@ -634,6 +632,9 @@ export interface components {
     };
     /** @description A finished replay that was found. */
     FindReplayResponse: {
+      /** @description The match from which this replay originates. */
+      matchId: string;
+      participant: components['schemas']['ParticipantResponse'];
       /** @description This is the payload of the replay in the format defined by the game. */
       payload: string;
       /**
@@ -655,7 +656,6 @@ export interface components {
       timeoutAt: string;
       /** Format: date-time */
       finishedAt: string;
-      playerStates: { [key: string]: string };
     };
     PageMatchHistoryResponse: {
       content: components['schemas']['MatchHistoryResponse'][];
@@ -1306,7 +1306,7 @@ export interface operations {
           'application/json': components['schemas']['MatchResponse'];
         };
       };
-      /** API Key is not valid */
+      /** Playertoken is valid but the match id is invalid */
       400: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
@@ -1867,9 +1867,6 @@ export interface operations {
         gameId?: string;
         timeoutAt?: string;
         denominationTier?: string;
-        playerStates?: {
-          [key: string]: 'JOINING' | 'PLAYING' | 'ABORTED' | 'FINISHED';
-        };
         finishedAt?: string;
         result?: string;
         createdAt?: string;
