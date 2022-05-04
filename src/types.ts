@@ -79,6 +79,9 @@ export interface paths {
   '/user/{id}': {
     get: operations['getById'];
   };
+  '/stats/user/{userId}/aggregate': {
+    get: operations['getAggregatedUserStats'];
+  };
   '/notification': {
     get: operations['search_1'];
   };
@@ -405,7 +408,6 @@ export interface components {
     };
     MatchResponse: {
       id: string;
-      players: string[];
       /** @enum {string} */
       matchState: 'creating' | 'running' | 'finished' | 'deleted';
       participants: components['schemas']['ParticipantResponse'][];
@@ -423,7 +425,6 @@ export interface components {
       finishedAt?: string;
       scoreSnapshots: components['schemas']['ScoreSnapshotResponse'][];
       availableReplays: components['schemas']['AvailableReplayResponse'][];
-      playerStates: { [key: string]: string };
     };
     MatchResultResponse: {
       winners: components['schemas']['ParticipantResultResponse'][];
@@ -433,13 +434,13 @@ export interface components {
       userId: string;
       username: string;
       avatarUrl: string;
+      /** @enum {string} */
+      playerMatchState: 'joining' | 'playing' | 'aborted' | 'finished';
     };
     ParticipantResultResponse: {
       userId: string;
       /** Format: int32 */
       score: number;
-      username: string;
-      avatarUrl: string;
     };
     ScoreSnapshotResponse: {
       userId: string;
@@ -583,6 +584,9 @@ export interface components {
       numberOfElements: number;
       empty: boolean;
     };
+    AggregationResponse: {
+      result?: { [key: string]: { [key: string]: unknown } }[];
+    };
     PagePurchasableResponse: {
       content: components['schemas']['PurchasableResponse'][];
       /** Format: int32 */
@@ -634,6 +638,9 @@ export interface components {
     };
     /** @description A finished replay that was found. */
     FindReplayResponse: {
+      /** @description The match from which this replay originates. */
+      matchId: string;
+      participant: components['schemas']['ParticipantResponse'];
       /** @description This is the payload of the replay in the format defined by the game. */
       payload: string;
       /**
@@ -655,7 +662,6 @@ export interface components {
       timeoutAt: string;
       /** Format: date-time */
       finishedAt: string;
-      playerStates: { [key: string]: string };
     };
     PageMatchHistoryResponse: {
       content: components['schemas']['MatchHistoryResponse'][];
@@ -1306,7 +1312,7 @@ export interface operations {
           'application/json': components['schemas']['MatchResponse'];
         };
       };
-      /** API Key is not valid */
+      /** Playertoken is valid but the match id is invalid */
       400: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
@@ -1689,6 +1695,31 @@ export interface operations {
       };
     };
   };
+  getAggregatedUserStats: {
+    parameters: {
+      path: {
+        userId: string;
+      };
+      query: {
+        metric: 'winRatio';
+        period?: '12m' | '6m' | 'month' | '30d' | '7d' | 'day';
+      };
+    };
+    responses: {
+      /** Your current user profile */
+      200: {
+        content: {
+          '*/*': components['schemas']['AggregationResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
   search_1: {
     parameters: {
       query: {
@@ -1867,9 +1898,6 @@ export interface operations {
         gameId?: string;
         timeoutAt?: string;
         denominationTier?: string;
-        playerStates?: {
-          [key: string]: 'JOINING' | 'PLAYING' | 'ABORTED' | 'FINISHED';
-        };
         finishedAt?: string;
         result?: string;
         createdAt?: string;

@@ -553,4 +553,13 @@ describe('fetch', () => {
       expect(statusText).toBe('Unauthorized');
     }
   });
+  it('getUserStats', async () => {
+    const { ok, status, statusText } = await client.getUserStats({
+      userId: '123',
+      metric: 'winRatio',
+    });
+    expect(ok).toBe(true);
+    expect(status).toBe(200);
+    expect(statusText).toBe('OK');
+  });
 });
