@@ -553,9 +553,9 @@ describe('fetch', () => {
       expect(statusText).toBe('Unauthorized');
     }
   });
-  it('getUserStats', async () => {
+  it('getUserWinRatio', async () => {
     try {
-      await client.getUserStats({
+      await client.getUserWinRatio({
         userId: '123',
       });
       throw Error("Should fail because user doesn't exist");
