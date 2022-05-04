@@ -554,12 +554,15 @@ describe('fetch', () => {
     }
   });
   it('getUserStats', async () => {
-    const { ok, status, statusText } = await client.getUserStats({
-      userId: '123',
-      metric: 'winRatio',
-    });
-    expect(ok).toBe(true);
-    expect(status).toBe(200);
-    expect(statusText).toBe('OK');
+    try {
+      await client.getUserStats({
+        userId: '123',
+      });
+      throw Error("Should fail because user doesn't exist");
+    } catch (error) {
+      const { status, statusText } = error as ApiError;
+      expect(status).toBe(404);
+      expect(statusText).toBe('Not Found');
+    }
   });
 });
