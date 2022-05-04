@@ -553,4 +553,14 @@ describe('fetch', () => {
       expect(statusText).toBe('Unauthorized');
     }
   });
+  it('getUserStats', async () => {
+    try {
+      await client.getUserStats({ userId: '123', metric: 'winRatio' });
+      throw Error('Should fail without credentials');
+    } catch (error) {
+      const { status, statusText } = error as ApiError;
+      expect(status).toBe(401);
+      expect(statusText).toBe('Unauthorized');
+    }
+  });
 });

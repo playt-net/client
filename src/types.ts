@@ -79,6 +79,9 @@ export interface paths {
   '/user/{id}': {
     get: operations['getById'];
   };
+  '/stats/user/{userId}/aggregate': {
+    get: operations['getAggregatedUserStats'];
+  };
   '/notification': {
     get: operations['search_1'];
   };
@@ -580,6 +583,9 @@ export interface components {
       /** Format: int32 */
       numberOfElements: number;
       empty: boolean;
+    };
+    AggregationResponse: {
+      result?: { [key: string]: { [key: string]: unknown } }[];
     };
     PagePurchasableResponse: {
       content: components['schemas']['PurchasableResponse'][];
@@ -1306,7 +1312,7 @@ export interface operations {
           'application/json': components['schemas']['MatchResponse'];
         };
       };
-      /** API Key is not valid */
+      /** Playertoken is valid but the match id is invalid */
       400: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
@@ -1685,6 +1691,31 @@ export interface operations {
       404: {
         content: {
           'application/json': components['schemas']['UserResponse'];
+        };
+      };
+    };
+  };
+  getAggregatedUserStats: {
+    parameters: {
+      path: {
+        userId: string;
+      };
+      query: {
+        metric: 'winRatio';
+        period?: '12m' | '6m' | 'month' | '30d' | '7d' | 'day';
+      };
+    };
+    responses: {
+      /** Your current user profile */
+      200: {
+        content: {
+          '*/*': components['schemas']['AggregationResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
         };
       };
     };

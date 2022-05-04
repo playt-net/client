@@ -203,4 +203,9 @@ export class PlaytClient {
   getWallet = this.fetcher.path('/wallet').method('get').create();
 
   getNotifications = this.fetcher.path('/notification').method('get').create();
+
+  getUserStats = this.fetcher
+    .path('/stats/user/{userId}/aggregate')
+    .method('get')
+    .create();
 }
