@@ -79,8 +79,8 @@ export interface paths {
   '/user/{id}': {
     get: operations['getById'];
   };
-  '/stats/user/{userId}/aggregate': {
-    get: operations['getAggregatedUserStats'];
+  '/stats/user/{userId}/aggregate/winRatio': {
+    get: operations['getAggregatedUserWinRatio'];
   };
   '/notification': {
     get: operations['search_1'];
@@ -584,8 +584,17 @@ export interface components {
       numberOfElements: number;
       empty: boolean;
     };
-    AggregationResponse: {
-      result?: { [key: string]: { [key: string]: unknown } }[];
+    WinRatioResponse: {
+      results: components['schemas']['WinRatioResponseEntry'][];
+    };
+    WinRatioResponseEntry: {
+      period: string;
+      /** Format: int64 */
+      played: number;
+      /** Format: int64 */
+      won: number;
+      /** Format: int64 */
+      lost: number;
     };
     PagePurchasableResponse: {
       content: components['schemas']['PurchasableResponse'][];
@@ -1312,7 +1321,7 @@ export interface operations {
           'application/json': components['schemas']['MatchResponse'];
         };
       };
-      /** Playertoken is valid but the match id is invalid */
+      /** API Key is not valid */
       400: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
@@ -1695,25 +1704,30 @@ export interface operations {
       };
     };
   };
-  getAggregatedUserStats: {
+  getAggregatedUserWinRatio: {
     parameters: {
       path: {
         userId: string;
       };
       query: {
-        metric: 'winRatio';
         period?: '12m' | '6m' | 'month' | '30d' | '7d' | 'day';
       };
     };
     responses: {
-      /** Your current user profile */
+      /** The win-ratio stats for the user */
       200: {
         content: {
-          '*/*': components['schemas']['AggregationResponse'];
+          'application/json': components['schemas']['WinRatioResponse'];
         };
       };
       /** Unauthorized */
       401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** User not found by id */
+      404: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
         };

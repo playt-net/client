@@ -204,8 +204,8 @@ export class PlaytClient {
 
   getNotifications = this.fetcher.path('/notification').method('get').create();
 
-  getUserStats = this.fetcher
-    .path('/stats/user/{userId}/aggregate')
+  getUserWinRatio = this.fetcher
+    .path('/stats/user/{userId}/aggregate/winRatio')
     .method('get')
     .create();
 }
