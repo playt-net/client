@@ -592,6 +592,7 @@ export interface components {
     };
     MatchHistoryResponse: {
       id: string;
+      matchId: string;
       participants: components['schemas']['ParticipantResponse'][];
       result: components['schemas']['MatchResultResponse'];
       matchTier: string;
