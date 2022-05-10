@@ -9,6 +9,8 @@ const client = new PlaytClient({
   },
 });
 
+jest.setTimeout(30000);
+
 /**
  * These tests should not replace backend tests, but make sure that the services are available.
  */
