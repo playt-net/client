@@ -57,8 +57,8 @@ describe('fetch', () => {
       throw Error('Should fail without credentials');
     } catch (error) {
       const { status, statusText } = error as ApiError;
-      expect(status).toBe(401);
-      expect(statusText).toBe('Unauthorized');
+      expect(status).toBe(400);
+      expect(statusText).toBe('Bad Request');
     }
   });
   it('postAuthRefresh', async () => {
@@ -99,7 +99,6 @@ describe('fetch', () => {
   it('putCurrentUser', async () => {
     try {
       await client.putCurrentUser({
-        username: '',
         avatarUrl: '',
       });
       throw Error('Should fail without credentials');
@@ -112,7 +111,6 @@ describe('fetch', () => {
   it('patchCurrentUser', async () => {
     try {
       await client.patchCurrentUser({
-        username: '',
         avatarUrl: '',
       });
       throw Error('Should fail without credentials');
