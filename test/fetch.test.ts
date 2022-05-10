@@ -99,7 +99,6 @@ describe('fetch', () => {
   it('putCurrentUser', async () => {
     try {
       await client.putCurrentUser({
-        username: '',
         avatarUrl: '',
       });
       throw Error('Should fail without credentials');
@@ -112,7 +111,6 @@ describe('fetch', () => {
   it('patchCurrentUser', async () => {
     try {
       await client.patchCurrentUser({
-        username: '',
         avatarUrl: '',
       });
       throw Error('Should fail without credentials');
