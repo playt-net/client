@@ -134,7 +134,6 @@ export interface components {
       error?: { [key: string]: unknown } | null;
     };
     UpdateUserRequest: {
-      username: string;
       avatarUrl: string;
     };
     UserResponse: {
@@ -426,6 +425,8 @@ export interface components {
     RegisterRequest: {
       /** @description User's email */
       email: string;
+      /** @description Optional username - must be unique. If not set, the username will be generated. */
+      username?: string;
       /** @description User's password. Must be a least 6 characters long. */
       password: string;
       /**
@@ -465,7 +466,6 @@ export interface components {
       password: string;
     };
     PatchUserRequest: {
-      username?: string;
       avatarUrl?: string;
     };
     UpdateItemRequest: {
@@ -1254,7 +1254,7 @@ export interface operations {
           'application/json': components['schemas']['MatchResponse'];
         };
       };
-      /** Playertoken is valid but the match id is invalid */
+      /** API Key is not valid */
       400: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
