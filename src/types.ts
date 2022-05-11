@@ -1148,6 +1148,12 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponse'];
         };
       };
+      /** Users wallet balance is not enough */
+      402: {
+        content: {
+          'application/json': components['schemas']['TicketResponse'];
+        };
+      };
       /** Could not add to ticket search */
       409: {
         content: {
@@ -1254,7 +1260,7 @@ export interface operations {
           'application/json': components['schemas']['MatchResponse'];
         };
       };
-      /** API Key is not valid */
+      /** Playertoken is valid but the match id is invalid */
       400: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
@@ -1507,6 +1513,12 @@ export interface operations {
       };
       /** Unauthorized */
       401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Username or email already taken */
+      409: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
         };
