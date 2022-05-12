@@ -1260,7 +1260,7 @@ export interface operations {
           'application/json': components['schemas']['MatchResponse'];
         };
       };
-      /** Playertoken is valid but the match id is invalid */
+      /** API Key is not valid */
       400: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
