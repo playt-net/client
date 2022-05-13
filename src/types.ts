@@ -73,6 +73,9 @@ export interface paths {
   '/auth/login': {
     post: operations['login'];
   };
+  '/auth/change/username': {
+    post: operations['changeUsername'];
+  };
   '/wallet': {
     get: operations['getUserWallet'];
   };
@@ -364,6 +367,11 @@ export interface components {
       avatarUrl: string;
       /** @enum {string} */
       playerMatchState: 'joining' | 'playing' | 'aborted' | 'finished';
+      /**
+       * Format: date-time
+       * @description The time when the player joined the match, if player has not joined yet then the value is null.
+       */
+      joinedAt?: string;
     };
     ParticipantResultResponse: {
       userId: string;
@@ -464,6 +472,9 @@ export interface components {
       email: string;
       /** @description User's password. Must be a least 6 characters long. */
       password: string;
+    };
+    ChangeUsernameRequest: {
+      username: string;
     };
     PatchUserRequest: {
       avatarUrl?: string;
@@ -1591,6 +1602,35 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': components['schemas']['LoginRequest'];
+      };
+    };
+  };
+  changeUsername: {
+    responses: {
+      /** The change of the username was successful */
+      202: unknown;
+      /** Missing required fields in request payload */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Username change failed */
+      409: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ChangeUsernameRequest'];
       };
     };
   };
