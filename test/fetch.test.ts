@@ -565,4 +565,41 @@ describe('fetch', () => {
       expect(statusText).toBe('Not Found');
     }
   });
+  it('postChangeUsername', async () => {
+    try {
+      await client.postChangeUsername({
+        username: '123',
+      });
+      throw Error('Should fail without credentials');
+    } catch (error) {
+      const { status, statusText } = error as ApiError;
+      expect(status).toBe(401);
+      expect(statusText).toBe('Unauthorized');
+    }
+  });
+  it('postChangeEmail', async () => {
+    try {
+      await client.postChangeEmail({
+        email: '123',
+      });
+      throw Error('Should fail without credentials');
+    } catch (error) {
+      const { status, statusText } = error as ApiError;
+      expect(status).toBe(401);
+      expect(statusText).toBe('Unauthorized');
+    }
+  });
+  it('getPlayer', async () => {
+    try {
+      await client.getPlayer({
+        id: '12',
+        playerToken: '123',
+      });
+      throw Error('Should fail without credentials');
+    } catch (error) {
+      const { status, statusText } = error as ApiError;
+      expect(status).toBe(401);
+      expect(statusText).toBe('Unauthorized');
+    }
+  });
 });
