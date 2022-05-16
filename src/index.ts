@@ -208,4 +208,19 @@ export class PlaytClient {
     .path('/stats/user/{userId}/aggregate/winRatio')
     .method('get')
     .create();
+
+  postChangeUsername = this.fetcher
+    .path('/auth/change/username')
+    .method('post')
+    .create();
+
+  postChangeEmail = this.fetcher
+    .path('/auth/change/email')
+    .method('post')
+    .create();
+
+  getPlayer = this.fetcher
+    .path('/match/{id}/player/{playerToken}')
+    .method('get')
+    .create();
 }

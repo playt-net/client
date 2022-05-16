@@ -73,6 +73,12 @@ export interface paths {
   '/auth/login': {
     post: operations['login'];
   };
+  '/auth/change/username': {
+    post: operations['changeUsername'];
+  };
+  '/auth/change/email': {
+    post: operations['changeUsername_1'];
+  };
   '/wallet': {
     get: operations['getUserWallet'];
   };
@@ -94,6 +100,9 @@ export interface paths {
   '/match/{id}': {
     get: operations['getById_3'];
     delete: operations['deleteById'];
+  };
+  '/match/{id}/player/{playerToken}': {
+    get: operations['getPlayerInfo'];
   };
   '/match/playerToken/{playerToken}': {
     get: operations['getByPlayerToken'];
@@ -364,6 +373,11 @@ export interface components {
       avatarUrl: string;
       /** @enum {string} */
       playerMatchState: 'joining' | 'playing' | 'aborted' | 'finished';
+      /**
+       * Format: date-time
+       * @description The time when the player joined the match, if player has not joined yet then the value is null.
+       */
+      joinedAt?: string;
     };
     ParticipantResultResponse: {
       userId: string;
@@ -464,6 +478,12 @@ export interface components {
       email: string;
       /** @description User's password. Must be a least 6 characters long. */
       password: string;
+    };
+    ChangeUsernameRequest: {
+      username: string;
+    };
+    ChangeEmailRequest: {
+      email: string;
     };
     PatchUserRequest: {
       avatarUrl?: string;
@@ -1148,6 +1168,12 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponse'];
         };
       };
+      /** Users wallet balance is not enough */
+      402: {
+        content: {
+          'application/json': components['schemas']['TicketResponse'];
+        };
+      };
       /** Could not add to ticket search */
       409: {
         content: {
@@ -1511,6 +1537,12 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponse'];
         };
       };
+      /** Username or email already taken */
+      409: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
     };
     requestBody: {
       content: {
@@ -1579,6 +1611,64 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': components['schemas']['LoginRequest'];
+      };
+    };
+  };
+  changeUsername: {
+    responses: {
+      /** The change of the username was successful */
+      202: unknown;
+      /** Missing required fields in request payload */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Username change failed */
+      409: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ChangeUsernameRequest'];
+      };
+    };
+  };
+  changeUsername_1: {
+    responses: {
+      /** The change of the email was successful */
+      202: unknown;
+      /** Missing required fields in request payload */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Email change failed */
+      409: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ChangeEmailRequest'];
       };
     };
   };
@@ -1800,6 +1890,40 @@ export interface operations {
       202: unknown;
       /** Unauthorized */
       401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  getPlayerInfo: {
+    parameters: {
+      path: {
+        id: string;
+        playerToken: string;
+      };
+    };
+    responses: {
+      /** Participant was found by playerToken in match */
+      200: {
+        content: {
+          'application/json': components['schemas']['ParticipantResponse'];
+        };
+      };
+      /** API Key is not valid */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Match with playerToken was not found */
+      404: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
         };
