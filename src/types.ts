@@ -76,6 +76,9 @@ export interface paths {
   '/auth/change/username': {
     post: operations['changeUsername'];
   };
+  '/auth/change/email': {
+    post: operations['changeUsername_1'];
+  };
   '/wallet': {
     get: operations['getUserWallet'];
   };
@@ -475,6 +478,9 @@ export interface components {
     };
     ChangeUsernameRequest: {
       username: string;
+    };
+    ChangeEmailRequest: {
+      email: string;
     };
     PatchUserRequest: {
       avatarUrl?: string;
@@ -1271,7 +1277,7 @@ export interface operations {
           'application/json': components['schemas']['MatchResponse'];
         };
       };
-      /** API Key is not valid */
+      /** Playertoken is valid but the match id is invalid */
       400: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
@@ -1631,6 +1637,35 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': components['schemas']['ChangeUsernameRequest'];
+      };
+    };
+  };
+  changeUsername_1: {
+    responses: {
+      /** The change of the email was successful */
+      202: unknown;
+      /** Missing required fields in request payload */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Email change failed */
+      409: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ChangeEmailRequest'];
       };
     };
   };
