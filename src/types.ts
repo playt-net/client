@@ -77,7 +77,7 @@ export interface paths {
     post: operations['changeUsername'];
   };
   '/auth/change/email': {
-    post: operations['changeUsername_1'];
+    post: operations['changeEmail'];
   };
   '/wallet': {
     get: operations['getUserWallet'];
@@ -100,6 +100,9 @@ export interface paths {
   '/match/{id}': {
     get: operations['getById_3'];
     delete: operations['deleteById'];
+  };
+  '/match/{id}/player/{playerToken}': {
+    get: operations['getPlayerInfo'];
   };
   '/match/playerToken/{playerToken}': {
     get: operations['getByPlayerToken'];
@@ -1640,7 +1643,7 @@ export interface operations {
       };
     };
   };
-  changeUsername_1: {
+  changeEmail: {
     responses: {
       /** The change of the email was successful */
       202: unknown;
@@ -1887,6 +1890,40 @@ export interface operations {
       202: unknown;
       /** Unauthorized */
       401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  getPlayerInfo: {
+    parameters: {
+      path: {
+        id: string;
+        playerToken: string;
+      };
+    };
+    responses: {
+      /** Participant was found by playerToken in match */
+      200: {
+        content: {
+          'application/json': components['schemas']['ParticipantResponse'];
+        };
+      };
+      /** playerToken is valid but the match id is invalid */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Match with playerToken was not found */
+      404: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
         };
