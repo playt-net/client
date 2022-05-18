@@ -77,7 +77,7 @@ export interface paths {
     post: operations['changeUsername'];
   };
   '/auth/change/email': {
-    post: operations['changeUsername_1'];
+    post: operations['changeEmail'];
   };
   '/wallet': {
     get: operations['getUserWallet'];
@@ -362,6 +362,8 @@ export interface components {
       finishedAt?: string;
       scoreSnapshots: components['schemas']['ScoreSnapshotResponse'][];
       availableReplays: components['schemas']['AvailableReplayResponse'][];
+      /** @enum {string} */
+      matchDifficulty?: 'beginner' | 'medium' | 'hard';
     };
     MatchResultResponse: {
       winners: components['schemas']['ParticipantResultResponse'][];
@@ -1298,6 +1300,12 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponse'];
         };
       };
+      /** Player has already a terminal match state */
+      409: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
     };
     requestBody: {
       content: {
@@ -1643,7 +1651,7 @@ export interface operations {
       };
     };
   };
-  changeUsername_1: {
+  changeEmail: {
     responses: {
       /** The change of the email was successful */
       202: unknown;
@@ -1910,7 +1918,7 @@ export interface operations {
           'application/json': components['schemas']['ParticipantResponse'];
         };
       };
-      /** API Key is not valid */
+      /** playerToken is valid but the match id is invalid */
       400: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
@@ -1971,6 +1979,7 @@ export interface operations {
         fee?: number;
         scoreSnapshots?: string;
         denominationTier?: string;
+        matchDifficulty?: 'beginner' | 'medium' | 'hard';
         finishedAt?: string;
         result?: string;
         createdAt?: string;
