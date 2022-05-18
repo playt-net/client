@@ -362,6 +362,8 @@ export interface components {
       finishedAt?: string;
       scoreSnapshots: components['schemas']['ScoreSnapshotResponse'][];
       availableReplays: components['schemas']['AvailableReplayResponse'][];
+      /** @enum {string} */
+      matchDifficulty?: 'beginner' | 'medium' | 'hard';
     };
     MatchResultResponse: {
       winners: components['schemas']['ParticipantResultResponse'][];
@@ -1280,7 +1282,7 @@ export interface operations {
           'application/json': components['schemas']['MatchResponse'];
         };
       };
-      /** Playertoken is valid but the match id is invalid */
+      /** API Key is not valid */
       400: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
@@ -1294,6 +1296,12 @@ export interface operations {
       };
       /** Match with player token was not found */
       404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Player has already a terminal match state */
+      409: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
         };
@@ -1971,6 +1979,7 @@ export interface operations {
         fee?: number;
         scoreSnapshots?: string;
         denominationTier?: string;
+        matchDifficulty?: 'beginner' | 'medium' | 'hard';
         finishedAt?: string;
         result?: string;
         createdAt?: string;
