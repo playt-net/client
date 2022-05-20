@@ -568,25 +568,45 @@ describe('fetch', () => {
   it('postChangeUsername', async () => {
     try {
       await client.postChangeUsername({
-        username: '123',
+        userId: '123',
+        password: '123',
+        newUsername: '123',
       });
-      throw Error('Should fail without credentials');
+      throw Error("Should fail because user doesn't exist");
     } catch (error) {
       const { status, statusText } = error as ApiError;
-      expect(status).toBe(401);
-      expect(statusText).toBe('Unauthorized');
+      expect(status).toBe(404);
+      expect(statusText).toBe('Not Found');
     }
   });
   it('postChangeEmail', async () => {
     try {
       await client.postChangeEmail({
-        email: '123',
+        userId: '123',
+        password: '123',
+        newEmail: '123@123.net',
       });
-      throw Error('Should fail without credentials');
+      throw Error("Should fail because user doesn't exist");
     } catch (error) {
       const { status, statusText } = error as ApiError;
-      expect(status).toBe(401);
-      expect(statusText).toBe('Unauthorized');
+      expect(status).toBe(404);
+      expect(statusText).toBe('Not Found');
+    }
+  });
+  it('postChangePassword', async () => {
+    try {
+      await client.postChangePassword({
+        userId: '123',
+        currentPassword: '123',
+        newPassword: 'AbCdEfG123',
+      });
+      throw Error('Should fail with invalid credentials');
+    } catch (error) {
+      console.log(error);
+
+      const { status, statusText } = error as ApiError;
+      expect(status).toBe(400);
+      expect(statusText).toBe('Bad Request');
     }
   });
   it('getPlayer', async () => {
