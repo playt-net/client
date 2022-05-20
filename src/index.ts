@@ -109,10 +109,10 @@ export class PlaytClient {
   postAuthRefresh = this.fetcher.path('/auth/refresh').method('post').create();
   postLogin = this.fetcher.path('/auth/login').method('post').create();
 
-  getCurrentUser = this.fetcher.path('/user').method('get').create();
-  putCurrentUser = this.fetcher.path('/user').method('put').create();
-  patchCurrentUser = this.fetcher.path('/user').method('patch').create();
-  getUser = this.fetcher.path('/user/{id}').method('get').create();
+  getCurrentUser = this.fetcher.path('/profile').method('get').create();
+  putCurrentUser = this.fetcher.path('/profile').method('put').create();
+  patchCurrentUser = this.fetcher.path('/profile').method('patch').create();
+  getUser = this.fetcher.path('/profile/{id}').method('get').create();
 
   getTutorials = this.fetcher.path('/tutorial').method('get').create();
   postTutorial = this.fetcher.path('/tutorial').method('post').create();
@@ -210,12 +210,17 @@ export class PlaytClient {
     .create();
 
   postChangeUsername = this.fetcher
-    .path('/auth/change/username')
+    .path('/auth/change-username')
     .method('post')
     .create();
 
   postChangeEmail = this.fetcher
-    .path('/auth/change/email')
+    .path('/auth/change-email')
+    .method('post')
+    .create();
+
+  postChangePassword = this.fetcher
+    .path('/auth/change-password')
     .method('post')
     .create();
 
