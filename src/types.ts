@@ -4,19 +4,19 @@
  */
 
 export interface paths {
-  '/user': {
-    get: operations['getCurrentUser'];
-    put: operations['updateCurrentUser'];
-    patch: operations['patchCurrentUser'];
-  };
   '/tutorial/{id}': {
-    get: operations['getById_1'];
+    get: operations['getById'];
     put: operations['update'];
   };
   '/purchasable/{id}': {
-    get: operations['getById_2'];
+    get: operations['getById_1'];
     put: operations['update_1'];
     delete: operations['delete'];
+  };
+  '/profile': {
+    get: operations['getCurrentUser'];
+    put: operations['updateCurrentUser'];
+    patch: operations['patchCurrentUser'];
   };
   '/game/{id}': {
     get: operations['getById_4'];
@@ -73,20 +73,23 @@ export interface paths {
   '/auth/login': {
     post: operations['login'];
   };
-  '/auth/change/username': {
+  '/auth/change-username': {
     post: operations['changeUsername'];
   };
-  '/auth/change/email': {
+  '/auth/change-password': {
+    post: operations['changePassword'];
+  };
+  '/auth/change-email': {
     post: operations['changeEmail'];
   };
   '/wallet': {
     get: operations['getUserWallet'];
   };
-  '/user/{id}': {
-    get: operations['getById'];
-  };
   '/stats/user/{userId}/aggregate/winRatio': {
     get: operations['getAggregatedUserWinRatio'];
+  };
+  '/profile/{id}': {
+    get: operations['getById_2'];
   };
   '/notification': {
     get: operations['search_1'];
@@ -141,14 +144,6 @@ export interface components {
       statusCode: number;
       /** @description Error reason */
       error?: { [key: string]: unknown } | null;
-    };
-    UpdateUserRequest: {
-      avatarUrl: string;
-    };
-    UserResponse: {
-      id: string;
-      username: string;
-      avatarUrl: string;
     };
     /** @description UpdateTutorial holds the required information to update a TutorialProgress */
     UpdateTutorialRequest: {
@@ -207,6 +202,14 @@ export interface components {
       createdAt: string;
       /** Format: date-time */
       updatedAt: string;
+    };
+    UpdateProfileRequest: {
+      avatarUrl: string;
+    };
+    ProfileResponse: {
+      id: string;
+      username: string;
+      avatarUrl: string;
     };
     UpdateGameRequest: {
       title: string;
@@ -482,12 +485,21 @@ export interface components {
       password: string;
     };
     ChangeUsernameRequest: {
-      username: string;
+      userId: string;
+      password: string;
+      newUsername: string;
+    };
+    ChangePasswordRequest: {
+      userId: string;
+      currentPassword: string;
+      newPassword: string;
     };
     ChangeEmailRequest: {
-      email: string;
+      userId: string;
+      password: string;
+      newEmail: string;
     };
-    PatchUserRequest: {
+    PatchProfileRequest: {
       avatarUrl?: string;
     };
     UpdateItemRequest: {
@@ -663,77 +675,7 @@ export interface components {
 }
 
 export interface operations {
-  getCurrentUser: {
-    responses: {
-      /** Your current user profile */
-      200: {
-        content: {
-          'application/json': components['schemas']['UserResponse'];
-        };
-      };
-      /** Unauthorized */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-    };
-  };
-  updateCurrentUser: {
-    responses: {
-      /** The updated user profile */
-      200: {
-        content: {
-          'application/json': components['schemas']['UserResponse'];
-        };
-      };
-      /** User update payload invalid */
-      400: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-      /** Unauthorized */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['UpdateUserRequest'];
-      };
-    };
-  };
-  patchCurrentUser: {
-    responses: {
-      /** The updated user profile */
-      200: {
-        content: {
-          'application/json': components['schemas']['UserResponse'];
-        };
-      };
-      /** User update payload invalid */
-      400: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-      /** Unauthorized */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['PatchUserRequest'];
-      };
-    };
-  };
-  getById_1: {
+  getById: {
     parameters: {
       path: {
         id: string;
@@ -798,7 +740,7 @@ export interface operations {
       };
     };
   };
-  getById_2: {
+  getById_1: {
     parameters: {
       path: {
         id: string;
@@ -865,6 +807,76 @@ export interface operations {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
         };
+      };
+    };
+  };
+  getCurrentUser: {
+    responses: {
+      /** Your current profile profile */
+      200: {
+        content: {
+          'application/json': components['schemas']['ProfileResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  updateCurrentUser: {
+    responses: {
+      /** The updated profile profile */
+      200: {
+        content: {
+          'application/json': components['schemas']['ProfileResponse'];
+        };
+      };
+      /** Profile update payload invalid */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateProfileRequest'];
+      };
+    };
+  };
+  patchCurrentUser: {
+    responses: {
+      /** The updated profile profile */
+      200: {
+        content: {
+          'application/json': components['schemas']['ProfileResponse'];
+        };
+      };
+      /** Profile update payload invalid */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PatchProfileRequest'];
       };
     };
   };
@@ -1282,7 +1294,7 @@ export interface operations {
           'application/json': components['schemas']['MatchResponse'];
         };
       };
-      /** API Key is not valid */
+      /** Playertoken is valid but the match id is invalid */
       400: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
@@ -1623,6 +1635,11 @@ export interface operations {
     };
   };
   changeUsername: {
+    parameters: {
+      header: {
+        Authorization: string;
+      };
+    };
     responses: {
       /** The change of the username was successful */
       202: unknown;
@@ -1651,7 +1668,46 @@ export interface operations {
       };
     };
   };
+  changePassword: {
+    parameters: {
+      header: {
+        Authorization: string;
+      };
+    };
+    responses: {
+      /** The change of the password was successful */
+      202: unknown;
+      /** Missing required fields in request payload */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Password change failed */
+      409: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ChangePasswordRequest'];
+      };
+    };
+  };
   changeEmail: {
+    parameters: {
+      header: {
+        Authorization: string;
+      };
+    };
     responses: {
       /** The change of the email was successful */
       202: unknown;
@@ -1708,33 +1764,6 @@ export interface operations {
       };
     };
   };
-  getById: {
-    parameters: {
-      path: {
-        id: string;
-      };
-    };
-    responses: {
-      /** The user profile */
-      200: {
-        content: {
-          'application/json': components['schemas']['UserResponse'];
-        };
-      };
-      /** Unauthorized */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-      /** User not found by id */
-      404: {
-        content: {
-          'application/json': components['schemas']['UserResponse'];
-        };
-      };
-    };
-  };
   getAggregatedUserWinRatio: {
     parameters: {
       path: {
@@ -1761,6 +1790,33 @@ export interface operations {
       404: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  getById_2: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** The profile profile */
+      200: {
+        content: {
+          'application/json': components['schemas']['ProfileResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** Profile not found by id */
+      404: {
+        content: {
+          'application/json': components['schemas']['ProfileResponse'];
         };
       };
     };
