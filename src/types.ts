@@ -349,7 +349,7 @@ export interface components {
     MatchResponse: {
       id: string;
       /** @enum {string} */
-      matchState: 'creating' | 'running' | 'finished' | 'deleted';
+      matchState: 'creating' | 'running' | 'finished' | 'timedOut' | 'deleted';
       participants: components['schemas']['ParticipantResponse'][];
       result: components['schemas']['MatchResultResponse'];
       matchTier: string;
@@ -1974,7 +1974,7 @@ export interface operations {
           'application/json': components['schemas']['ParticipantResponse'];
         };
       };
-      /** playerToken is valid but the match id is invalid */
+      /** API Key is not valid */
       400: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
