@@ -1980,7 +1980,7 @@ export interface operations {
           'application/json': components['schemas']['ParticipantResponse'];
         };
       };
-      /** API Key is not valid */
+      /** playerToken is valid but the match id is invalid */
       400: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
