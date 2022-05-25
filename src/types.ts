@@ -119,6 +119,9 @@ export interface paths {
   '/match/history/user/{userId}': {
     get: operations['getHistoryForUser'];
   };
+  '/game/info': {
+    get: operations['getGameInfo'];
+  };
   '/basket': {
     get: operations['getCurrentBasket'];
     delete: operations['deleteCurrentBasket'];
@@ -275,7 +278,8 @@ export interface components {
     };
     /** @description Playable match tiers */
     MatchTierResponse: {
-      identifier: string;
+      /** @enum {string} */
+      identifier: '1vs1' | 'tournament';
       playerPool: string;
       realtime: boolean;
       denominations: components['schemas']['DenominationResponse'][];
@@ -349,7 +353,13 @@ export interface components {
     MatchResponse: {
       id: string;
       /** @enum {string} */
-      matchState: 'creating' | 'running' | 'finished' | 'deleted';
+      matchState:
+        | 'creating'
+        | 'running'
+        | 'finished'
+        | 'noWinner'
+        | 'timedOut'
+        | 'deleted';
       participants: components['schemas']['ParticipantResponse'][];
       result: components['schemas']['MatchResultResponse'];
       matchTier: string;
@@ -2111,6 +2121,22 @@ export interface operations {
       200: {
         content: {
           'application/json': components['schemas']['PageMatchHistoryResponse'];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  getGameInfo: {
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          'application/json': components['schemas']['MatchTierResponse'][];
         };
       };
       /** Unauthorized */
