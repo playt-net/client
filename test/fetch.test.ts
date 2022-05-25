@@ -622,4 +622,14 @@ describe('fetch', () => {
       expect(statusText).toBe('Unauthorized');
     }
   });
+  it('getGameInfo', async () => {
+    try {
+      await client.getGameInfo({});
+      throw Error('Should fail without credentials');
+    } catch (error) {
+      const { status, statusText } = error as ApiError;
+      expect(status).toBe(403);
+      expect(statusText).toBe('Forbidden');
+    }
+  });
 });
