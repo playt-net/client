@@ -228,4 +228,6 @@ export class PlaytClient {
     .path('/match/{id}/player/{playerToken}')
     .method('get')
     .create();
+
+  getGameInfo = this.fetcher.path('/game/info').method('get').create();
 }
