@@ -682,7 +682,7 @@ export interface components {
       empty: boolean;
     };
     GameInfoResponse: {
-      matchTiers?: components['schemas']['MatchTierResponse'][];
+      matchTiers: components['schemas']['MatchTierResponse'][];
     };
   };
 }
