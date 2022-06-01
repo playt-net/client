@@ -279,7 +279,7 @@ export interface components {
     /** @description Playable match tiers */
     MatchTierResponse: {
       /** @enum {string} */
-      identifier: '1vs1' | 'tournament';
+      identifier: '1vs1' | '5p' | '10p' | 'tournament';
       playerPool: string;
       realtime: boolean;
       denominations: components['schemas']['DenominationResponse'][];
@@ -1987,7 +1987,7 @@ export interface operations {
           'application/json': components['schemas']['ParticipantResponse'];
         };
       };
-      /** API Key is not valid */
+      /** playerToken is valid but the match id is invalid */
       400: {
         content: {
           'application/json': components['schemas']['ErrorResponse'];
