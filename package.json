@@ -1,6 +1,6 @@
 {
   "name": "@playt/client",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "description": "A client for the PLAYT API",
   "engines": {
     "node": ">= 16.0.0",
@@ -34,7 +34,7 @@
   "homepage": "https://github.com/playt-net/client#readme",
   "scripts": {
     "clean": "rimraf './dist'",
-    "build": "npm run clean && tsc --project tsconfig.esm.json && tsc --project tsconfig.cjs.json && ./fixup",
+    "build": "npm run clean && tsc --project tsconfig.esm.json && tsc --project tsconfig.cjs.json",
     "generate": "openapi-typescript https://playt-backend-xbwjl.ondigitalocean.app/v3/api-docs --output src/types.ts --prettier-config .prettierrc.json",
     "test": "jest",
     "typecheck": "tsc --noEmit --project tsconfig.json"
