@@ -1,9 +1,0 @@
-{
-  "compilerOptions": {
-    "module": "commonjs",
-    "outDir": "dist/cjs",
-    "target": "es2015"
-  },
-  "extends": "./tsconfig.json",
-  "include": ["src"]
-}
