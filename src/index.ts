@@ -1,11 +1,19 @@
-import { ApiError, Fetcher } from './fetcher/index.js';
+import { ApiError, Fetcher, Middleware } from './fetcher/index.js';
 
 import type { paths } from './types.js';
 
 export { ApiError };
 
-const PlaytClient = function (apiUrl = 'https://fun-fair.vercel.app') {
+const PlaytClient = function (
+  apiUrl = 'https://fun-fair.vercel.app',
+  apiKey = ''
+) {
   const fetcher = Fetcher.for<paths>();
+
+  const authenticate: Middleware = async (url, init, next) => {
+    init.headers.set('Authorization', apiKey);
+    return next(url, init);
+  };
 
   fetcher.configure({
     baseUrl: apiUrl,
@@ -14,7 +22,7 @@ const PlaytClient = function (apiUrl = 'https://fun-fair.vercel.app') {
         'Content-Type': 'application/json',
       },
     },
-    use: [],
+    use: [authenticate],
   });
 
   const searchMatch = fetcher
