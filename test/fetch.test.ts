@@ -1,13 +1,11 @@
 import './fetch-polyfill';
 
 import { ApiError } from 'openapi-typescript-fetch';
-import {
-  searchMatch,
-  submitScore,
-  submitReplay,
-  getReplay,
-} from '../src/index';
+import PlaytClient from '../src/index';
 import { describe, it, expect } from 'vitest';
+
+const client = PlaytClient();
+const { searchMatch, submitScore, submitReplay, getReplay } = client;
 
 /**
  * These tests should not replace backend tests, but make sure that the services are available.
