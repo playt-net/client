@@ -30,7 +30,7 @@
   "scripts": {
     "clean": "rimraf './dist'",
     "build": "npm run clean && tsc --project tsconfig.esm.json",
-    "generate": "openapi-typescript https://fun-fair-git-lmachens-issue300-playt.vercel.app/api/docs --output src/types.ts --prettier-config .prettierrc.json",
+    "generate": "openapi-typescript https://fun-fair.vercel.app/api/docs --output src/types.ts --prettier-config .prettierrc.json",
     "test": "vitest",
     "typecheck": "tsc --noEmit --project tsconfig.json"
   },
@@ -47,7 +47,7 @@
     "prettier": "2.7.1",
     "rimraf": "3.0.2",
     "typescript": "4.7.4",
-    "vitest": "^0.18.1",
+    "vitest": "0.18.1",
     "whatwg-fetch": "3.6.2"
   }
 }
