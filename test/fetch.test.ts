@@ -1,5 +1,6 @@
+import './fetch-polyfill';
+
 import { ApiError } from 'openapi-typescript-fetch';
-import 'whatwg-fetch';
 import {
   searchMatch,
   submitScore,
