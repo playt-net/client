@@ -1,7 +1,6 @@
 import './fetch-polyfill';
 
-import { ApiError } from 'openapi-typescript-fetch';
-import PlaytClient from '../src/index';
+import PlaytClient, { ApiError } from '../src/index';
 import { describe, it, expect } from 'vitest';
 
 const client = PlaytClient();
