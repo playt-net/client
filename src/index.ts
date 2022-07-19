@@ -1,6 +1,6 @@
-import { ApiError, Fetcher } from 'openapi-typescript-fetch';
+import { ApiError, Fetcher } from './fetcher/index.js';
 
-import type { paths } from './types';
+import type { paths } from './types.js';
 
 export { ApiError };
 
