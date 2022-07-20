@@ -1,4 +1,4 @@
-import { ApiError, Fetcher, Middleware } from './fetcher/index.js';
+import { ApiError, Fetcher } from './fetcher/index.js';
 
 import type { paths } from './types.js';
 
@@ -10,19 +10,15 @@ const PlaytClient = function (
 ) {
   const fetcher = Fetcher.for<paths>();
 
-  const authenticate: Middleware = async (url, init, next) => {
-    init.headers.set('Authorization', apiKey);
-    return next(url, init);
-  };
-
   fetcher.configure({
     baseUrl: apiUrl,
     init: {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: apiKey,
       },
     },
-    use: [authenticate],
+    use: [],
   });
 
   const searchMatch = fetcher
