@@ -5,8 +5,8 @@ import type { paths } from './types.js';
 export { ApiError };
 
 const PlaytClient = function (
-  apiUrl = 'https://fun-fair.vercel.app',
-  apiKey = ''
+  apiKey: string,
+  apiUrl = 'https://fun-fair.vercel.app'
 ) {
   const fetcher = Fetcher.for<paths>();
 

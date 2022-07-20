@@ -3,7 +3,7 @@ import './fetch-polyfill';
 import PlaytClient, { ApiError } from '../src/index';
 import { describe, it, expect } from 'vitest';
 
-const client = PlaytClient();
+const client = PlaytClient('INVALID_KEY');
 const { searchMatch, submitScore, submitReplay, getReplay } = client;
 
 /**
