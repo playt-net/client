@@ -4,7 +4,10 @@ import type { paths } from './types.js';
 
 export { ApiError };
 
-const PlaytClient = function (apiUrl = 'https://fun-fair.vercel.app') {
+const PlaytClient = function (
+  apiUrl = 'https://fun-fair.vercel.app',
+  apiKey = ''
+) {
   const fetcher = Fetcher.for<paths>();
 
   fetcher.configure({
@@ -12,6 +15,7 @@ const PlaytClient = function (apiUrl = 'https://fun-fair.vercel.app') {
     init: {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: apiKey,
       },
     },
     use: [],
