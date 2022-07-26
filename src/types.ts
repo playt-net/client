@@ -5,7 +5,7 @@
 
 export interface paths {
   '/api/matches/scores': {
-    /** The score depends on the game and should be an accumulated score of the user at a given time. Previously submitted scores will be ignored when a player is aborted or times out. Submitting a final score will finalise the match for the given player and no subsequent updates can be posted. */
+    /** The score depends on the game and should be an accumulated score of the user at a given time. Previously submitted scores will be ignored when a player has surrendered or is timed out. Submitting a final score or surrendering will finalise the match for the given player and no subsequent updates can be posted. */
     post: {
       responses: {
         200: {
@@ -22,7 +22,8 @@ export interface paths {
           'application/json': {
             playerToken: string;
             score: number;
-            finalSnapshot: boolean;
+            finalSnapshot?: boolean;
+            surrender?: boolean;
           };
         };
       };
@@ -37,7 +38,7 @@ export interface paths {
             'application/json': {
               gameId: string;
               /** @enum {string} */
-              matchTier: '1vs1' | '5p' | '10p' | 'tournament';
+              matchTier: 'tutorial' | '1vs1' | '5p' | '10p' | 'tournament';
               requiredPlayers: number;
               /** @enum {string} */
               matchState: 'running' | 'finished';
