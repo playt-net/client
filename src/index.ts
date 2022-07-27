@@ -29,6 +29,10 @@ const PlaytClient = function (
     .path('/api/matches/scores')
     .method('post')
     .create();
+  const submitTutorialScore = fetcher
+    .path('/api/tutorials/scores')
+    .method('post')
+    .create();
   const submitReplay = fetcher.path('/api/replays').method('post').create();
   const getReplay = fetcher.path('/api/replays').method('get').create();
 
@@ -36,6 +40,7 @@ const PlaytClient = function (
     fetcher,
     searchMatch,
     submitScore,
+    submitTutorialScore,
     submitReplay,
     getReplay,
   };
