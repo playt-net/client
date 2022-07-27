@@ -141,6 +141,31 @@ export interface paths {
       };
     };
   };
+  '/api/tutorials/scores': {
+    /** The score depends on the game and should be an accumulated score of the user at a given time. Previously submitted scores will be ignored when a player has surrendered or is timed out. Submitting a final score or surrendering will finalise the match for the given player and no subsequent updates can be posted. */
+    post: {
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              /** @enum {string} */
+              message: 'success';
+            };
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            playerToken: string;
+            score: number;
+            finalSnapshot?: boolean;
+            surrender?: boolean;
+          };
+        };
+      };
+    };
+  };
 }
 
 export interface components {}

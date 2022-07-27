@@ -4,7 +4,13 @@ import PlaytClient, { ApiError } from '../src/index';
 import { describe, it, expect } from 'vitest';
 
 const client = PlaytClient('INVALID_KEY');
-const { searchMatch, submitScore, submitReplay, getReplay } = client;
+const {
+  searchMatch,
+  submitScore,
+  submitTutorialScore,
+  submitReplay,
+  getReplay,
+} = client;
 
 /**
  * These tests should not replace backend tests, but make sure that the services are available.
@@ -34,6 +40,20 @@ describe('fetch', () => {
       const { status, statusText } = error as ApiError;
       expect(status).toBe(401);
       expect(statusText).toBe('Unauthorized');
+    }
+  });
+  it('submitTutorialScore', async () => {
+    try {
+      await submitTutorialScore({
+        playerToken: 'unknown',
+        score: 1000,
+        finalSnapshot: true,
+      });
+      throw Error('Should fail without valid query');
+    } catch (error) {
+      const { status, statusText } = error as ApiError;
+      expect(status).toBe(404);
+      expect(statusText).toBe('Not Found');
     }
   });
   it('submitReplay', async () => {
