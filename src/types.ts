@@ -4,6 +4,26 @@
  */
 
 export interface paths {
+  '/api/live/channels': {
+    /** The playerToken identifies a player in a match. */
+    get: {
+      parameters: {
+        path: {
+          playerToken: string;
+        };
+      };
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              channelName: string;
+              appKey: string;
+            };
+          };
+        };
+      };
+    };
+  };
   '/api/matches/scores': {
     /** The score depends on the game and should be an accumulated score of the user at a given time. Previously submitted scores will be ignored when a player has surrendered or is timed out. Submitting a final score or surrendering will finalise the match for the given player and no subsequent updates can be posted. */
     post: {
@@ -36,6 +56,7 @@ export interface paths {
         200: {
           content: {
             'application/json': {
+              id: string;
               gameId: string;
               /** @enum {string} */
               matchTier: 'tutorial' | '1vs1' | '5p' | '10p' | 'tournament';
