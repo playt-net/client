@@ -42,8 +42,8 @@ export interface paths {
           'application/json': {
             playerToken: string;
             score: number;
-            finalSnapshot?: boolean;
-            surrender?: boolean;
+            finalSnapshot?: boolean | null;
+            surrender?: boolean | null;
           };
         };
       };
@@ -58,29 +58,53 @@ export interface paths {
             'application/json': {
               id: string;
               gameId: string;
+              gameTitle: string;
               /** @enum {string} */
               matchTier: 'tutorial' | '1vs1' | '5p' | '10p' | 'tournament';
               requiredPlayers: number;
               /** @enum {string} */
               matchState: 'running' | 'finished';
-              finishedAt?: string;
+              finishedAt?: string | null;
               denominationTier: string;
               players: {
                 userId: string;
                 name: string;
+                didNotFinish?: boolean | null;
                 scoreSnapshots: {
                   score: number;
                   timestamp: string;
                 }[];
-                finalScore?: number;
-                ranking?: number;
-                replayId?: string;
-                earnings?: {
-                  amount: number;
-                  /** @enum {string} */
-                  type: 'coins';
-                }[];
+                finalScore?: number | null;
+                ranking?: number | null;
+                replayId?: string | null;
+                earnings?:
+                  | {
+                      amount: number;
+                      /** @enum {string} */
+                      type: 'coins';
+                    }[]
+                  | null;
               }[];
+              player: {
+                userId: string;
+                name: string;
+                playerToken: string;
+                didNotFinish?: boolean | null;
+                scoreSnapshots: {
+                  score: number;
+                  timestamp: string;
+                }[];
+                finalScore?: number | null;
+                ranking?: number | null;
+                replayId?: string | null;
+                earnings?:
+                  | {
+                      amount: number;
+                      /** @enum {string} */
+                      type: 'coins';
+                    }[]
+                  | null;
+              };
               entryCost: {
                 /** @enum {string} */
                 identifier: 'coins';
@@ -88,23 +112,6 @@ export interface paths {
               };
               createdAt: string;
               updatedAt: string;
-              player: {
-                userId: string;
-                name: string;
-                playerToken: string;
-                scoreSnapshots: {
-                  score: number;
-                  timestamp: string;
-                }[];
-                finalScore?: number;
-                ranking?: number;
-                replayId?: string;
-                earnings?: {
-                  amount: number;
-                  /** @enum {string} */
-                  type: 'coins';
-                }[];
-              };
             };
           };
         };
@@ -112,7 +119,8 @@ export interface paths {
       requestBody: {
         content: {
           'application/json': {
-            playerToken: string;
+            playerToken?: string | null;
+            matchId?: string | null;
           };
         };
       };
@@ -131,6 +139,7 @@ export interface paths {
         200: {
           content: {
             'application/json': {
+              id: string;
               matchId: string;
               userId: string;
               name: string;
@@ -180,8 +189,8 @@ export interface paths {
           'application/json': {
             playerToken: string;
             score: number;
-            finalSnapshot?: boolean;
-            surrender?: boolean;
+            finalSnapshot?: boolean | null;
+            surrender?: boolean | null;
           };
         };
       };
