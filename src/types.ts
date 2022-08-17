@@ -69,6 +69,7 @@ export interface paths {
               players: {
                 userId: string;
                 name: string;
+                avatarUrl?: string;
                 didNotFinish?: boolean | null;
                 scoreSnapshots: {
                   score: number;
@@ -88,6 +89,7 @@ export interface paths {
               player: {
                 userId: string;
                 name: string;
+                avatarUrl?: string;
                 playerToken: string;
                 didNotFinish?: boolean | null;
                 scoreSnapshots: {
