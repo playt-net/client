@@ -69,7 +69,18 @@ export interface paths {
               players: {
                 userId: string;
                 name: string;
-                avatarUrl: string;
+                avatar: {
+                  url: string;
+                  /** @enum {string} */
+                  backgroundColor:
+                    | '#FFAA7A'
+                    | '#A9FF94'
+                    | '#D694FF'
+                    | '#94BFFF'
+                    | '#7EFFD1'
+                    | '#FFDB7E'
+                    | '#FF7E7E';
+                };
                 didNotFinish?: boolean | null;
                 scoreSnapshots: {
                   score: number;
@@ -89,7 +100,18 @@ export interface paths {
               player: {
                 userId: string;
                 name: string;
-                avatarUrl: string;
+                avatar: {
+                  url: string;
+                  /** @enum {string} */
+                  backgroundColor:
+                    | '#FFAA7A'
+                    | '#A9FF94'
+                    | '#D694FF'
+                    | '#94BFFF'
+                    | '#7EFFD1'
+                    | '#FFDB7E'
+                    | '#FF7E7E';
+                };
                 playerToken: string;
                 didNotFinish?: boolean | null;
                 scoreSnapshots: {
