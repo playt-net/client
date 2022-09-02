@@ -59,13 +59,18 @@ export interface paths {
               id: string;
               gameId: string;
               gameTitle: string;
-              /** @enum {string} */
-              matchTier: 'tutorial' | '1vs1' | '5p' | '10p' | 'tournament';
-              requiredPlayers: number;
+              matchTier: {
+                name: string;
+                label: string;
+                /** @enum {string} */
+                type: 'tutorial' | 'single' | 'quickTournament';
+                playerCount: number;
+                prize: number;
+                entryCost: number;
+              };
               /** @enum {string} */
               matchState: 'running' | 'finished';
               finishedAt?: string | null;
-              denominationTier: string;
               players: {
                 userId: string;
                 name: string;
@@ -128,11 +133,6 @@ export interface paths {
                       type: 'coins';
                     }[]
                   | null;
-              };
-              entryCost: {
-                /** @enum {string} */
-                identifier: 'coins';
-                amount: number;
               };
               createdAt: string;
               updatedAt: string;
