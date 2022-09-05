@@ -1,6 +1,6 @@
 {
   "name": "@playt/client",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "A client for the PLAYT API",
   "engines": {
     "node": ">= 16.0.0",
