@@ -61,7 +61,8 @@ export interface paths {
               gameTitle: string;
               matchTier: {
                 name: string;
-                label: string;
+                /** @enum {string} */
+                label: 'venti' | 'grande' | 'yolo' | 'tutorial';
                 /** @enum {string} */
                 type: 'tutorial' | 'single' | 'quickTournament';
                 playerCount: number;
@@ -134,6 +135,8 @@ export interface paths {
                     }[]
                   | null;
               };
+              /** @enum {number} */
+              difficulty: 0 | 1 | 2 | 3;
               createdAt: string;
               updatedAt: string;
             };
