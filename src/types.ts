@@ -57,8 +57,16 @@ export interface paths {
           content: {
             'application/json': {
               id: string;
-              gameId: string;
-              gameTitle: string;
+              game: {
+                gameId: string;
+                title: string;
+                iconUrl: string;
+              };
+              tournament?: {
+                tournamentId: string;
+                stage: number;
+                totalStages: number;
+              } | null;
               matchTier: {
                 name: string;
                 /** @enum {string} */
@@ -67,6 +75,7 @@ export interface paths {
                 type: 'tutorial' | 'single' | 'quickTournament';
                 playerCount: number;
                 prize: number;
+                basicMedals: number;
                 entryCost: number;
               };
               /** @enum {string} */
@@ -94,12 +103,13 @@ export interface paths {
                 }[];
                 finalScore?: number | null;
                 ranking?: number | null;
+                quitGame?: boolean | null;
                 replayId?: string | null;
                 earnings?:
                   | {
                       amount: number;
                       /** @enum {string} */
-                      type: 'coins';
+                      type: 'coins' | 'medals';
                     }[]
                   | null;
               }[];
@@ -126,12 +136,13 @@ export interface paths {
                 }[];
                 finalScore?: number | null;
                 ranking?: number | null;
+                quitGame?: boolean | null;
                 replayId?: string | null;
                 earnings?:
                   | {
                       amount: number;
                       /** @enum {string} */
-                      type: 'coins';
+                      type: 'coins' | 'medals';
                     }[]
                   | null;
               };
@@ -139,6 +150,7 @@ export interface paths {
               difficulty: 0 | 1 | 2 | 3;
               createdAt: string;
               updatedAt: string;
+              dueDate?: string;
             };
           };
         };
@@ -148,6 +160,28 @@ export interface paths {
           'application/json': {
             playerToken?: string | null;
             matchId?: string | null;
+          };
+        };
+      };
+    };
+  };
+  '/api/matches/quit': {
+    /** If the quitGame value is true , the iframe with the game will be closed */
+    post: {
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              /** @enum {string} */
+              message: 'success';
+            };
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            playerToken: string;
           };
         };
       };
@@ -172,6 +206,7 @@ export interface paths {
               name: string;
               payload: string;
               createdAt: string;
+              updatedAt?: string;
             };
           };
         };
