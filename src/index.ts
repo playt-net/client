@@ -40,6 +40,7 @@ const PlaytClient = function ({
     .path('/api/matches/scores')
     .method('post')
     .create();
+  const quitMatch = fetcher.path('/api/matches/quit').method('post').create();
   const submitTutorialScore = fetcher
     .path('/api/tutorials/scores')
     .method('post')
@@ -80,6 +81,7 @@ const PlaytClient = function ({
     submitTutorialScore,
     submitReplay,
     getReplay,
+    quitMatch,
     subscribeLiveMatch,
     getLiveMatchChannel,
   };

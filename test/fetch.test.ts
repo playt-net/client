@@ -8,6 +8,7 @@ const client = PlaytClient({
 });
 const {
   searchMatch,
+  quitMatch,
   submitScore,
   submitTutorialScore,
   submitReplay,
@@ -28,6 +29,18 @@ describe('fetch', () => {
       const { status, statusText } = error as ApiError;
       expect(status).toBe(404);
       expect(statusText).toBe('Not Found');
+    }
+  });
+  it('quitMatch', async () => {
+    try {
+      await quitMatch({
+        playerToken: 'unknown',
+      });
+      throw Error('Should fail without valid query');
+    } catch (error) {
+      const { status, statusText } = error as ApiError;
+      expect(status).toBe(401);
+      expect(statusText).toBe('Unauthorized');
     }
   });
   it('submitScore', async () => {
