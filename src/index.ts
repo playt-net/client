@@ -86,3 +86,55 @@ export const PlaytServer = function ({
     getLiveMatchChannel,
   };
 };
+
+export const PlaytClient = ({
+  apiUrl,
+  gameId,
+  gameKey,
+}: {
+  apiUrl: string;
+  gameId: string;
+  gameKey: string;
+}) => {
+  async function setupAnybrain() {
+    import(
+      /* webpackIgnore: true */
+      `${apiUrl}/AnybrainSDK/anybrain.helper.js`
+    );
+    return new Promise<void>((resolve, reject) => {
+      document.addEventListener('anybrain', (event) => {
+        // @ts-expect-error
+        if (event.detail.loadModuleSuccess()) {
+          // @ts-expect-error
+          AnybrainSetCredentials(gameId, gameKey);
+
+          resolve();
+        }
+        // @ts-expect-error
+        if (event.detail.error != 0) {
+          reject();
+        }
+      });
+    });
+  }
+  const anybrain = setupAnybrain();
+
+  const startMatch = async (playerToken: string) => {
+    await anybrain;
+    // @ts-expect-error
+    AnybrainSetUserId(playerToken);
+    // @ts-expect-error
+    AnybrainStartSDK();
+    // @ts-expect-error
+    return AnybrainStartMatch(playerToken);
+  };
+
+  const stopMatch = async () => {
+    await anybrain;
+    // @ts-expect-error
+    AnybrainStopMatch();
+    // @ts-expect-error
+    return AnybrainStopSDK();
+  };
+  return { startMatch, stopMatch };
+};
