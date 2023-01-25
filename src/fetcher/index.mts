@@ -1,7 +1,7 @@
 // Based on https://github.com/ajaishankar/openapi-typescript-fetch without CJS
 
-import { Fetcher } from './fetcher.js';
-import { arrayRequestBody } from './utils.js';
+import { Fetcher } from './fetcher.mjs';
+import { arrayRequestBody } from './utils.mjs';
 
 import type {
   ApiResponse,
@@ -14,9 +14,9 @@ import type {
   OpDefaultReturnType,
   OpReturnType,
   TypedFetch,
-} from './types.js';
+} from './types.mjs';
 
-import { ApiError } from './types.js';
+import { ApiError } from './types.mjs';
 
 export type {
   OpArgType,

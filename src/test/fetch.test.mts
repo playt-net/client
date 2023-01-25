@@ -1,10 +1,13 @@
 import './fetch-polyfill';
 
-import PlaytClient, { ApiError } from '../src/index';
+import PlaytClient, { ApiError } from '../index.mjs';
 import { describe, it, expect } from 'vitest';
+
+// TODO fix test
 
 const client = PlaytClient({
   apiKey: 'INVALID',
+  apiUrl: 'https://fun-fair.vercel.app',
 });
 const {
   searchMatch,

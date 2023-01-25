@@ -1,25 +1,31 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src",
-    "declaration": true,
+    "rootDir": "src",
+
     "esModuleInterop": true,
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "moduleResolution": "Node",
-    "strict": true,
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
-    "inlineSourceMap": false,
-    "listEmittedFiles": false,
-    "listFiles": false,
-    "noFallthroughCasesInSwitch": true,
-    "pretty": true,
-    "resolveJsonModule": true,
     "skipLibCheck": true,
-    "traceResolution": false,
+
+    "lib": ["dom", "dom.iterable", "esnext"],
     "types": ["node"],
+
+    "resolveJsonModule": true,
     "module": "esnext",
+    "moduleResolution": "nodenext",
+    "allowJs": true,
+
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "inlineSourceMap": false,
     "outDir": "./dist",
-    "target": "esnext"
+    "target": "esnext",
+
+    "strict": true,
+    "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "test"]
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  },
+  "include": ["src/**/*"]
 }
