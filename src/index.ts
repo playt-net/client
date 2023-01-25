@@ -6,7 +6,7 @@ import type { FetchConfig } from './fetcher/types.js';
 
 export { ApiError };
 
-const PlaytClient = function ({
+export const PlaytServer = function ({
   apiKey,
   apiUrl,
 }: {
@@ -86,5 +86,3 @@ const PlaytClient = function ({
     getLiveMatchChannel,
   };
 };
-
-export default PlaytClient;
