@@ -1,7 +1,6 @@
 import { ApiError, Fetcher } from './fetcher/index.mjs';
 
 import type { paths } from './types.mjs';
-import Pusher from 'pusher-js';
 import type { FetchConfig } from './fetcher/types.mjs';
 
 export { ApiError };
@@ -29,10 +28,6 @@ const PlaytClient = function ({
   }
   fetcher.configure(config);
 
-  const getLiveMatchChannel = fetcher
-    .path('/api/live/channels')
-    .method('get')
-    .create();
   const searchMatch = fetcher
     .path('/api/matches/search')
     .method('post')
@@ -49,32 +44,6 @@ const PlaytClient = function ({
   const submitReplay = fetcher.path('/api/replays').method('post').create();
   const getReplay = fetcher.path('/api/replays').method('get').create();
 
-  const subscribeLiveMatch = async (
-    playerToken: string,
-    onUpdate: (data: any) => void
-  ) => {
-    const { data: liveChannel } = await getLiveMatchChannel({ playerToken });
-    const pusher = new Pusher.default(liveChannel.appKey, {
-      cluster: 'eu',
-      channelAuthorization: {
-        transport: 'ajax',
-        endpoint: `${apiUrl}/api/live/auth`,
-        params: { playerToken },
-      },
-    });
-    const channel = pusher.subscribe(liveChannel.channelName);
-
-    channel.bind('client-update', (data: any) => {
-      onUpdate(data);
-    });
-
-    return {
-      send: (payload: any) => {
-        channel.trigger('client-update', payload);
-      },
-    };
-  };
-
   return {
     fetcher,
     searchMatch,
@@ -83,8 +52,6 @@ const PlaytClient = function ({
     submitReplay,
     getReplay,
     quitMatch,
-    subscribeLiveMatch,
-    getLiveMatchChannel,
   };
 };
 export default PlaytClient;
