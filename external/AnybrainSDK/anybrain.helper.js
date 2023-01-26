@@ -33,7 +33,7 @@ var Mouse;
   Mouse[(Mouse["MOVED"] = 2)] = "MOVED";
   Mouse[(Mouse["WHEEL"] = 3)] = "WHEEL";
 })(Mouse || (Mouse = {}));
-const anyWorker = new Worker("AnybrainSDK/anybrain.worker.js");
+const anyWorker = new Worker(new URL('./anybrain.worker.js', import.meta.url), { type: 'module' });
 anyWorker.postMessage([WorkerMessage.InitModule]);
 anyWorker.addEventListener("message", (event) => {
   if (event.data[0] === WorkerMessage.Success) {
@@ -118,37 +118,37 @@ window.addEventListener("wheel", (event) => {
   ]);
 });
 // SDK Methods
-function AnybrainSetCredentials(gk, gs) {
+export function AnybrainSetCredentials(gk, gs) {
   anyWorker.postMessage([WorkerMessage.Credentials, gk, gs]);
 }
-function AnybrainSetUserId(userId) {
+export function AnybrainSetUserId(userId) {
   anyWorker.postMessage([WorkerMessage.UserId, userId]);
 }
-function AnybrainStartSDK() {
+export function AnybrainStartSDK() {
   anyWorker.postMessage([
     WorkerMessage.StartSDK,
     window.screen.availWidth,
     window.screen.availHeight,
   ]);
 }
-function AnybrainStopSDK() {
+export function AnybrainStopSDK() {
   anyWorker.postMessage([WorkerMessage.StopSDK]);
 }
-function AnybrainPauseSDK() {
+export function AnybrainPauseSDK() {
   anyWorker.postMessage([WorkerMessage.PauseSDK]);
 }
-function AnybrainResumeSDK() {
+export function AnybrainResumeSDK() {
   anyWorker.postMessage([WorkerMessage.ResumeSDK]);
 }
-function AnybrainStartMatch(matchId) {
+export function AnybrainStartMatch(matchId) {
   anyWorker.postMessage([WorkerMessage.StartMatch, matchId]);
 }
-function AnybrainStopMatch() {
+export function AnybrainStopMatch() {
   anyWorker.postMessage([WorkerMessage.StopMatch]);
 }
-function AnybrainReportError(severity, message) {
+export function AnybrainReportError(severity, message) {
   anyWorker.postMessage([WorkerMessage.ReportError]);
 }
-function AnybrainGetErrorDescription(number) {
+export function AnybrainGetErrorDescription(number) {
   anyWorker.postMessage([WorkerMessage.GetErrorDescription]);
 }

@@ -1,5 +1,5 @@
 "use strict";
-importScripts("anybrainSDK.js");
+import { Module } from './anybrainSDK.js';
 var WorkerMessage;
 (function (WorkerMessage) {
   WorkerMessage[(WorkerMessage["InitModule"] = 0)] = "InitModule";

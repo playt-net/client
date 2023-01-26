@@ -31,18 +31,21 @@ const PlaytBrowserClient = ({
         resolve(event);
       });
     });
-    // @ts-expect-error TODO
-    await import(`../external/AnybrainSDK/anybrain.helper.js`);
+    const { AnybrainSetCredentials } = await import(
+      // @ts-expect-error TODO
+      `../external/AnybrainSDK/anybrain.helper.js`
+    );
     const event = await anybrainEvent;
 
     // @ts-expect-error TODO
     if (event.detail.loadModuleSuccess()) {
       AnybrainSetCredentials(gameId, gameKey);
+    } else {
+      throw new Error(
+        // @ts-expect-error TODO
+        `Anybrain SDK failed to load. Error code: ${event.detail.error}`
+      );
     }
-    throw new Error(
-      // @ts-expect-error TODO
-      `Anybrain SDK failed to load. Error code: ${event.detail.error}`
-    );
   }
   const anybrain = setupAnybrain();
 

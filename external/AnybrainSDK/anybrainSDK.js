@@ -1,4 +1,4 @@
-var Module = typeof Module != "undefined" ? Module : {};
+export var Module = typeof Module != "undefined" ? Module : {};
 var moduleOverrides = Object.assign({}, Module);
 var arguments_ = [];
 var thisProgram = "./this.program";
@@ -6,7 +6,7 @@ var quit_ = (status, toThrow) => {
   throw toThrow;
 };
 var ENVIRONMENT_IS_WEB = typeof window == "object";
-var ENVIRONMENT_IS_WORKER = typeof importScripts == "function";
+var ENVIRONMENT_IS_WORKER = typeof ImportScripts == "function";
 var ENVIRONMENT_IS_NODE =
   typeof process == "object" &&
   typeof process.versions == "object" &&
@@ -423,7 +423,7 @@ function createWasm() {
         abort(reason);
       });
   }
-  function instantiateAsync() {
+  async function instantiateAsync() {
     if (
       !wasmBinary &&
       typeof WebAssembly.instantiateStreaming == "function" &&
@@ -432,6 +432,7 @@ function createWasm() {
       !ENVIRONMENT_IS_NODE &&
       typeof fetch == "function"
     ) {
+      wasmBinaryFile = (await import('./anybrainSDK.wasm')).default;
       return fetch(wasmBinaryFile, { credentials: "same-origin" }).then(
         function (response) {
           var result = WebAssembly.instantiateStreaming(response, info);
