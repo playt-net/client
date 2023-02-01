@@ -6,7 +6,7 @@
     "node": ">= 16.0.0",
     "npm": ">= 8.0.0"
   },
-  "author": "Leon Machens",
+  "author": "PLAYT.net AG",
   "license": "MIT",
   "keywords": [
     "fetch",
@@ -34,19 +34,19 @@
     "test": "vitest",
     "typecheck": "tsc --noEmit --project tsconfig.json"
   },
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "5.30.6",
-    "@typescript-eslint/parser": "5.30.6",
-    "eslint": "8.20.0",
-    "eslint-config-prettier": "8.5.0",
-    "node-fetch": "3.2.9",
-    "openapi-typescript": "5.4.1",
-    "prettier": "2.7.1",
-    "rimraf": "3.0.2",
-    "typescript": "4.7.4",
-    "vitest": "0.18.1"
-  },
   "dependencies": {
-    "pusher-js": "7.3.0"
+    "pusher-js": "^7.3.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.30.6",
+    "@typescript-eslint/parser": "^5.30.6",
+    "eslint": "^8.20.0",
+    "eslint-config-prettier": "^8.5.0",
+    "node-fetch": "^3.2.9",
+    "openapi-typescript": "^5.4.1",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "typescript": "~4.7.4",
+    "vitest": "^0.18.1"
   }
 }
