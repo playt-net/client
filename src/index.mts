@@ -15,7 +15,7 @@ const PlaytClient = function ({
 }) {
   const fetcher = Fetcher.for<paths>();
   const config: FetchConfig = {
-    baseUrl: apiUrl ?? 'https://fun-fair.vercel.app',
+    baseUrl: apiUrl,
     use: [],
   };
   if (typeof apiKey !== 'undefined') {

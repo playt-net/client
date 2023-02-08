@@ -6,16 +6,16 @@ import { paths } from './types.mjs';
 const PlaytBrowserClient = ({
   // TODO move pusher stuff in here
   apiUrl,
-  gameId,
-  gameKey,
+  anybrainGameKey,
+  anybrainGameSecret,
 }: {
-  apiUrl?: string;
-  gameId: string;
-  gameKey: string;
+  apiUrl: string;
+  anybrainGameKey: string;
+  anybrainGameSecret: string;
 }) => {
   const fetcher = Fetcher.for<paths>();
   const config: FetchConfig = {
-    baseUrl: apiUrl ?? 'https://fun-fair.vercel.app',
+    baseUrl: apiUrl,
     use: [],
   };
   fetcher.configure(config);
@@ -39,7 +39,7 @@ const PlaytBrowserClient = ({
 
     // @ts-expect-error TODO
     if (event.detail.loadModuleSuccess()) {
-      anybrain.AnybrainSetCredentials(gameId, gameKey);
+      anybrain.AnybrainSetCredentials(anybrainGameKey, anybrainGameSecret);
       return anybrain;
     } else {
       throw new Error(
