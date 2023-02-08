@@ -31,7 +31,7 @@ const PlaytBrowserClient = ({
         resolve(event);
       });
     });
-    const { AnybrainSetCredentials } = await import(
+    const anybrain = await import(
       // @ts-expect-error TODO
       `../external/AnybrainSDK/anybrain.helper.js`
     );
@@ -39,7 +39,8 @@ const PlaytBrowserClient = ({
 
     // @ts-expect-error TODO
     if (event.detail.loadModuleSuccess()) {
-      AnybrainSetCredentials(gameId, gameKey);
+      anybrain.AnybrainSetCredentials(gameId, gameKey);
+      return anybrain;
     } else {
       throw new Error(
         // @ts-expect-error TODO
@@ -47,17 +48,18 @@ const PlaytBrowserClient = ({
       );
     }
   }
-  const anybrain = setupAnybrain();
+  const anybrainPromise = setupAnybrain();
 
   const startMatch = async (playerToken: string) => {
-    await anybrain;
+    const { AnybrainSetUserId, AnybrainStartMatch, AnybrainStartSDK } =
+      await anybrainPromise;
     AnybrainSetUserId(playerToken);
     AnybrainStartSDK();
     return AnybrainStartMatch(playerToken);
   };
 
   const stopMatch = async () => {
-    await anybrain;
+    const { AnybrainStopMatch, AnybrainStopSDK } = await anybrainPromise;
     AnybrainStopMatch();
     return AnybrainStopSDK();
   };
