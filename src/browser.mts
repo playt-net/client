@@ -4,7 +4,7 @@ import { FetchConfig } from './fetcher/types.mjs';
 import { paths } from './types.mjs';
 
 const PlaytBrowserClient = ({
-  // TODO move pusher stuff in here
+  // TODO move pusher stuff in here, proper browser/server split
   apiUrl,
   anybrainGameKey,
   anybrainGameSecret,
@@ -33,7 +33,7 @@ const PlaytBrowserClient = ({
     });
     const anybrain = await import(
       // @ts-expect-error TODO
-      `../external/AnybrainSDK/anybrain.helper.js`
+      `@playt/anybrain-sdk`
     );
     const event = await anybrainEvent;
 

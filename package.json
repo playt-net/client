@@ -15,16 +15,16 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/src/index.d.mts",
-      "import": "./dist/src/index.mjs"
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
     },
     "./browser": {
-      "types": "./dist/src/browser.d.mts",
-      "import": "./dist/src/browser.mjs"
+      "types": "./dist/browser.d.mts",
+      "import": "./dist/browser.mjs"
     }
   },
-  "module": "./dist/src/index.mjs",
-  "types": "./dist/src/index.d.mts",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "repository": {
     "type": "git",
     "url": "https://github.com/playt-net/client"
@@ -35,9 +35,7 @@
   "homepage": "https://github.com/playt-net/client#readme",
   "scripts": {
     "clean": "rimraf './dist'",
-    "build": "npm run clean && tsc && npm run build:src && npm run build:external",
-    "build:src": "babel src -d dist/src --extensions .mts --out-file-extension .mjs",
-    "build:external": "babel --copy-files external -d dist/external --extensions .js --out-file-extension .js",
+    "build": "npm run clean && tsc && babel src -d dist --extensions .mts --out-file-extension .mjs",
     "generate": "openapi-typescript https://fun-fair.vercel.app/api/docs --output src/types.ts --prettier-config .prettierrc.json",
     "test": "vitest",
     "typecheck": "tsc --noEmit"
@@ -60,6 +58,7 @@
     "vitest": "^0.18.1"
   },
   "dependencies": {
+    "@playt/anybrain-sdk": "file:../anybrain-sdk",
     "pusher-js": "^8.0.1"
   }
 }

@@ -1,5 +1,9 @@
 # PLAYT Client
 
+TODO real @playt/anybrain-sdk dependency
+TODO update docs with new browser/server usage
+TODO update @playt/anybrain-sdk version in package.json
+
 An API client for PLAYT, written in Typescript.
 
 ## Features
