@@ -74,7 +74,7 @@ const PlaytBrowserClient = ({
     onUpdate: (data: any) => void
   ) => {
     const { data: liveChannel } = await getLiveMatchChannel({ playerToken });
-    const pusher = new Pusher.default(liveChannel.appKey, {
+    const pusher = new (Pusher.default ?? Pusher)(liveChannel.appKey, {
       cluster: 'eu',
       channelAuthorization: {
         transport: 'ajax',
