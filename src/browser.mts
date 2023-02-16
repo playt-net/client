@@ -25,36 +25,42 @@ const PlaytBrowserClient = ({
     .create();
 
   async function setupAnybrain() {
-    const anybrainEvent = new Promise((resolve) => {
-      document.addEventListener('anybrain', (event) => {
-        resolve(event);
-      });
-    });
-    const anybrain = await import(
-      // @ts-expect-error TODO
-      `@playt/anybrain-sdk`
+    const anybrainEvent = new Promise<DocumentEventMap['anybrain']>(
+      (resolve) => {
+        document.addEventListener('anybrain', (event) => {
+          resolve(event);
+        });
+      }
     );
+    const anybrain = await import(`@playt/anybrain-sdk`);
     const event = await anybrainEvent;
 
-    // @ts-expect-error TODO
     if (event.detail.loadModuleSuccess()) {
       anybrain.AnybrainSetCredentials(anybrainGameKey, anybrainGameSecret);
       return anybrain;
     } else {
       throw new Error(
-        // @ts-expect-error TODO
         `Anybrain SDK failed to load. Error code: ${event.detail.error}`
       );
     }
   }
   const anybrainPromise = setupAnybrain();
 
-  const startMatch = async (playerToken: string) => {
-    const { AnybrainSetUserId, AnybrainStartMatch, AnybrainStartSDK } =
-      await anybrainPromise;
-    AnybrainSetUserId(playerToken);
+  const startMatch = async (
+    userId: string,
+    matchId: string,
+    playerToken: string
+  ) => {
+    const {
+      AnybrainSetUserId,
+      AnybrainStartMatch,
+      AnybrainStartSDK,
+      AnybrainSetPlayerToken,
+    } = await anybrainPromise;
+    AnybrainSetUserId(userId);
+    AnybrainSetPlayerToken(playerToken);
     AnybrainStartSDK();
-    return AnybrainStartMatch(playerToken);
+    return AnybrainStartMatch(matchId);
   };
 
   const stopMatch = async () => {
