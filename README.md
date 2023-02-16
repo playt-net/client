@@ -1,9 +1,5 @@
 # PLAYT Client
 
-TODO real @playt/anybrain-sdk dependency
-TODO update docs with new browser/server usage
-TODO update @playt/anybrain-sdk version in package.json
-
 An API client for PLAYT, written in Typescript.
 
 ## Features
@@ -18,17 +14,34 @@ An API client for PLAYT, written in Typescript.
 npm install @playt/client
 ```
 
-## API Key Usage
+### API Client
 
 When you want to connect an application to our API you must generate an API Key first.
 
 You can then use the client as follows:
 
 ```ts
-import PlaytClient from '@playt/client';
+import PlaytApiClient from '@playt/client';
 
 // Create a new client with API Key and optional API URL
-const client = PlaytClient('<API_KEY>', '<API_URL>');
+const apiClient = PlaytApiClient({
+  apiKey: '<API_KEY>',
+  apiUrl: '<API_URL>',
+});
+```
+
+### Browser Client
+
+For a web-based game, you also need to load the browser client in the browser when the user is playing the game. Among other optional features, it tracks user inputs for cheat detection using [Anybrain](https://anybrain.gg/). Use the browser client as follows:
+
+```
+import PlaytBrowserClient from '@playt/client/browser';
+
+const browserClient = PlaytBrowserClient({
+  apiUrl: '<API_URL>',
+  anybrainGameKey: '<ANYBRAIN_GAME_KEY>',
+  anybrainGameSecret: '<ANYBRAIN_GAME_SECRET>',
+})
 ```
 
 ## API
