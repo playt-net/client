@@ -4,7 +4,6 @@ import { FetchConfig } from './fetcher/types.mjs';
 import { paths } from './types.mjs';
 
 const PlaytBrowserClient = ({
-  // TODO move pusher stuff in here, proper browser/server split
   apiUrl,
   anybrainGameKey,
   anybrainGameSecret,

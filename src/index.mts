@@ -6,7 +6,7 @@ import type { FetchConfig } from './fetcher/types.mjs';
 export { ApiError };
 export type { paths };
 
-const PlaytClient = function ({
+const PlaytApiClient = function ({
   apiKey,
   apiUrl,
 }: {
@@ -54,4 +54,4 @@ const PlaytClient = function ({
     quitMatch,
   };
 };
-export default PlaytClient;
+export default PlaytApiClient;
