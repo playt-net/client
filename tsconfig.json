@@ -4,7 +4,6 @@
     "skipLibCheck": true,
 
     "lib": ["dom", "dom.iterable", "esnext"],
-    "types": ["node"],
 
     "resolveJsonModule": true,
     "module": "esnext",

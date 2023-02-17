@@ -1,4 +1,5 @@
 import './fetch-polyfill';
+import 'jest';
 
 import PlaytApiClient, { ApiError } from '../index.mjs';
 
