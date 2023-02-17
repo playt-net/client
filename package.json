@@ -36,7 +36,7 @@
   "scripts": {
     "clean": "rimraf './dist'",
     "build": "npm run clean && tsc && babel src -d dist --extensions .mts --out-file-extension .mjs",
-    "generate": "openapi-typescript https://fun-fair.vercel.app/api/docs --output src/types.ts --prettier-config .prettierrc.json",
+    "generate": "openapi-typescript https://fun-fair.vercel.app/api/docs --output src/types.mts --prettier-config .prettierrc.json",
     "test": "jest",
     "typecheck": "tsc"
   },
