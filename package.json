@@ -13,6 +13,10 @@
     "client",
     "playt"
   ],
+  "files": [
+    "src",
+    "dist"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.mts",
