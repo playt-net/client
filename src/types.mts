@@ -113,7 +113,7 @@ export interface paths {
                     }[]
                   | null;
               }[];
-              player: {
+              player?: {
                 userId: string;
                 name: string;
                 avatar: {
@@ -145,7 +145,7 @@ export interface paths {
                       type: 'coins' | 'medals';
                     }[]
                   | null;
-              };
+              } | null;
               /** @enum {number} */
               difficulty: 0 | 1 | 2 | 3;
               createdAt: string;
@@ -253,6 +253,26 @@ export interface paths {
             score: number;
             finalSnapshot?: boolean | null;
             surrender?: boolean | null;
+          };
+        };
+      };
+    };
+  };
+  '/api/anybrain/info': {
+    /** Retreives the user and match id for a given player token */
+    get: {
+      parameters: {
+        path: {
+          playerToken: string;
+        };
+      };
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              userId: string;
+              matchId: string;
+            };
           };
         };
       };
