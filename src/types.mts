@@ -24,6 +24,93 @@ export interface paths {
       };
     };
   };
+  '/api/matches/{matchId}': {
+    /** Search a match based on match id. Matches are public. */
+    get: {
+      parameters: {
+        path: {
+          /** The matchId is the same for all players in the match and is not to be confused with the gameId, userId, or playerToken (which is per-player per-match). */
+          matchId: string;
+        };
+      };
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              id: string;
+              game: {
+                gameId: string;
+                title: string;
+                iconKey: string;
+                antiCheat: {
+                  gameKey: string;
+                  gameSecret: string;
+                };
+              };
+              tournament?: {
+                tournamentId: string;
+                stage: number;
+                totalStages: number;
+              } | null;
+              matchTier: {
+                name: string;
+                /** @enum {string} */
+                label: 'venti' | 'grande' | 'yolo' | 'tutorial';
+                /** @enum {string} */
+                type: 'tutorial' | 'single' | 'quickTournament';
+                playerCount: number;
+                prize: number;
+                basicMedals: number;
+                entryCost: number;
+              };
+              /** @enum {string} */
+              matchState: 'running' | 'finished';
+              finishedAt?: string | null;
+              players: {
+                userId: string;
+                name: string;
+                avatar: {
+                  url: string;
+                  /** @enum {string} */
+                  backgroundColor:
+                    | '#FFAA7A'
+                    | '#A9FF94'
+                    | '#D694FF'
+                    | '#94BFFF'
+                    | '#7EFFD1'
+                    | '#FFDB7E'
+                    | '#FF7E7E';
+                };
+                didNotFinish?: boolean | null;
+                scoreSnapshots: {
+                  score: number;
+                  timestamp: string;
+                }[];
+                finalScore?: number | null;
+                ranking?: number | null;
+                quitGame?: boolean | null;
+                replayId?: string | null;
+                earnings?:
+                  | {
+                      amount: number;
+                      /** @enum {string} */
+                      type: 'coins' | 'medals';
+                    }[]
+                  | null;
+              }[];
+              /** @enum {number} */
+              difficulty: 0 | 1 | 2 | 3;
+              createdAt: string;
+              updatedAt: string;
+              dueDate?: string;
+            };
+          };
+        };
+        /** No match exists for this matchId */
+        404: unknown;
+      };
+    };
+  };
   '/api/matches/scores': {
     /** The score depends on the game and should be an accumulated score of the user at a given time. Previously submitted scores will be ignored when a player has surrendered or is timed out. Submitting a final score or surrendering will finalise the match for the given player and no subsequent updates can be posted. */
     post: {
@@ -60,7 +147,11 @@ export interface paths {
               game: {
                 gameId: string;
                 title: string;
-                iconUrl: string;
+                iconKey: string;
+                antiCheat: {
+                  gameKey: string;
+                  gameSecret: string;
+                };
               };
               tournament?: {
                 tournamentId: string;
