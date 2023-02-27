@@ -3,15 +3,7 @@ import { Fetcher } from './fetcher/fetcher.mjs';
 import { FetchConfig } from './fetcher/types.mjs';
 import { paths } from './types.mjs';
 
-const PlaytBrowserClient = ({
-  apiUrl,
-  anybrainGameKey,
-  anybrainGameSecret,
-}: {
-  apiUrl: string;
-  anybrainGameKey: string;
-  anybrainGameSecret: string;
-}) => {
+const PlaytBrowserClient = ({ apiUrl }: { apiUrl: string }) => {
   const fetcher = Fetcher.for<paths>();
   const config: FetchConfig = {
     baseUrl: apiUrl,
@@ -36,7 +28,6 @@ const PlaytBrowserClient = ({
     const event = await anybrainEvent;
 
     if (event.detail.loadModuleSuccess()) {
-      anybrain.AnybrainSetCredentials(anybrainGameKey, anybrainGameSecret);
       return anybrain;
     } else {
       throw new Error(
@@ -51,12 +42,24 @@ const PlaytBrowserClient = ({
     matchId: string,
     playerToken: string
   ) => {
+    const matchResp = await fetcher
+      .path('/api/matches/{matchId}')
+      .method('get')
+      .create()({ matchId });
+    if (!matchResp.ok) {
+      throw new Error(
+        `Failed to fetch match with id ${matchId}. ${matchResp.status} ${matchResp.statusText}`
+      );
+    }
+    const { gameKey, gameSecret } = matchResp.data.game.antiCheat;
     const {
+      AnybrainSetCredentials,
       AnybrainSetUserId,
       AnybrainStartMatch,
       AnybrainStartSDK,
       AnybrainSetPlayerToken,
     } = await anybrainPromise;
+    AnybrainSetCredentials(gameKey, gameSecret);
     AnybrainSetUserId(userId);
     AnybrainSetPlayerToken(playerToken);
     AnybrainStartSDK();

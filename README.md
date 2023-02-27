@@ -25,8 +25,8 @@ import PlaytApiClient from '@playt/client';
 
 // Create a new client with API Key and optional API URL
 const apiClient = PlaytApiClient({
-  apiKey: '<API_KEY>',
   apiUrl: '<API_URL>',
+  apiKey: '<API_KEY>',
 });
 ```
 
@@ -39,8 +39,6 @@ import PlaytBrowserClient from '@playt/client/browser';
 
 const browserClient = PlaytBrowserClient({
   apiUrl: '<API_URL>',
-  anybrainGameKey: '<ANYBRAIN_GAME_KEY>',
-  anybrainGameSecret: '<ANYBRAIN_GAME_SECRET>',
 })
 
 // When the game starts
