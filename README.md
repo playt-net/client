@@ -39,7 +39,7 @@ import PlaytBrowserClient from '@playt/client/browser';
 
 const browserClient = PlaytBrowserClient({
   apiUrl: '<API_URL>',
-})
+});
 
 // When the game starts
 await browserClient.startMatch('<USER_ID>', '<MATCH_ID>', '<PLAYER_TOKEN>');
@@ -89,3 +89,13 @@ git push --tags
 ```
 
 7. Create a release on GitHub
+
+## Browser client in Webpack 4
+
+As of the beginning of 2023, Webpack 4 is highly outdated and misses out-of-the-box support for plenty of standards such as `package.json` `exports`, `new Worker`, and `??` syntax. We suggest that you upgrade to Webpack 5. However, if you choose to continue using Webpack 4, we have found that the following workarounds (extremely hacky and likely not universal) might enable you to import the browser client in Webpack 4:
+
+- Import `from "@playt/client/dist/browser.mjs"` instead of the usual `from "@playt/client/browser"`
+- Transpile `??` if you get an error about it. This depends on your Webpack configuration, but is usually done with `babel-loader`, and there are usually good search results since this is an error that many people run into in various situations.
+- Add `{ test: /\.worker\.js$/, use: { loader: "worker-loader" } }` to your Webpack config `module.rules` to be able to load workers.
+- Add `"@playt/anybrain-sdk": "@playt/anybrain-sdk/webpack4/anybrain.helper.compiled.js"` to your Webpack config `resolve.alias` to load an alternative `worker-loader`-compatible version of our internal package called `@playt/anybrain-sdk`.
+- If you get an error about resolving `fs`, set your Webpack config `node.fs` to `"empty"`.
