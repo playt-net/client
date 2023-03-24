@@ -218,6 +218,8 @@ function fetcher<Paths>() {
       middlewares.push(...(config.use || []));
     },
     use: (mw: Middleware) => middlewares.push(mw),
+    // https://github.com/prettier/prettier/issues/14518
+    // prettier-ignore
     path: <P extends keyof Paths,>(path: P) => ({
       method: <M extends keyof Paths[P],>(method: M) => ({
         create: ((queryParams?: Record<string, true | 1>) =>
@@ -238,5 +240,6 @@ function fetcher<Paths>() {
 }
 
 export const Fetcher = {
+  // prettier-ignore
   for: <Paths extends OpenapiPaths<Paths>,>() => fetcher<Paths>(),
 };
