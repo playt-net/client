@@ -21,30 +21,6 @@ const sendBody = (method: Method) =>
   method === 'patch' ||
   method === 'delete';
 
-function queryString(params: Record<string, unknown>): string {
-  const qs: string[] = [];
-
-  const encode = (key: string, value: unknown) =>
-    `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`;
-
-  Object.keys(params).forEach((key) => {
-    const value = params[key];
-    if (value != null) {
-      if (Array.isArray(value)) {
-        value.forEach((value) => qs.push(encode(key, value)));
-      } else {
-        qs.push(encode(key, value));
-      }
-    }
-  });
-
-  if (qs.length > 0) {
-    return `?${qs.join('&')}`;
-  }
-
-  return '';
-}
-
 function getPath(path: string, payload: Record<string, any>) {
   return path.replace(/\{([^}]+)\}/g, (_, key) => {
     const value = encodeURIComponent(payload[key]);
@@ -56,12 +32,12 @@ function getPath(path: string, payload: Record<string, any>) {
 function getQuery(
   method: Method,
   payload: Record<string, any>,
-  query: string[]
+  queryKeys: string[]
 ) {
-  let queryObj = {} as any;
+  let queryObj = {} as Record<string, any>;
 
   if (sendBody(method)) {
-    query.forEach((key) => {
+    queryKeys.forEach((key) => {
       queryObj[key] = payload[key];
       delete payload[key];
     });
@@ -69,7 +45,8 @@ function getQuery(
     queryObj = { ...payload };
   }
 
-  return queryString(queryObj);
+  const query = new URLSearchParams(queryObj).toString();
+  return query ? '?' + query : '';
 }
 
 function getHeaders(body?: string, init?: HeadersInit) {
@@ -122,7 +99,7 @@ function getFetchParams(request: Request) {
   const query = getQuery(request.method, payload, request.queryParams);
   const body = getBody(request.method, payload);
   const headers = getHeaders(body, request.init?.headers);
-  const url = request.baseUrl + path + query;
+  const url = new URL(query, new URL(path, request.baseUrl)).toString();
 
   const init = {
     ...request.init,
