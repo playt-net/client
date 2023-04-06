@@ -67,8 +67,7 @@ const PlaytBrowserClient = ({ apiUrl }: { apiUrl: string }) => {
   };
 
   const stopMatch = async () => {
-    const { AnybrainStopMatch, AnybrainStopSDK } = await anybrainPromise;
-    AnybrainStopMatch();
+    const { AnybrainStopSDK } = await anybrainPromise;
     return AnybrainStopSDK();
   };
 
