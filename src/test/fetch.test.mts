@@ -1,7 +1,7 @@
 import './fetch-polyfill';
 import 'jest';
 
-import PlaytApiClient, { ApiError } from '../index.mjs';
+import PlaytApiClient from '../index.mjs';
 
 const client = PlaytApiClient({
   apiKey: 'INVALID',
@@ -15,6 +15,8 @@ const {
   submitReplay,
   getReplay,
 } = client;
+
+jest.setTimeout(10_000);
 
 /**
  * These tests should not replace backend tests, but make sure that the services are available.
