@@ -39,8 +39,8 @@
   "homepage": "https://github.com/playt-net/client#readme",
   "scripts": {
     "clean": "rimraf './dist'",
-    "build": "npm run clean && tsc && babel src -d dist --extensions .mts --out-file-extension .mjs",
-    "generate": "openapi-typescript https://fun-fair.vercel.app/api/docs --output src/types.mts --prettier-config .prettierrc.json",
+    "build": "npm run clean && npm run typecheck && babel src -d dist --extensions .mts --out-file-extension .mjs",
+    "generate": "openapi-typescript https://staging.clashparadise.io/api/docs --output src/types.mts --prettier-config .prettierrc.json",
     "test": "jest",
     "typecheck": "tsc"
   },

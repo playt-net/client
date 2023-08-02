@@ -55,7 +55,7 @@ export interface paths {
               matchTier: {
                 name: string;
                 /** @enum {string} */
-                label: 'venti' | 'grande' | 'yolo' | 'tutorial';
+                label: 'small' | 'medium' | 'large' | 'tutorial';
                 /** @enum {string} */
                 type: 'tutorial' | 'single' | 'quickTournament';
                 playerCount: number;
@@ -64,7 +64,7 @@ export interface paths {
                 entryCost: number;
               };
               /** @enum {string} */
-              matchState: 'running' | 'finished';
+              status: 'running' | 'finished';
               finishedAt?: string | null;
               players: {
                 userId: string;
@@ -98,8 +98,6 @@ export interface paths {
                     }[]
                   | null;
               }[];
-              /** @enum {number} */
-              difficulty: 0 | 1 | 2 | 3;
               createdAt: string;
               updatedAt: string;
               dueDate?: string;
@@ -161,7 +159,7 @@ export interface paths {
               matchTier: {
                 name: string;
                 /** @enum {string} */
-                label: 'venti' | 'grande' | 'yolo' | 'tutorial';
+                label: 'small' | 'medium' | 'large' | 'tutorial';
                 /** @enum {string} */
                 type: 'tutorial' | 'single' | 'quickTournament';
                 playerCount: number;
@@ -170,7 +168,7 @@ export interface paths {
                 entryCost: number;
               };
               /** @enum {string} */
-              matchState: 'running' | 'finished';
+              status: 'running' | 'finished';
               finishedAt?: string | null;
               players: {
                 userId: string;
@@ -237,11 +235,11 @@ export interface paths {
                     }[]
                   | null;
               } | null;
-              /** @enum {number} */
-              difficulty: 0 | 1 | 2 | 3;
               createdAt: string;
               updatedAt: string;
               dueDate?: string;
+              /** @enum {number} */
+              difficulty: 0 | 1 | 2 | 3;
             };
           };
         };
