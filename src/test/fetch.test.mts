@@ -5,7 +5,7 @@ import PlaytApiClient, { ApiError } from '../index.mjs';
 
 const client = PlaytApiClient({
   apiKey: 'INVALID',
-  apiUrl: 'https://fun-fair.vercel.app',
+  apiUrl: 'https://staging.clashparadise.io',
 });
 const {
   searchMatch,

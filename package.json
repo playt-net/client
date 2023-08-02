@@ -63,7 +63,7 @@
     "typescript": "~4.9.4"
   },
   "dependencies": {
-    "@playt/anybrain-sdk": "^1.1.0",
+    "@playt/anybrain-sdk": "^1.2.0",
     "pusher-js": "^8.0.1"
   }
 }
