@@ -16,8 +16,6 @@ const {
   getReplay,
 } = client;
 
-jest.setTimeout(10_000);
-
 /**
  * These tests should not replace backend tests, but make sure that the services are available.
  */
