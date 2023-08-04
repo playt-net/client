@@ -1,7 +1,7 @@
 import './fetch-polyfill';
 import 'jest';
 
-import PlaytApiClient, { ApiError } from '../index.mjs';
+import PlaytApiClient from '../index.mjs';
 
 const client = PlaytApiClient({
   apiKey: 'INVALID',
@@ -21,82 +21,75 @@ const {
  */
 describe('fetch', () => {
   it('searchMatch', async () => {
-    try {
-      await searchMatch({
-        playerToken: 'unknown',
-      });
-      throw Error('Should fail without valid query');
-    } catch (error) {
-      const { status, statusText } = error as ApiError;
-      expect(status).toBe(404);
-      expect(statusText).toBe('Not Found');
-    }
+    const promise = searchMatch({
+      playerToken: 'unknown',
+    });
+    await expect(promise).rejects.toThrowError(
+      expect.objectContaining({
+        status: 404,
+        statusText: 'Not Found',
+      })
+    );
   });
   it('quitMatch', async () => {
-    try {
-      await quitMatch({
-        playerToken: 'unknown',
-      });
-      throw Error('Should fail without valid query');
-    } catch (error) {
-      const { status, statusText } = error as ApiError;
-      expect(status).toBe(401);
-      expect(statusText).toBe('Unauthorized');
-    }
+    const promise = quitMatch({
+      playerToken: 'unknown',
+    });
+    await expect(promise).rejects.toThrowError(
+      expect.objectContaining({
+        status: 401,
+        statusText: 'Unauthorized',
+      })
+    );
   });
   it('submitScore', async () => {
-    try {
-      await submitScore({
-        playerToken: 'unknown',
-        score: 1000,
-        finalSnapshot: true,
-      });
-      throw Error('Should fail without valid query');
-    } catch (error) {
-      const { status, statusText } = error as ApiError;
-      console.log(error);
-      expect(status).toBe(401);
-      expect(statusText).toBe('Unauthorized');
-    }
+    const promise = submitScore({
+      playerToken: 'unknown',
+      score: 1000,
+      finalSnapshot: true,
+    });
+    await expect(promise).rejects.toThrowError(
+      expect.objectContaining({
+        status: 401,
+        statusText: 'Unauthorized',
+      })
+    );
   });
   it('submitTutorialScore', async () => {
-    try {
-      await submitTutorialScore({
-        playerToken: 'unknown',
-        score: 1000,
-        finalSnapshot: true,
-      });
-      throw Error('Should fail without valid query');
-    } catch (error) {
-      const { status, statusText } = error as ApiError;
-      expect(status).toBe(404);
-      expect(statusText).toBe('Not Found');
-    }
+    const promise = submitTutorialScore({
+      playerToken: 'unknown',
+      score: 1000,
+      finalSnapshot: true,
+    });
+    await expect(promise).rejects.toThrowError(
+      expect.objectContaining({
+        status: 404,
+        statusText: 'Not Found',
+      })
+    );
   });
   it('submitReplay', async () => {
-    try {
-      await submitReplay({
-        playerToken: 'unknown',
-        payload: JSON.stringify([]),
-      });
-      throw Error('Should fail without valid query');
-    } catch (error) {
-      const { status, statusText } = error as ApiError;
-      expect(status).toBe(401);
-      expect(statusText).toBe('Unauthorized');
-    }
+    const promise = submitReplay({
+      playerToken: 'unknown',
+      payload: JSON.stringify([]),
+    });
+    await expect(promise).rejects.toThrowError(
+      expect.objectContaining({
+        status: 401,
+        statusText: 'Unauthorized',
+      })
+    );
   });
   it('getReplay', async () => {
-    try {
-      await getReplay({
-        userId: 'unknown',
-        matchId: 'unknown',
-      });
-      throw Error('Should fail without valid query');
-    } catch (error) {
-      const { status, statusText } = error as ApiError;
-      expect(status).toBe(404);
-      expect(statusText).toBe('Not Found');
-    }
+    const promise = getReplay({
+      userId: 'unknown',
+      matchId: 'unknown',
+    });
+    await expect(promise).rejects.toThrowError(
+      expect.objectContaining({
+        status: 404,
+        statusText: 'Not Found',
+      })
+    );
   });
 });
