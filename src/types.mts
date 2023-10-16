@@ -94,7 +94,7 @@ export interface paths {
                   | {
                       amount: number;
                       /** @enum {string} */
-                      type: 'coins' | 'medals';
+                      type: 'practiceCurrency' | 'medals';
                     }[]
                   | null;
               }[];
@@ -198,7 +198,7 @@ export interface paths {
                   | {
                       amount: number;
                       /** @enum {string} */
-                      type: 'coins' | 'medals';
+                      type: 'practiceCurrency' | 'medals';
                     }[]
                   | null;
               }[];
@@ -231,7 +231,7 @@ export interface paths {
                   | {
                       amount: number;
                       /** @enum {string} */
-                      type: 'coins' | 'medals';
+                      type: 'practiceCurrency' | 'medals';
                     }[]
                   | null;
               } | null;
