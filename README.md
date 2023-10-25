@@ -65,7 +65,7 @@ const { ok, data, status, statusMessage } = await client.submitScore({
 
 ## Development
 
-The API types in this repository are generated based on our [OpenAPI](https://fun-fair.vercel.app/api/docs) and its corresponding types in `playt-net/fun-fair`. If the fun-fair OpenAPI changes, this project needs to be updated as well. You can do this with a few simple steps:
+The API types in this repository are generated based on our [OpenAPI](https://staging.clashparadise.io/api/docs) and its corresponding types in @playt-net/clashparadise`. If the fun-fair OpenAPI changes, this project needs to be updated as well. You can do this with a few simple steps:
 
 1. Generate new types
 
