@@ -4,26 +4,6 @@
  */
 
 export interface paths {
-  '/api/live/channels': {
-    /** The playerToken identifies a player in a match. */
-    get: {
-      parameters: {
-        path: {
-          playerToken: string;
-        };
-      };
-      responses: {
-        200: {
-          content: {
-            'application/json': {
-              channelName: string;
-              appKey: string;
-            };
-          };
-        };
-      };
-    };
-  };
   '/api/matches/{matchId}': {
     /** Search a match based on match id. Matches are public. */
     get: {
@@ -39,68 +19,11 @@ export interface paths {
             'application/json': {
               id: string;
               game: {
-                gameId: string;
-                title: string;
-                iconKey: string;
                 antiCheat: {
                   gameKey: string;
                   gameSecret: string;
                 };
               };
-              tournament?: {
-                tournamentId: string;
-                stage: number;
-                totalStages: number;
-              } | null;
-              matchTier: {
-                name: string;
-                /** @enum {string} */
-                label: 'small' | 'medium' | 'large' | 'tutorial';
-                /** @enum {string} */
-                type: 'tutorial' | 'single' | 'quickTournament';
-                playerCount: number;
-                prize: number;
-                basicMedals: number;
-                entryCost: number;
-              };
-              /** @enum {string} */
-              status: 'running' | 'finished';
-              finishedAt?: string | null;
-              players: {
-                userId: string;
-                name: string;
-                avatar: {
-                  url: string;
-                  /** @enum {string} */
-                  backgroundColor:
-                    | '#FFAA7A'
-                    | '#A9FF94'
-                    | '#D694FF'
-                    | '#94BFFF'
-                    | '#7EFFD1'
-                    | '#FFDB7E'
-                    | '#FF7E7E';
-                };
-                didNotFinish?: boolean | null;
-                scoreSnapshots: {
-                  score: number;
-                  timestamp: string;
-                }[];
-                finalScore?: number | null;
-                ranking?: number | null;
-                quitGame?: boolean | null;
-                replayId?: string | null;
-                earnings?:
-                  | {
-                      amount: number;
-                      /** @enum {string} */
-                      type: 'practiceCurrency' | 'medals';
-                    }[]
-                  | null;
-              }[];
-              createdAt: string;
-              updatedAt: string;
-              dueDate?: string;
             };
           };
         };
@@ -142,34 +65,11 @@ export interface paths {
           content: {
             'application/json': {
               id: string;
-              game: {
-                gameId: string;
-                title: string;
-                iconKey: string;
-                antiCheat: {
-                  gameKey: string;
-                  gameSecret: string;
-                };
-              };
-              tournament?: {
-                tournamentId: string;
-                stage: number;
-                totalStages: number;
-              } | null;
               matchTier: {
-                name: string;
-                /** @enum {string} */
-                label: 'small' | 'medium' | 'large' | 'tutorial';
-                /** @enum {string} */
-                type: 'tutorial' | 'single' | 'quickTournament';
                 playerCount: number;
-                prize: number;
-                basicMedals: number;
-                entryCost: number;
               };
               /** @enum {string} */
               status: 'running' | 'finished';
-              finishedAt?: string | null;
               players: {
                 userId: string;
                 name: string;
@@ -185,22 +85,10 @@ export interface paths {
                     | '#FFDB7E'
                     | '#FF7E7E';
                 };
-                didNotFinish?: boolean | null;
                 scoreSnapshots: {
                   score: number;
                   timestamp: string;
                 }[];
-                finalScore?: number | null;
-                ranking?: number | null;
-                quitGame?: boolean | null;
-                replayId?: string | null;
-                earnings?:
-                  | {
-                      amount: number;
-                      /** @enum {string} */
-                      type: 'practiceCurrency' | 'medals';
-                    }[]
-                  | null;
               }[];
               player?: {
                 userId: string;
@@ -217,26 +105,11 @@ export interface paths {
                     | '#FFDB7E'
                     | '#FF7E7E';
                 };
-                playerToken: string;
-                didNotFinish?: boolean | null;
                 scoreSnapshots: {
                   score: number;
                   timestamp: string;
                 }[];
-                finalScore?: number | null;
-                ranking?: number | null;
-                quitGame?: boolean | null;
-                replayId?: string | null;
-                earnings?:
-                  | {
-                      amount: number;
-                      /** @enum {string} */
-                      type: 'practiceCurrency' | 'medals';
-                    }[]
-                  | null;
               } | null;
-              createdAt: string;
-              updatedAt: string;
               dueDate?: string;
               /** @enum {number} */
               difficulty: 0 | 1 | 2 | 3;
@@ -247,8 +120,7 @@ export interface paths {
       requestBody: {
         content: {
           'application/json': {
-            playerToken?: string | null;
-            matchId?: string | null;
+            playerToken: string;
           };
         };
       };
@@ -348,7 +220,7 @@ export interface paths {
     };
   };
   '/api/anybrain/info': {
-    /** Retreives the user and match id for a given player token */
+    /** Retrieves the user and match id for a given player token */
     get: {
       parameters: {
         path: {
