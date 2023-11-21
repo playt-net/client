@@ -47,7 +47,11 @@ const PlaytApiClient = function ({
   return {
     fetcher,
     searchMatch,
-    submitScore,
+    submitScore: ({
+      timestamp = new Date().toISOString(),
+      ...args
+    }: Parameters<typeof submitScore>[0]) =>
+      submitScore({ timestamp, ...args }),
     submitTutorialScore,
     submitReplay,
     getReplay,
