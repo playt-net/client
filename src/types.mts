@@ -52,6 +52,7 @@ export interface paths {
             score: number;
             finalSnapshot?: boolean | null;
             surrender?: boolean | null;
+            timestamp?: string | null;
           };
         };
       };
