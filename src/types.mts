@@ -68,6 +68,8 @@ export interface paths {
               id: string;
               matchTier: {
                 playerCount: number;
+                /** @enum {string} */
+                type: 'match' | 'tournament' | 'tutorial';
               };
               /** @enum {string} */
               status: 'running' | 'finished';
