@@ -85,6 +85,7 @@ export interface paths {
                     | '#FFDB7E'
                     | '#FF7E7E';
                 };
+                replayId?: string;
                 scoreSnapshots: {
                   score: number;
                   timestamp: string;
@@ -105,6 +106,7 @@ export interface paths {
                     | '#FFDB7E'
                     | '#FF7E7E';
                 };
+                replayId?: string;
                 scoreSnapshots: {
                   score: number;
                   timestamp: string;
@@ -163,12 +165,7 @@ export interface paths {
           content: {
             'application/json': {
               id: string;
-              matchId: string;
-              userId: string;
-              name: string;
               payload: string;
-              createdAt: string;
-              updatedAt?: string;
             };
           };
         };
