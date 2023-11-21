@@ -120,7 +120,8 @@ export interface paths {
       requestBody: {
         content: {
           'application/json': {
-            playerToken: string;
+            playerToken?: string | null;
+            matchId?: string | null;
           };
         };
       };
