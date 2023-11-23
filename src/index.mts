@@ -22,7 +22,7 @@ const PlaytApiClient = function ({
     config.init = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: apiKey,
+        Authorization: `Bearer ${apiKey}`,
       },
     };
   }
