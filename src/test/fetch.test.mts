@@ -63,8 +63,8 @@ describe('fetch', () => {
     });
     await expect(promise).rejects.toThrowError(
       expect.objectContaining({
-        status: 404,
-        statusText: 'Not Found',
+        status: 401,
+        statusText: 'Unauthorized',
       })
     );
   });

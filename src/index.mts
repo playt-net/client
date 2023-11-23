@@ -37,22 +37,22 @@ const PlaytApiClient = function ({
     .method('post')
     .create();
   const quitMatch = fetcher.path('/api/matches/quit').method('post').create();
-  const submitTutorialScore = fetcher
-    .path('/api/tutorials/scores')
-    .method('post')
-    .create();
   const submitReplay = fetcher.path('/api/replays').method('post').create();
   const getReplay = fetcher.path('/api/replays').method('get').create();
+
+  const submitScoreWithTimestamp = ({
+    timestamp = new Date().toISOString(),
+    ...args
+  }: Parameters<typeof submitScore>[0]) => submitScore({ timestamp, ...args });
 
   return {
     fetcher,
     searchMatch,
-    submitScore: ({
-      timestamp = new Date().toISOString(),
-      ...args
-    }: Parameters<typeof submitScore>[0]) =>
-      submitScore({ timestamp, ...args }),
-    submitTutorialScore,
+    submitScore: submitScoreWithTimestamp,
+    /**
+     * @deprecated Use submitScore instead
+     */
+    submitTutorialScore: submitScoreWithTimestamp,
     submitReplay,
     getReplay,
     quitMatch,
