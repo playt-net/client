@@ -2,6 +2,8 @@ import { ApiError, Fetcher } from './fetcher/index.mjs';
 
 import type { paths } from './types.mjs';
 import type { FetchConfig } from './fetcher/types.mjs';
+import * as Sentry from "@sentry/node";
+import { getEnv } from './env.mjs';
 
 export { ApiError };
 export type { paths };
@@ -13,6 +15,15 @@ const PlaytApiClient = function ({
   apiKey: string;
   apiUrl: string;
 }) {
+  const env = getEnv();
+  Sentry.init({
+    dsn: env.sentry_dsn,
+    release: env.release,
+    environment: env.environment,  
+    // We recommend adjusting this value in production, or using tracesSampler
+    // for finer control
+    tracesSampleRate: 1.0,
+  });
   const fetcher = Fetcher.for<paths>();
   const config: FetchConfig = {
     baseUrl: apiUrl,
