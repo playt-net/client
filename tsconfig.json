@@ -7,7 +7,7 @@
 
     "resolveJsonModule": true,
     "module": "esnext",
-    "moduleResolution": "nodenext",
+    "moduleResolution": "node",
     "allowJs": true,
 
     "declaration": true,
