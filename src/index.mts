@@ -2,6 +2,9 @@ import { ApiError, Fetcher } from './fetcher/index.mjs';
 
 import type { paths } from './types.mjs';
 import type { FetchConfig } from './fetcher/types.mjs';
+import * as Sentry from '@sentry/node';
+import { CaptureConsole } from '@sentry/integrations';
+import { normalizeEnvironmentName } from './utils.mjs';
 
 export { ApiError };
 export type { paths };
@@ -29,6 +32,22 @@ const PlaytApiClient = function ({
   }
   fetcher.configure(config);
 
+  const initialize = async ({ gameVersion }: { gameVersion: string }) => {
+    Sentry.init({
+      dsn: 'https://9d84d42a72c0a9cd7001d6d4e369275d@o4504684409782272.ingest.sentry.io/4506304617578496',
+      release: gameVersion,
+      environment: normalizeEnvironmentName(new URL(apiUrl)),
+      tracesSampleRate: 1,
+      integrations: [
+        new Sentry.Integrations.Http({ tracing: true }),
+        new Sentry.Integrations.OnUncaughtException(),
+        new Sentry.Integrations.OnUnhandledRejection(),
+        new CaptureConsole(),
+      ],
+      // TODO fetch dsn and tracesSampleRate from game metadata
+    });
+  };
+
   const searchMatch = fetcher
     .path('/api/matches/search')
     .method('post')
@@ -47,6 +66,7 @@ const PlaytApiClient = function ({
   }: Parameters<typeof submitScore>[0]) => submitScore({ timestamp, ...args });
 
   return {
+    initialize,
     fetcher,
     searchMatch,
     submitScore: submitScoreWithTimestamp,

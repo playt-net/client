@@ -1,51 +1,11 @@
 import { Fetcher } from './fetcher/fetcher.mjs';
 import { FetchConfig } from './fetcher/types.mjs';
 import { paths } from './types.mjs';
-
-// This is a hack to forward console.log to the parent window.
-const setupLogForwarding = (apiUrl: string) => {
-  if (!window.parent) {
-    console.warn('No parent window found. Not forwarding logs.');
-    return;
-  }
-  const origin = new URL(apiUrl).origin;
-
-  const proxiedMethods = [
-    'log',
-    'error',
-    'info',
-    'trace',
-    'warn',
-    'debug',
-  ] as const;
-
-  console = new Proxy(console, {
-    get: function (target, prop, receiver) {
-      const method = prop as typeof proxiedMethods[number];
-      if (proxiedMethods.includes(method)) {
-        return function (...rest: any[]) {
-          // window.parent is the parent frame that made this window
-          window.parent.postMessage(
-            {
-              source: 'iframe',
-              message: {
-                type: prop,
-                payload: rest,
-              },
-            },
-            origin
-          );
-          target[method].apply(rest);
-        };
-      }
-      return Reflect.get(target, prop, receiver);
-    },
-  });
-};
+import * as Sentry from '@sentry/browser';
+import { CaptureConsole } from '@sentry/integrations';
+import { normalizeEnvironmentName } from './utils.mjs';
 
 const PlaytBrowserClient = ({ apiUrl }: { apiUrl: string }) => {
-  setupLogForwarding(apiUrl);
-
   const fetcher = Fetcher.for<paths>();
   const config: FetchConfig = {
     baseUrl: apiUrl,
@@ -57,6 +17,19 @@ const PlaytBrowserClient = ({ apiUrl }: { apiUrl: string }) => {
     },
   };
   fetcher.configure(config);
+
+  const initialize = async ({ gameVersion }: { gameVersion: string }) => {
+    Sentry.init({
+      dsn: 'https://9d84d42a72c0a9cd7001d6d4e369275d@o4504684409782272.ingest.sentry.io/4506304617578496',
+      release: gameVersion,
+      environment: normalizeEnvironmentName(new URL(apiUrl)),
+      integrations: [new Sentry.BrowserTracing(), new CaptureConsole()],
+      tracesSampleRate: 1,
+      replaysSessionSampleRate: 0.001,
+      replaysOnErrorSampleRate: 0.1,
+      // TODO fetch dsn and sample rates from game metadata
+    });
+  };
 
   async function setupAnybrain() {
     const anybrainEvent = new Promise<DocumentEventMap['anybrain']>(
@@ -113,7 +86,7 @@ const PlaytBrowserClient = ({ apiUrl }: { apiUrl: string }) => {
     return AnybrainStopSDK();
   };
 
-  return { startMatch, stopMatch };
+  return { initialize, startMatch, stopMatch };
 };
 
 export default PlaytBrowserClient;
