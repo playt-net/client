@@ -41,6 +41,7 @@ For a web-based game, you also need to load the browser client in the browser wh
 import PlaytBrowserClient from '@playt/client/browser';
 
 const browserClient = PlaytBrowserClient({
+  gameId: '<usually from iframe query param>',
   apiUrl: '<API_URL>',
 });
 await browserClient.initialize({

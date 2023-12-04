@@ -33,18 +33,26 @@ const PlaytApiClient = function ({
   fetcher.configure(config);
 
   const initialize = async ({ gameVersion }: { gameVersion: string }) => {
+    const sentryConfigResp = await fetcher
+      .path('/api/games/self/sentry-config')
+      .method('get')
+      .create()({});
+    if (!sentryConfigResp.ok) {
+      console.error(
+        'Failed to fetch Sentry config, error tracking will not work',
+      );
+    }
     Sentry.init({
-      dsn: 'https://9d84d42a72c0a9cd7001d6d4e369275d@o4504684409782272.ingest.sentry.io/4506304617578496',
+      ...sentryConfigResp.data,
+      dsn: sentryConfigResp.data.dsn ?? undefined,
       release: gameVersion,
       environment: normalizeEnvironmentName(new URL(apiUrl)),
-      tracesSampleRate: 1,
       integrations: [
         new Sentry.Integrations.Http({ tracing: true }),
         new Sentry.Integrations.OnUncaughtException(),
         new Sentry.Integrations.OnUnhandledRejection(),
         new CaptureConsole(),
       ],
-      // TODO fetch dsn and tracesSampleRate from game metadata
     });
   };
 

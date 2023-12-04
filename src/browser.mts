@@ -5,7 +5,13 @@ import * as Sentry from '@sentry/browser';
 import { CaptureConsole } from '@sentry/integrations';
 import { normalizeEnvironmentName } from './utils.mjs';
 
-const PlaytBrowserClient = ({ apiUrl }: { apiUrl: string }) => {
+const PlaytBrowserClient = ({
+  gameId,
+  apiUrl,
+}: {
+  gameId: string;
+  apiUrl: string;
+}) => {
   const fetcher = Fetcher.for<paths>();
   const config: FetchConfig = {
     baseUrl: apiUrl,
@@ -19,15 +25,21 @@ const PlaytBrowserClient = ({ apiUrl }: { apiUrl: string }) => {
   fetcher.configure(config);
 
   const initialize = async ({ gameVersion }: { gameVersion: string }) => {
+    const sentryConfigResp = await fetcher
+      .path('/api/games/{gameId}/sentry-config')
+      .method('get')
+      .create()({ gameId });
+    if (!sentryConfigResp.ok) {
+      console.error(
+        'Failed to fetch Sentry config, error tracking will not work',
+      );
+    }
     Sentry.init({
-      dsn: 'https://9d84d42a72c0a9cd7001d6d4e369275d@o4504684409782272.ingest.sentry.io/4506304617578496',
+      ...sentryConfigResp.data,
+      dsn: sentryConfigResp.data.dsn ?? undefined,
       release: gameVersion,
       environment: normalizeEnvironmentName(new URL(apiUrl)),
       integrations: [new Sentry.BrowserTracing(), new CaptureConsole()],
-      tracesSampleRate: 1,
-      replaysSessionSampleRate: 0.001,
-      replaysOnErrorSampleRate: 0.1,
-      // TODO fetch dsn and sample rates from game metadata
     });
   };
 
@@ -37,7 +49,7 @@ const PlaytBrowserClient = ({ apiUrl }: { apiUrl: string }) => {
         document.addEventListener('anybrain', (event) => {
           resolve(event);
         });
-      }
+      },
     );
     const anybrain = await import(`@playt/anybrain-sdk`);
     const event = await anybrainEvent;
@@ -46,7 +58,7 @@ const PlaytBrowserClient = ({ apiUrl }: { apiUrl: string }) => {
       return anybrain;
     } else {
       throw new Error(
-        `Anybrain SDK failed to load. Error code: ${event.detail.error}`
+        `Anybrain SDK failed to load. Error code: ${event.detail.error}`,
       );
     }
   }
@@ -55,18 +67,16 @@ const PlaytBrowserClient = ({ apiUrl }: { apiUrl: string }) => {
   const startMatch = async (
     userId: string,
     matchId: string,
-    playerToken: string
+    playerToken: string,
   ) => {
-    const matchResp = await fetcher
-      .path('/api/matches/{matchId}')
+    const antiCheatConfigResp = await fetcher
+      .path('/api/games/{gameId}/anti-cheat-config')
       .method('get')
-      .create()({ matchId });
-    if (!matchResp.ok) {
-      throw new Error(
-        `Failed to fetch match with id ${matchId}. ${matchResp.status} ${matchResp.statusText}`
-      );
+      .create()({ gameId });
+    if (!antiCheatConfigResp.ok) {
+      throw new Error('Failed to fetch anti-cheat config');
     }
-    const { gameKey, gameSecret } = matchResp.data.game.antiCheat;
+    const { gameKey, gameSecret } = antiCheatConfigResp.data;
     const {
       AnybrainSetCredentials,
       AnybrainSetUserId,
