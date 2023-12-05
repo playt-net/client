@@ -4,6 +4,9 @@
  */
 
 export interface paths {
+  '/api/games/self/sentry-config': {
+    get: operations['sentryConfigOwnGame'];
+  };
   '/api/games/{gameId}/sentry-config': {
     get: operations['sentryConfig'];
   };
@@ -19,7 +22,7 @@ export interface paths {
     get: operations['playerInfo'];
   };
   '/api/matches/{matchId}': {
-    /** To be used by the browser api when starting a game. */
+    /** Only for compatibility with legacy clients that read anti-cheat data directly from the match instead of from the game metadata endpoints. */
     get: operations['antiCheatCredentials'];
   };
   '/api/matches/quit': {
@@ -55,6 +58,27 @@ export interface components {
 }
 
 export interface operations {
+  sentryConfigOwnGame: {
+    parameters: {};
+    responses: {
+      /** Successful response */
+      200: {
+        content: {
+          'application/json': {
+            /** Format: uri */
+            dsn?: string | null;
+            /** @default 1 */
+            tracesSampleRate?: number;
+            /** @default 0.001 */
+            replaysSessionSampleRate?: number;
+            /** @default 0.1 */
+            replaysOnErrorSampleRate?: number;
+          };
+        };
+      };
+      default: components['responses']['error'];
+    };
+  };
   sentryConfig: {
     parameters: {
       path: {
@@ -146,7 +170,7 @@ export interface operations {
       default: components['responses']['error'];
     };
   };
-  /** To be used by the browser api when starting a game. */
+  /** Only for compatibility with legacy clients that read anti-cheat data directly from the match instead of from the game metadata endpoints. */
   antiCheatCredentials: {
     parameters: {
       path: {
@@ -158,6 +182,7 @@ export interface operations {
       200: {
         content: {
           'application/json': {
+            id: string;
             game: {
               gameId: string;
               antiCheat: {
@@ -165,7 +190,6 @@ export interface operations {
                 gameSecret: string;
               };
             };
-            _id?: unknown;
           };
         };
       };
@@ -203,6 +227,7 @@ export interface operations {
       200: {
         content: {
           'application/json': {
+            id: string;
             player?: {
               userId: string;
               avatar: {
@@ -258,7 +283,6 @@ export interface operations {
             };
             difficulty: Partial<Partial<Partial<0> & Partial<1>> & Partial<2>> &
               Partial<3>;
-            _id?: unknown;
           };
         };
       };
