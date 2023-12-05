@@ -50,6 +50,11 @@ const PlaytBrowserClient = ({ apiUrl }: { apiUrl: string }) => {
   const config: FetchConfig = {
     baseUrl: apiUrl,
     use: [],
+    init: {
+      headers: {
+        'User-Agent': `playt-browser-client/${process.env.npm_package_version}`,
+      },
+    },
   };
   fetcher.configure(config);
 

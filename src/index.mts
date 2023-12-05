@@ -21,8 +21,9 @@ const PlaytApiClient = function ({
   if (typeof apiKey !== 'undefined') {
     config.init = {
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `Bearer ${apiKey}`,
+        'User-Agent': `playt-client/${process.env.npm_package_version}`,
+        'Content-Type': 'application/json',
       },
     };
   }
