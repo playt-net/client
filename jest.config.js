@@ -6,6 +6,6 @@ module.exports = {
   transform: {
     '\\.(js|mjs|ts|mts)$': 'babel-jest',
   },
-  transformIgnorePatterns: [],
+  transformIgnorePatterns: ["node_modules/(?!(fetch-blob|node-fetch|data-uri-to-buffer|formdata-polyfill)/)"],
   testMatch: ['**/*.test.mts'],
 };
