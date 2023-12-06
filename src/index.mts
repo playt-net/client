@@ -2,6 +2,9 @@ import { ApiError, Fetcher } from './fetcher/index.mjs';
 
 import type { paths } from './types.mjs';
 import type { FetchConfig } from './fetcher/types.mjs';
+import * as Sentry from '@sentry/node';
+import { CaptureConsole } from '@sentry/integrations';
+import { normalizeEnvironmentName } from './utils.mjs';
 
 export { ApiError };
 export type { paths };
@@ -21,12 +24,37 @@ const PlaytApiClient = function ({
   if (typeof apiKey !== 'undefined') {
     config.init = {
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `Bearer ${apiKey}`,
+        'User-Agent': `playt-client/${process.env.npm_package_version}`,
+        'Content-Type': 'application/json',
       },
     };
   }
   fetcher.configure(config);
+
+  const initialize = async ({ gameVersion }: { gameVersion: string }) => {
+    const sentryConfigResp = await fetcher
+      .path('/api/games/self/sentry-config')
+      .method('get')
+      .create()({});
+    if (!sentryConfigResp.ok) {
+      console.error(
+        'Failed to fetch Sentry config, error tracking will not work',
+      );
+    }
+    Sentry.init({
+      ...sentryConfigResp.data,
+      dsn: sentryConfigResp.data.dsn ?? undefined,
+      release: gameVersion,
+      environment: normalizeEnvironmentName(new URL(apiUrl)),
+      integrations: [
+        new Sentry.Integrations.Http({ tracing: true }),
+        new Sentry.Integrations.OnUncaughtException(),
+        new Sentry.Integrations.OnUnhandledRejection(),
+        new CaptureConsole(),
+      ],
+    });
+  };
 
   const searchMatch = fetcher
     .path('/api/matches/search')
@@ -46,6 +74,7 @@ const PlaytApiClient = function ({
   }: Parameters<typeof submitScore>[0]) => submitScore({ timestamp, ...args });
 
   return {
+    initialize,
     fetcher,
     searchMatch,
     submitScore: submitScoreWithTimestamp,
