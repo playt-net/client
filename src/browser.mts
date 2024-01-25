@@ -1,6 +1,6 @@
 import { Fetcher } from './fetcher/fetcher.mjs';
-import { FetchConfig } from './fetcher/types.mjs';
-import { paths } from './types.mjs';
+import type { FetchConfig } from './fetcher/types.mjs';
+import type { paths } from './types.mjs';
 import * as Sentry from '@sentry/browser';
 import { CaptureConsole } from '@sentry/integrations';
 import { normalizeEnvironmentName } from './utils.mjs';
@@ -24,6 +24,16 @@ const PlaytBrowserClient = ({
   };
   fetcher.configure(config);
 
+  const emitEvent = (message: "started-match" | "stopped-match" | "initialized" | "can-exit") => {
+    window.parent.postMessage(
+      {
+        source: 'iframe',
+        message,
+      },
+      new URL(apiUrl).origin,
+    );
+  }
+
   const initialize = async ({ gameVersion }: { gameVersion: string }) => {
     const sentryConfigResp = await fetcher
       .path('/api/games/{gameId}/sentry-config')
@@ -31,7 +41,7 @@ const PlaytBrowserClient = ({
       .create()({ gameId });
     if (!sentryConfigResp.ok) {
       console.error(
-        'Failed to fetch Sentry config, error tracking will not work',
+        'Failed to fetch Sentry config, error tracking will not work'
       );
     }
     Sentry.init({
@@ -41,6 +51,8 @@ const PlaytBrowserClient = ({
       environment: normalizeEnvironmentName(new URL(apiUrl)),
       integrations: [new Sentry.BrowserTracing(), new CaptureConsole()],
     });
+
+    emitEvent('initialized');
   };
 
   async function setupAnybrain() {
@@ -49,25 +61,24 @@ const PlaytBrowserClient = ({
         document.addEventListener('anybrain', (event) => {
           resolve(event);
         });
-      },
+      }
     );
-    const anybrain = await import(`@playt/anybrain-sdk`);
+    const anybrain = await import("@playt/anybrain-sdk");
     const event = await anybrainEvent;
 
     if (event.detail.loadModuleSuccess()) {
       return anybrain;
-    } else {
-      throw new Error(
-        `Anybrain SDK failed to load. Error code: ${event.detail.error}`,
-      );
     }
+    throw new Error(
+      `Anybrain SDK failed to load. Error code: ${event.detail.error}`
+    );
   }
   const anybrainPromise = setupAnybrain();
-
+  
   const startMatch = async (
     userId: string,
     matchId: string,
-    playerToken: string,
+    playerToken: string
   ) => {
     const antiCheatConfigResp = await fetcher
       .path('/api/games/{gameId}/anti-cheat-config')
@@ -88,15 +99,28 @@ const PlaytBrowserClient = ({
     AnybrainSetUserId(userId);
     AnybrainSetPlayerToken(playerToken);
     AnybrainStartSDK();
-    return AnybrainStartMatch(matchId);
+
+    AnybrainStartMatch(matchId);
+
+    emitEvent('started-match');
   };
 
   const stopMatch = async () => {
     const { AnybrainStopSDK } = await anybrainPromise;
-    return AnybrainStopSDK();
+    AnybrainStopSDK();
+
+    emitEvent('stopped-match');
   };
 
-  return { initialize, startMatch, stopMatch };
+  /**
+   * Will emit a message to the parent window to indicate that the game is ready to exit.
+   * The parent window will then close the iframe.
+   */
+  const exit = () => {
+    emitEvent('can-exit');
+  }
+
+  return { initialize, startMatch, stopMatch, exit };
 };
 
 export default PlaytBrowserClient;
