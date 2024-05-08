@@ -51,7 +51,7 @@ const PlaytApiClient = function ({
         new Sentry.Integrations.Http({ tracing: true }),
         new Sentry.Integrations.OnUncaughtException(),
         new Sentry.Integrations.OnUnhandledRejection(),
-        new CaptureConsole(),
+        new CaptureConsole(sentryConfigResp.data.integrations?.captureConsole),
       ],
     });
   };
