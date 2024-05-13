@@ -39,7 +39,7 @@ const PlaytBrowserClient = ({
       dsn: sentryConfigResp.data.dsn ?? undefined,
       release: gameVersion,
       environment: normalizeEnvironmentName(new URL(apiUrl)),
-      integrations: [new Sentry.BrowserTracing(), new CaptureConsole()],
+      integrations: [new Sentry.BrowserTracing(), new CaptureConsole(sentryConfigResp.data.integrations?.captureConsole)],
     });
   };
 

@@ -67,12 +67,27 @@ export interface operations {
           'application/json': {
             /** Format: uri */
             dsn?: string | null;
-            /** @default 1 */
+            /** @default 0.005 */
             tracesSampleRate?: number;
             /** @default 0.001 */
             replaysSessionSampleRate?: number;
             /** @default 0.1 */
             replaysOnErrorSampleRate?: number;
+            /**
+             * @default {
+             *   "captureConsole": {
+             *     "levels": [
+             *       "error",
+             *       "warn"
+             *     ]
+             *   }
+             * }
+             */
+            integrations?: {
+              captureConsole: {
+                levels: string[];
+              };
+            };
           };
         };
       };
@@ -92,12 +107,27 @@ export interface operations {
           'application/json': {
             /** Format: uri */
             dsn?: string | null;
-            /** @default 1 */
+            /** @default 0.005 */
             tracesSampleRate?: number;
             /** @default 0.001 */
             replaysSessionSampleRate?: number;
             /** @default 0.1 */
             replaysOnErrorSampleRate?: number;
+            /**
+             * @default {
+             *   "captureConsole": {
+             *     "levels": [
+             *       "error",
+             *       "warn"
+             *     ]
+             *   }
+             * }
+             */
+            integrations?: {
+              captureConsole: {
+                levels: string[];
+              };
+            };
           };
         };
       };
@@ -132,7 +162,7 @@ export interface operations {
         content: {
           'application/json': {
             /** @enum {string} */
-            message: 'success';
+            message: 'success' | 'surrender' | 'final-score';
           };
         };
       };
@@ -309,7 +339,6 @@ export interface operations {
       200: {
         content: {
           'application/json': {
-            id: string;
             payload: string;
           };
         };
@@ -324,9 +353,7 @@ export interface operations {
       /** Successful response */
       200: {
         content: {
-          'application/json': {
-            replayId: string;
-          };
+          'application/json': unknown;
         };
       };
       default: components['responses']['error'];
