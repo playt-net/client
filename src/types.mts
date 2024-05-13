@@ -353,7 +353,9 @@ export interface operations {
       /** Successful response */
       200: {
         content: {
-          'application/json': unknown;
+          'application/json': {
+            replayId: string;
+          };
         };
       };
       default: components['responses']['error'];
