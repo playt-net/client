@@ -53,6 +53,13 @@ await browserClient.startMatch('<USER_ID>', '<MATCH_ID>', '<PLAYER_TOKEN>');
 
 // When the game ends
 await browserClient.stopMatch();
+
+// When you want to report a fatal error in the game, which should be sent to the platform
+await browserClient.reportError('Fatal error message');
+await browserClient.reportError({
+  message: 'Fatal error message',
+  stack: 'Error stack',
+});
 ```
 
 ## API
