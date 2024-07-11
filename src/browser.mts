@@ -96,11 +96,12 @@ const PlaytBrowserClient = ({
     return AnybrainStopSDK();
   };
 
-  const reportError = async (error: any) => {
-    console.log('Reporting error:', error);
+  const reportFatalError = async (error: unknown) => {
+    window.parent.postMessage({ type: 'error', error }, new URL(apiUrl).origin);
+    console.warn('Reporting error:', error);
   }
 
-  return { initialize, startMatch, stopMatch, reportError };
+  return { initialize, startMatch, stopMatch, reportFatalError };
 };
 
 export default PlaytBrowserClient;
