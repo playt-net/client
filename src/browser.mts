@@ -1,9 +1,9 @@
-import { Fetcher } from './fetcher/fetcher.mjs';
-import { FetchConfig } from './fetcher/types.mjs';
-import { paths } from './types.mjs';
-import * as Sentry from '@sentry/browser';
-import { CaptureConsole } from '@sentry/integrations';
-import { normalizeEnvironmentName } from './utils.mjs';
+import { Fetcher } from "./fetcher/fetcher.mjs";
+import type { FetchConfig } from "./fetcher/types.mjs";
+import type { paths } from "./types.mjs";
+import * as Sentry from "@sentry/browser";
+import { CaptureConsole } from "@sentry/integrations";
+import { normalizeEnvironmentName } from "./utils.mjs";
 
 const PlaytBrowserClient = ({
   gameId,
@@ -18,7 +18,7 @@ const PlaytBrowserClient = ({
     use: [],
     init: {
       headers: {
-        'User-Agent': `playt-browser-client/${process.env.npm_package_version}`,
+        "User-Agent": `playt-browser-client/${process.env.npm_package_version}`,
       },
     },
   };
@@ -26,12 +26,12 @@ const PlaytBrowserClient = ({
 
   const initialize = async ({ gameVersion }: { gameVersion: string }) => {
     const sentryConfigResp = await fetcher
-      .path('/api/games/{gameId}/sentry-config')
-      .method('get')
+      .path("/api/games/{gameId}/sentry-config")
+      .method("get")
       .create()({ gameId });
     if (!sentryConfigResp.ok) {
       console.error(
-        'Failed to fetch Sentry config, error tracking will not work',
+        "Failed to fetch Sentry config, error tracking will not work",
       );
     }
     Sentry.init({
@@ -39,14 +39,17 @@ const PlaytBrowserClient = ({
       dsn: sentryConfigResp.data.dsn ?? undefined,
       release: gameVersion,
       environment: normalizeEnvironmentName(new URL(apiUrl)),
-      integrations: [new Sentry.BrowserTracing(), new CaptureConsole(sentryConfigResp.data.integrations?.captureConsole)],
+      integrations: [
+        new Sentry.BrowserTracing(),
+        new CaptureConsole(sentryConfigResp.data.integrations?.captureConsole),
+      ],
     });
   };
 
   async function setupAnybrain() {
-    const anybrainEvent = new Promise<DocumentEventMap['anybrain']>(
+    const anybrainEvent = new Promise<DocumentEventMap["anybrain"]>(
       (resolve) => {
-        document.addEventListener('anybrain', (event) => {
+        document.addEventListener("anybrain", (event) => {
           resolve(event);
         });
       },
@@ -56,11 +59,10 @@ const PlaytBrowserClient = ({
 
     if (event.detail.loadModuleSuccess()) {
       return anybrain;
-    } else {
-      throw new Error(
-        `Anybrain SDK failed to load. Error code: ${event.detail.error}`,
-      );
     }
+    throw new Error(
+      `Anybrain SDK failed to load. Error code: ${event.detail.error}`,
+    );
   }
   const anybrainPromise = setupAnybrain();
 
@@ -70,11 +72,11 @@ const PlaytBrowserClient = ({
     playerToken: string,
   ) => {
     const antiCheatConfigResp = await fetcher
-      .path('/api/games/{gameId}/anti-cheat-config')
-      .method('get')
+      .path("/api/games/{gameId}/anti-cheat-config")
+      .method("get")
       .create()({ gameId });
     if (!antiCheatConfigResp.ok) {
-      throw new Error('Failed to fetch anti-cheat config');
+      throw new Error("Failed to fetch anti-cheat config");
     }
     const { gameKey, gameSecret } = antiCheatConfigResp.data;
     const {
@@ -96,10 +98,14 @@ const PlaytBrowserClient = ({
     return AnybrainStopSDK();
   };
 
-  const reportFatalError = async (error: unknown) => {
-    window.parent.postMessage({ type: 'error', error }, new URL(apiUrl).origin);
-    console.warn('Reporting error:', error);
-  }
+  const reportFatalError = (error: unknown) => {
+    window.parent.postMessage({ type: "error", error }, new URL(apiUrl).origin);
+    console.warn("Reporting error:", error);
+  };
+
+  window.addEventListener('locationchange', () => {
+    window.parent.postMessage({ type: "url", url: window.location.origin }, new URL(apiUrl).origin);
+  });
 
   return { initialize, startMatch, stopMatch, reportFatalError };
 };
