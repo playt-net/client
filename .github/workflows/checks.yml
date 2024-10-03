@@ -9,18 +9,28 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 16
-          cache: 'npm'
+          node-version-file: .nvmrc
+          cache: "npm"
+          check-latest: true
       - name: Install Dependencies
         run: npm ci
       - name: Run typechecks
         run: npm run typecheck
+      - name: Run linter
+        run: npm run format --aggregate-output
+      - name: Check if any files got edited
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git status
+            git --no-pager diff
+            exit 1;
+          fi
       - name: Build ESM and CJS
         run: npm run build
       - name: Run tests

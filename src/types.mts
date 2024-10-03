@@ -4,451 +4,451 @@
  */
 
 export interface paths {
-  '/api/status/email_primary': {
-    get: operations['status-email_primary'];
-  };
-  '/api/status/email_secondary': {
-    get: operations['status-email_secondary'];
-  };
-  '/api/status/events': {
-    get: operations['status-events'];
-  };
-  '/api/status/database': {
-    get: operations['status-database'];
-  };
-  '/api/status/queues': {
-    get: operations['status-queues'];
-  };
-  '/api/status/dlq': {
-    get: operations['status-dlq'];
-  };
-  '/api/games/self/sentry-config': {
-    get: operations['sentryConfigOwnGame'];
-  };
-  '/api/games/{gameId}/sentry-config': {
-    get: operations['sentryConfig'];
-  };
-  '/api/games/{gameId}/anti-cheat-config': {
-    get: operations['antiCheatConfig'];
-  };
-  '/api/matches/scores': {
-    /** The score depends on the game and should be an accumulated score of the user at a given time. Previously submitted scores will be ignored when a player has surrendered or is timed out. Submitting a final score or surrendering will finalize the match for the given player and no subsequent updates can be posted. */
-    post: operations['addScore'];
-  };
-  '/api/user/settings': {
-    /** Used to mirror settings like the mute state of the game back to the platform */
-    post: operations['updateSettings'];
-  };
-  '/api/anybrain/info': {
-    /** To be used by external anti-cheat service anybrain */
-    get: operations['playerInfo'];
-  };
-  '/api/matches/quit': {
-    /** If the quitGame value is true, the iframe with the game will be closed */
-    post: operations['quitMatch'];
-  };
-  '/api/matches/search': {
-    /** The playerToken identifies a player in a match. The returned match includes additional information about the requesting player. */
-    post: operations['searchMatch'];
-  };
-  '/api/replays': {
-    get: operations['getReplay'];
-    /** The replayId is returned as a response and can be used to retrieve the replay. We expect a stringified replay. */
-    post: operations['addReplay'];
-  };
+	"/api/status/email_primary": {
+		get: operations["status-email_primary"];
+	};
+	"/api/status/email_secondary": {
+		get: operations["status-email_secondary"];
+	};
+	"/api/status/events": {
+		get: operations["status-events"];
+	};
+	"/api/status/database": {
+		get: operations["status-database"];
+	};
+	"/api/status/queues": {
+		get: operations["status-queues"];
+	};
+	"/api/status/dlq": {
+		get: operations["status-dlq"];
+	};
+	"/api/games/self/sentry-config": {
+		get: operations["sentryConfigOwnGame"];
+	};
+	"/api/games/{gameId}/sentry-config": {
+		get: operations["sentryConfig"];
+	};
+	"/api/games/{gameId}/anti-cheat-config": {
+		get: operations["antiCheatConfig"];
+	};
+	"/api/matches/scores": {
+		/** The score depends on the game and should be an accumulated score of the user at a given time. Previously submitted scores will be ignored when a player has surrendered or is timed out. Submitting a final score or surrendering will finalize the match for the given player and no subsequent updates can be posted. */
+		post: operations["addScore"];
+	};
+	"/api/user/settings": {
+		/** Used to mirror settings like the mute state of the game back to the platform */
+		post: operations["updateSettings"];
+	};
+	"/api/anybrain/info": {
+		/** To be used by external anti-cheat service anybrain */
+		get: operations["playerInfo"];
+	};
+	"/api/matches/quit": {
+		/** If the quitGame value is true, the iframe with the game will be closed */
+		post: operations["quitMatch"];
+	};
+	"/api/matches/search": {
+		/** The playerToken identifies a player in a match. The returned match includes additional information about the requesting player. */
+		post: operations["searchMatch"];
+	};
+	"/api/replays": {
+		get: operations["getReplay"];
+		/** The replayId is returned as a response and can be used to retrieve the replay. We expect a stringified replay. */
+		post: operations["addReplay"];
+	};
 }
 
 export interface components {
-  responses: {
-    /** Error response */
-    error: {
-      content: {
-        'application/json': {
-          message: string;
-          code: string;
-          issues?: {
-            message: string;
-          }[];
-        };
-      };
-    };
-  };
+	responses: {
+		/** Error response */
+		error: {
+			content: {
+				"application/json": {
+					message: string;
+					code: string;
+					issues?: {
+						message: string;
+					}[];
+				};
+			};
+		};
+	};
 }
 
 export interface operations {
-  'status-email_primary': {
-    parameters: {};
-    responses: {
-      /** Successful response */
-      200: {
-        content: {
-          'application/json': boolean;
-        };
-      };
-      default: components['responses']['error'];
-    };
-  };
-  'status-email_secondary': {
-    parameters: {};
-    responses: {
-      /** Successful response */
-      200: {
-        content: {
-          'application/json': boolean;
-        };
-      };
-      default: components['responses']['error'];
-    };
-  };
-  'status-events': {
-    parameters: {};
-    responses: {
-      /** Successful response */
-      200: {
-        content: {
-          'application/json': boolean;
-        };
-      };
-      default: components['responses']['error'];
-    };
-  };
-  'status-database': {
-    parameters: {};
-    responses: {
-      /** Successful response */
-      200: {
-        content: {
-          'application/json': boolean;
-        };
-      };
-      default: components['responses']['error'];
-    };
-  };
-  'status-queues': {
-    parameters: {};
-    responses: {
-      /** Successful response */
-      200: {
-        content: {
-          'application/json': boolean;
-        };
-      };
-      default: components['responses']['error'];
-    };
-  };
-  'status-dlq': {
-    parameters: {};
-    responses: {
-      /** Successful response */
-      200: {
-        content: {
-          'application/json': boolean;
-        };
-      };
-      default: components['responses']['error'];
-    };
-  };
-  sentryConfigOwnGame: {
-    parameters: {};
-    responses: {
-      /** Successful response */
-      200: {
-        content: {
-          'application/json': {
-            /** Format: uri */
-            dsn?: string | null;
-            /** @default 0.005 */
-            tracesSampleRate?: number;
-            /** @default 0.001 */
-            replaysSessionSampleRate?: number;
-            /** @default 0.1 */
-            replaysOnErrorSampleRate?: number;
-            /**
-             * @default {
-             *   "captureConsole": {
-             *     "levels": [
-             *       "error",
-             *       "warn"
-             *     ]
-             *   }
-             * }
-             */
-            integrations?: {
-              captureConsole: {
-                levels: string[];
-              };
-            };
-          };
-        };
-      };
-      default: components['responses']['error'];
-    };
-  };
-  sentryConfig: {
-    parameters: {
-      path: {
-        gameId: string;
-      };
-    };
-    responses: {
-      /** Successful response */
-      200: {
-        content: {
-          'application/json': {
-            /** Format: uri */
-            dsn?: string | null;
-            /** @default 0.005 */
-            tracesSampleRate?: number;
-            /** @default 0.001 */
-            replaysSessionSampleRate?: number;
-            /** @default 0.1 */
-            replaysOnErrorSampleRate?: number;
-            /**
-             * @default {
-             *   "captureConsole": {
-             *     "levels": [
-             *       "error",
-             *       "warn"
-             *     ]
-             *   }
-             * }
-             */
-            integrations?: {
-              captureConsole: {
-                levels: string[];
-              };
-            };
-          };
-        };
-      };
-      default: components['responses']['error'];
-    };
-  };
-  antiCheatConfig: {
-    parameters: {
-      path: {
-        gameId: string;
-      };
-    };
-    responses: {
-      /** Successful response */
-      200: {
-        content: {
-          'application/json': {
-            gameKey: string;
-            gameSecret: string;
-          };
-        };
-      };
-      default: components['responses']['error'];
-    };
-  };
-  /** The score depends on the game and should be an accumulated score of the user at a given time. Previously submitted scores will be ignored when a player has surrendered or is timed out. Submitting a final score or surrendering will finalize the match for the given player and no subsequent updates can be posted. */
-  addScore: {
-    parameters: {};
-    responses: {
-      /** Successful response */
-      200: {
-        content: {
-          'application/json': unknown;
-        };
-      };
-      default: components['responses']['error'];
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          playerToken: string;
-          score: number;
-          finalSnapshot?: boolean;
-          surrender?: boolean;
-          timestamp?: string;
-        };
-      };
-    };
-  };
-  /** Used to mirror settings like the mute state of the game back to the platform */
-  updateSettings: {
-    parameters: {};
-    responses: {
-      /** Successful response */
-      200: {
-        content: {
-          'application/json': unknown;
-        };
-      };
-      default: components['responses']['error'];
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          playerToken: string;
-          mute: boolean;
-        };
-      };
-    };
-  };
-  /** To be used by external anti-cheat service anybrain */
-  playerInfo: {
-    parameters: {
-      query: {
-        playerToken: string;
-      };
-    };
-    responses: {
-      /** Successful response */
-      200: {
-        content: {
-          'application/json': {
-            userId: string;
-            matchId: string;
-          };
-        };
-      };
-      default: components['responses']['error'];
-    };
-  };
-  /** If the quitGame value is true, the iframe with the game will be closed */
-  quitMatch: {
-    parameters: {};
-    responses: {
-      /** Successful response */
-      200: {
-        content: {
-          'application/json': {
-            /** @enum {string} */
-            message: 'success';
-          };
-        };
-      };
-      default: components['responses']['error'];
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          playerToken: string;
-        };
-      };
-    };
-  };
-  /** The playerToken identifies a player in a match. The returned match includes additional information about the requesting player. */
-  searchMatch: {
-    parameters: {};
-    responses: {
-      /** Successful response */
-      200: {
-        content: {
-          'application/json': {
-            id: string;
-            player?: {
-              userId: string;
-              avatar: {
-                url: string;
-                /** @enum {string} */
-                backgroundColor:
-                  | '#FFAA7A'
-                  | '#A9FF94'
-                  | '#D694FF'
-                  | '#94BFFF'
-                  | '#7EFFD1'
-                  | '#FFDB7E'
-                  | '#FF7E7E';
-              };
-              name: string;
-              scoreSnapshots: {
-                score: number;
-                /** Format: date-time */
-                timestamp: string;
-              }[];
-              replayId?: string;
-            };
-            players: {
-              userId: string;
-              avatar: {
-                url: string;
-                /** @enum {string} */
-                backgroundColor:
-                  | '#FFAA7A'
-                  | '#A9FF94'
-                  | '#D694FF'
-                  | '#94BFFF'
-                  | '#7EFFD1'
-                  | '#FFDB7E'
-                  | '#FF7E7E';
-              };
-              name: string;
-              scoreSnapshots: {
-                score: number;
-                /** Format: date-time */
-                timestamp: string;
-              }[];
-              replayId?: string;
-            }[];
-            /** @enum {string} */
-            status: 'running' | 'finished' | 'cancelled';
-            matchTier: {
-              playerCount: number;
-              /** @enum {string} */
-              type: 'match' | 'tutorial';
-            };
-            difficulty: Partial<Partial<Partial<0> & Partial<1>> & Partial<2>> &
-              Partial<3>;
-          };
-        };
-      };
-      default: components['responses']['error'];
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          matchId?: string;
-          playerToken?: string;
-        };
-      };
-    };
-  };
-  getReplay: {
-    parameters: {
-      query: {
-        matchId: string;
-        userId: string;
-      };
-    };
-    responses: {
-      /** Successful response */
-      200: {
-        content: {
-          'application/json': {
-            payload: string;
-          };
-        };
-      };
-      default: components['responses']['error'];
-    };
-  };
-  /** The replayId is returned as a response and can be used to retrieve the replay. We expect a stringified replay. */
-  addReplay: {
-    parameters: {};
-    responses: {
-      /** Successful response */
-      200: {
-        content: {
-          'application/json': {
-            replayId: string;
-          };
-        };
-      };
-      default: components['responses']['error'];
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          playerToken: string;
-          payload: string;
-        };
-      };
-    };
-  };
+	"status-email_primary": {
+		parameters: {};
+		responses: {
+			/** Successful response */
+			200: {
+				content: {
+					"application/json": boolean;
+				};
+			};
+			default: components["responses"]["error"];
+		};
+	};
+	"status-email_secondary": {
+		parameters: {};
+		responses: {
+			/** Successful response */
+			200: {
+				content: {
+					"application/json": boolean;
+				};
+			};
+			default: components["responses"]["error"];
+		};
+	};
+	"status-events": {
+		parameters: {};
+		responses: {
+			/** Successful response */
+			200: {
+				content: {
+					"application/json": boolean;
+				};
+			};
+			default: components["responses"]["error"];
+		};
+	};
+	"status-database": {
+		parameters: {};
+		responses: {
+			/** Successful response */
+			200: {
+				content: {
+					"application/json": boolean;
+				};
+			};
+			default: components["responses"]["error"];
+		};
+	};
+	"status-queues": {
+		parameters: {};
+		responses: {
+			/** Successful response */
+			200: {
+				content: {
+					"application/json": boolean;
+				};
+			};
+			default: components["responses"]["error"];
+		};
+	};
+	"status-dlq": {
+		parameters: {};
+		responses: {
+			/** Successful response */
+			200: {
+				content: {
+					"application/json": boolean;
+				};
+			};
+			default: components["responses"]["error"];
+		};
+	};
+	sentryConfigOwnGame: {
+		parameters: {};
+		responses: {
+			/** Successful response */
+			200: {
+				content: {
+					"application/json": {
+						/** Format: uri */
+						dsn?: string | null;
+						/** @default 0.005 */
+						tracesSampleRate?: number;
+						/** @default 0.001 */
+						replaysSessionSampleRate?: number;
+						/** @default 0.1 */
+						replaysOnErrorSampleRate?: number;
+						/**
+						 * @default {
+						 *   "captureConsole": {
+						 *     "levels": [
+						 *       "error",
+						 *       "warn"
+						 *     ]
+						 *   }
+						 * }
+						 */
+						integrations?: {
+							captureConsole: {
+								levels: string[];
+							};
+						};
+					};
+				};
+			};
+			default: components["responses"]["error"];
+		};
+	};
+	sentryConfig: {
+		parameters: {
+			path: {
+				gameId: string;
+			};
+		};
+		responses: {
+			/** Successful response */
+			200: {
+				content: {
+					"application/json": {
+						/** Format: uri */
+						dsn?: string | null;
+						/** @default 0.005 */
+						tracesSampleRate?: number;
+						/** @default 0.001 */
+						replaysSessionSampleRate?: number;
+						/** @default 0.1 */
+						replaysOnErrorSampleRate?: number;
+						/**
+						 * @default {
+						 *   "captureConsole": {
+						 *     "levels": [
+						 *       "error",
+						 *       "warn"
+						 *     ]
+						 *   }
+						 * }
+						 */
+						integrations?: {
+							captureConsole: {
+								levels: string[];
+							};
+						};
+					};
+				};
+			};
+			default: components["responses"]["error"];
+		};
+	};
+	antiCheatConfig: {
+		parameters: {
+			path: {
+				gameId: string;
+			};
+		};
+		responses: {
+			/** Successful response */
+			200: {
+				content: {
+					"application/json": {
+						gameKey: string;
+						gameSecret: string;
+					};
+				};
+			};
+			default: components["responses"]["error"];
+		};
+	};
+	/** The score depends on the game and should be an accumulated score of the user at a given time. Previously submitted scores will be ignored when a player has surrendered or is timed out. Submitting a final score or surrendering will finalize the match for the given player and no subsequent updates can be posted. */
+	addScore: {
+		parameters: {};
+		responses: {
+			/** Successful response */
+			200: {
+				content: {
+					"application/json": unknown;
+				};
+			};
+			default: components["responses"]["error"];
+		};
+		requestBody: {
+			content: {
+				"application/json": {
+					playerToken: string;
+					score: number;
+					finalSnapshot?: boolean;
+					surrender?: boolean;
+					timestamp?: string;
+				};
+			};
+		};
+	};
+	/** Used to mirror settings like the mute state of the game back to the platform */
+	updateSettings: {
+		parameters: {};
+		responses: {
+			/** Successful response */
+			200: {
+				content: {
+					"application/json": unknown;
+				};
+			};
+			default: components["responses"]["error"];
+		};
+		requestBody: {
+			content: {
+				"application/json": {
+					playerToken: string;
+					mute: boolean;
+				};
+			};
+		};
+	};
+	/** To be used by external anti-cheat service anybrain */
+	playerInfo: {
+		parameters: {
+			query: {
+				playerToken: string;
+			};
+		};
+		responses: {
+			/** Successful response */
+			200: {
+				content: {
+					"application/json": {
+						userId: string;
+						matchId: string;
+					};
+				};
+			};
+			default: components["responses"]["error"];
+		};
+	};
+	/** If the quitGame value is true, the iframe with the game will be closed */
+	quitMatch: {
+		parameters: {};
+		responses: {
+			/** Successful response */
+			200: {
+				content: {
+					"application/json": {
+						/** @enum {string} */
+						message: "success";
+					};
+				};
+			};
+			default: components["responses"]["error"];
+		};
+		requestBody: {
+			content: {
+				"application/json": {
+					playerToken: string;
+				};
+			};
+		};
+	};
+	/** The playerToken identifies a player in a match. The returned match includes additional information about the requesting player. */
+	searchMatch: {
+		parameters: {};
+		responses: {
+			/** Successful response */
+			200: {
+				content: {
+					"application/json": {
+						id: string;
+						player?: {
+							userId: string;
+							avatar: {
+								url: string;
+								/** @enum {string} */
+								backgroundColor:
+									| "#FFAA7A"
+									| "#A9FF94"
+									| "#D694FF"
+									| "#94BFFF"
+									| "#7EFFD1"
+									| "#FFDB7E"
+									| "#FF7E7E";
+							};
+							name: string;
+							scoreSnapshots: {
+								score: number;
+								/** Format: date-time */
+								timestamp: string;
+							}[];
+							replayId?: string;
+						};
+						players: {
+							userId: string;
+							avatar: {
+								url: string;
+								/** @enum {string} */
+								backgroundColor:
+									| "#FFAA7A"
+									| "#A9FF94"
+									| "#D694FF"
+									| "#94BFFF"
+									| "#7EFFD1"
+									| "#FFDB7E"
+									| "#FF7E7E";
+							};
+							name: string;
+							scoreSnapshots: {
+								score: number;
+								/** Format: date-time */
+								timestamp: string;
+							}[];
+							replayId?: string;
+						}[];
+						/** @enum {string} */
+						status: "running" | "finished" | "cancelled";
+						matchTier: {
+							playerCount: number;
+							/** @enum {string} */
+							type: "match" | "tutorial";
+						};
+						difficulty: Partial<Partial<Partial<0> & Partial<1>> & Partial<2>> &
+							Partial<3>;
+					};
+				};
+			};
+			default: components["responses"]["error"];
+		};
+		requestBody: {
+			content: {
+				"application/json": {
+					matchId?: string;
+					playerToken?: string;
+				};
+			};
+		};
+	};
+	getReplay: {
+		parameters: {
+			query: {
+				matchId: string;
+				userId: string;
+			};
+		};
+		responses: {
+			/** Successful response */
+			200: {
+				content: {
+					"application/json": {
+						payload: string;
+					};
+				};
+			};
+			default: components["responses"]["error"];
+		};
+	};
+	/** The replayId is returned as a response and can be used to retrieve the replay. We expect a stringified replay. */
+	addReplay: {
+		parameters: {};
+		responses: {
+			/** Successful response */
+			200: {
+				content: {
+					"application/json": {
+						replayId: string;
+					};
+				};
+			};
+			default: components["responses"]["error"];
+		};
+		requestBody: {
+			content: {
+				"application/json": {
+					playerToken: string;
+					payload: string;
+				};
+			};
+		};
+	};
 }
 
-export interface external {}
+export type external = {};
