@@ -1,6 +1,6 @@
 import { Fetcher } from './fetcher/fetcher.mjs';
 import { FetchConfig } from './fetcher/types.mjs';
-import { paths } from './types.mjs';
+import { operations, paths } from './types.mjs';
 import * as Sentry from '@sentry/browser';
 import { CaptureConsole } from '@sentry/integrations';
 import { normalizeEnvironmentName } from './utils.mjs';
@@ -8,9 +8,11 @@ import { normalizeEnvironmentName } from './utils.mjs';
 const PlaytBrowserClient = ({
   gameId,
   apiUrl,
+  playerToken
 }: {
   gameId: string;
   apiUrl: string;
+  playerToken: string;
 }) => {
   const fetcher = Fetcher.for<paths>();
   const config: FetchConfig = {
@@ -43,7 +45,7 @@ const PlaytBrowserClient = ({
     });
   };
 
-  async function setupAnybrain() {
+  const setupAnybrain = async () => {
     const anybrainEvent = new Promise<DocumentEventMap['anybrain']>(
       (resolve) => {
         document.addEventListener('anybrain', (event) => {
@@ -67,7 +69,6 @@ const PlaytBrowserClient = ({
   const startMatch = async (
     userId: string,
     matchId: string,
-    playerToken: string,
   ) => {
     const antiCheatConfigResp = await fetcher
       .path('/api/games/{gameId}/anti-cheat-config')
@@ -101,7 +102,14 @@ const PlaytBrowserClient = ({
     console.warn('Reporting error:', error);
   }
 
-  return { initialize, startMatch, stopMatch, reportFatalError };
+  const updatePlayerSettings = async (userSettings: Omit<operations["updateSettings"]["requestBody"]["content"]["application/json"], "playerToken">) => {
+    await fetcher
+      .path('/api/user/settings')
+      .method('post')
+      .create()({ playerToken, ...userSettings })
+  }
+
+  return { initialize, startMatch, stopMatch, reportFatalError, updatePlayerSettings };
 };
 
 export default PlaytBrowserClient;
