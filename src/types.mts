@@ -5,62 +5,93 @@
 
 export interface paths {
 	"/api/status/email_primary": {
+		/** Get the status of the primary email service */
 		get: operations["status-email_primary"];
 	};
 	"/api/status/email_secondary": {
+		/** Get the status of the secondary email service */
 		get: operations["status-email_secondary"];
 	};
 	"/api/status/events": {
+		/** Get the status of the events service */
 		get: operations["status-events"];
 	};
 	"/api/status/database": {
+		/** Get the status of the database */
 		get: operations["status-database"];
 	};
 	"/api/status/queues": {
+		/** Get the status of the queues */
 		get: operations["status-queues"];
 	};
 	"/api/status/dlq": {
+		/** Get the status of the DLQ */
 		get: operations["status-dlq"];
 	};
 	"/api/games/self/sentry-config": {
+		/** Get sentry config for the game associated with your API key */
 		get: operations["sentryConfigOwnGame"];
 	};
 	"/api/games/{gameId}/sentry-config": {
+		/** Get sentry config for a game */
 		get: operations["sentryConfig"];
 	};
 	"/api/games/{gameId}/anti-cheat-config": {
+		/** Get anti-cheat config for a game */
 		get: operations["antiCheatConfig"];
 	};
 	"/api/matches/scores": {
-		/** The score depends on the game and should be an accumulated score of the user at a given time. Previously submitted scores will be ignored when a player has surrendered or is timed out. Submitting a final score or surrendering will finalize the match for the given player and no subsequent updates can be posted. */
+		/**
+		 * Adds a score for a player
+		 * @description The score depends on the game and should be an accumulated score of the user at a given time. Previously submitted scores will be ignored when a player has surrendered or is timed out. Submitting a final score or surrendering will finalize the match for the given player and no subsequent updates can be posted.
+		 */
 		post: operations["addScore"];
 	};
 	"/api/user/settings": {
-		/** Used to mirror settings like the mute state of the game back to the platform */
+		/**
+		 * Updates the settings of a user
+		 * @description Used to mirror settings like the mute state of the game back to the platform
+		 */
 		post: operations["updateSettings"];
 	};
 	"/api/anybrain/info": {
-		/** To be used by external anti-cheat service anybrain */
+		/**
+		 * Retrieves the user and match id for a given player token
+		 * @description To be used by external anti-cheat service anybrain
+		 */
 		get: operations["playerInfo"];
 	};
 	"/api/matches/quit": {
-		/** If the quitGame value is true, the iframe with the game will be closed */
+		/**
+		 * Updates the player in a match with the { quitGame: true } property
+		 * @description If the quitGame value is true, the iframe with the game will be closed
+		 */
 		post: operations["quitMatch"];
 	};
 	"/api/matches/search": {
-		/** The playerToken identifies a player in a match. The returned match includes additional information about the requesting player. */
+		/**
+		 * Search a match based on playerToken
+		 * @description The playerToken identifies a player in a match. The returned match includes additional information about the requesting player.
+		 */
 		post: operations["searchMatch"];
 	};
 	"/api/replays": {
+		/** Retrieves a replay by replay id */
 		get: operations["getReplay"];
-		/** The replayId is returned as a response and can be used to retrieve the replay. We expect a stringified replay. */
+		/**
+		 * Adds a replay for a player
+		 * @description The replayId is returned as a response and can be used to retrieve the replay. We expect a stringified replay.
+		 */
 		post: operations["addReplay"];
 	};
 }
 
+export type webhooks = Record<string, never>;
+
 export interface components {
+	schemas: never;
 	responses: {
-		/** Error response */
+		/** @description Error response */
 		error: {
 			content: {
 				"application/json": {
@@ -73,13 +104,21 @@ export interface components {
 			};
 		};
 	};
+	parameters: never;
+	requestBodies: never;
+	headers: never;
+	pathItems: never;
 }
 
+export type $defs = Record<string, never>;
+
+export type external = Record<string, never>;
+
 export interface operations {
+	/** Get the status of the primary email service */
 	"status-email_primary": {
-		parameters: {};
 		responses: {
-			/** Successful response */
+			/** @description Successful response */
 			200: {
 				content: {
 					"application/json": boolean;
@@ -88,10 +127,10 @@ export interface operations {
 			default: components["responses"]["error"];
 		};
 	};
+	/** Get the status of the secondary email service */
 	"status-email_secondary": {
-		parameters: {};
 		responses: {
-			/** Successful response */
+			/** @description Successful response */
 			200: {
 				content: {
 					"application/json": boolean;
@@ -100,10 +139,10 @@ export interface operations {
 			default: components["responses"]["error"];
 		};
 	};
+	/** Get the status of the events service */
 	"status-events": {
-		parameters: {};
 		responses: {
-			/** Successful response */
+			/** @description Successful response */
 			200: {
 				content: {
 					"application/json": boolean;
@@ -112,10 +151,10 @@ export interface operations {
 			default: components["responses"]["error"];
 		};
 	};
+	/** Get the status of the database */
 	"status-database": {
-		parameters: {};
 		responses: {
-			/** Successful response */
+			/** @description Successful response */
 			200: {
 				content: {
 					"application/json": boolean;
@@ -124,10 +163,10 @@ export interface operations {
 			default: components["responses"]["error"];
 		};
 	};
+	/** Get the status of the queues */
 	"status-queues": {
-		parameters: {};
 		responses: {
-			/** Successful response */
+			/** @description Successful response */
 			200: {
 				content: {
 					"application/json": boolean;
@@ -136,10 +175,10 @@ export interface operations {
 			default: components["responses"]["error"];
 		};
 	};
+	/** Get the status of the DLQ */
 	"status-dlq": {
-		parameters: {};
 		responses: {
-			/** Successful response */
+			/** @description Successful response */
 			200: {
 				content: {
 					"application/json": boolean;
@@ -148,10 +187,10 @@ export interface operations {
 			default: components["responses"]["error"];
 		};
 	};
+	/** Get sentry config for the game associated with your API key */
 	sentryConfigOwnGame: {
-		parameters: {};
 		responses: {
-			/** Successful response */
+			/** @description Successful response */
 			200: {
 				content: {
 					"application/json": {
@@ -184,6 +223,7 @@ export interface operations {
 			default: components["responses"]["error"];
 		};
 	};
+	/** Get sentry config for a game */
 	sentryConfig: {
 		parameters: {
 			path: {
@@ -191,7 +231,7 @@ export interface operations {
 			};
 		};
 		responses: {
-			/** Successful response */
+			/** @description Successful response */
 			200: {
 				content: {
 					"application/json": {
@@ -224,6 +264,7 @@ export interface operations {
 			default: components["responses"]["error"];
 		};
 	};
+	/** Get anti-cheat config for a game */
 	antiCheatConfig: {
 		parameters: {
 			path: {
@@ -231,7 +272,7 @@ export interface operations {
 			};
 		};
 		responses: {
-			/** Successful response */
+			/** @description Successful response */
 			200: {
 				content: {
 					"application/json": {
@@ -243,18 +284,11 @@ export interface operations {
 			default: components["responses"]["error"];
 		};
 	};
-	/** The score depends on the game and should be an accumulated score of the user at a given time. Previously submitted scores will be ignored when a player has surrendered or is timed out. Submitting a final score or surrendering will finalize the match for the given player and no subsequent updates can be posted. */
+	/**
+	 * Adds a score for a player
+	 * @description The score depends on the game and should be an accumulated score of the user at a given time. Previously submitted scores will be ignored when a player has surrendered or is timed out. Submitting a final score or surrendering will finalize the match for the given player and no subsequent updates can be posted.
+	 */
 	addScore: {
-		parameters: {};
-		responses: {
-			/** Successful response */
-			200: {
-				content: {
-					"application/json": unknown;
-				};
-			};
-			default: components["responses"]["error"];
-		};
 		requestBody: {
 			content: {
 				"application/json": {
@@ -266,12 +300,8 @@ export interface operations {
 				};
 			};
 		};
-	};
-	/** Used to mirror settings like the mute state of the game back to the platform */
-	updateSettings: {
-		parameters: {};
 		responses: {
-			/** Successful response */
+			/** @description Successful response */
 			200: {
 				content: {
 					"application/json": unknown;
@@ -279,6 +309,12 @@ export interface operations {
 			};
 			default: components["responses"]["error"];
 		};
+	};
+	/**
+	 * Updates the settings of a user
+	 * @description Used to mirror settings like the mute state of the game back to the platform
+	 */
+	updateSettings: {
 		requestBody: {
 			content: {
 				"application/json": {
@@ -287,8 +323,20 @@ export interface operations {
 				};
 			};
 		};
+		responses: {
+			/** @description Successful response */
+			200: {
+				content: {
+					"application/json": unknown;
+				};
+			};
+			default: components["responses"]["error"];
+		};
 	};
-	/** To be used by external anti-cheat service anybrain */
+	/**
+	 * Retrieves the user and match id for a given player token
+	 * @description To be used by external anti-cheat service anybrain
+	 */
 	playerInfo: {
 		parameters: {
 			query: {
@@ -296,7 +344,7 @@ export interface operations {
 			};
 		};
 		responses: {
-			/** Successful response */
+			/** @description Successful response */
 			200: {
 				content: {
 					"application/json": {
@@ -308,11 +356,20 @@ export interface operations {
 			default: components["responses"]["error"];
 		};
 	};
-	/** If the quitGame value is true, the iframe with the game will be closed */
+	/**
+	 * Updates the player in a match with the { quitGame: true } property
+	 * @description If the quitGame value is true, the iframe with the game will be closed
+	 */
 	quitMatch: {
-		parameters: {};
+		requestBody: {
+			content: {
+				"application/json": {
+					playerToken: string;
+				};
+			};
+		};
 		responses: {
-			/** Successful response */
+			/** @description Successful response */
 			200: {
 				content: {
 					"application/json": {
@@ -323,19 +380,22 @@ export interface operations {
 			};
 			default: components["responses"]["error"];
 		};
+	};
+	/**
+	 * Search a match based on playerToken
+	 * @description The playerToken identifies a player in a match. The returned match includes additional information about the requesting player.
+	 */
+	searchMatch: {
 		requestBody: {
 			content: {
 				"application/json": {
-					playerToken: string;
+					matchId?: string;
+					playerToken?: string;
 				};
 			};
 		};
-	};
-	/** The playerToken identifies a player in a match. The returned match includes additional information about the requesting player. */
-	searchMatch: {
-		parameters: {};
 		responses: {
-			/** Successful response */
+			/** @description Successful response */
 			200: {
 				content: {
 					"application/json": {
@@ -391,22 +451,14 @@ export interface operations {
 							/** @enum {string} */
 							type: "match" | "tutorial";
 						};
-						difficulty: Partial<Partial<Partial<0> & Partial<1>> & Partial<2>> &
-							Partial<3>;
+						difficulty: ((0 | 1) | 2) | 3;
 					};
 				};
 			};
 			default: components["responses"]["error"];
 		};
-		requestBody: {
-			content: {
-				"application/json": {
-					matchId?: string;
-					playerToken?: string;
-				};
-			};
-		};
 	};
+	/** Retrieves a replay by replay id */
 	getReplay: {
 		parameters: {
 			query: {
@@ -415,7 +467,7 @@ export interface operations {
 			};
 		};
 		responses: {
-			/** Successful response */
+			/** @description Successful response */
 			200: {
 				content: {
 					"application/json": {
@@ -426,11 +478,21 @@ export interface operations {
 			default: components["responses"]["error"];
 		};
 	};
-	/** The replayId is returned as a response and can be used to retrieve the replay. We expect a stringified replay. */
+	/**
+	 * Adds a replay for a player
+	 * @description The replayId is returned as a response and can be used to retrieve the replay. We expect a stringified replay.
+	 */
 	addReplay: {
-		parameters: {};
+		requestBody: {
+			content: {
+				"application/json": {
+					playerToken: string;
+					payload: string;
+				};
+			};
+		};
 		responses: {
-			/** Successful response */
+			/** @description Successful response */
 			200: {
 				content: {
 					"application/json": {
@@ -440,15 +502,5 @@ export interface operations {
 			};
 			default: components["responses"]["error"];
 		};
-		requestBody: {
-			content: {
-				"application/json": {
-					playerToken: string;
-					payload: string;
-				};
-			};
-		};
 	};
 }
-
-export interface external {}
