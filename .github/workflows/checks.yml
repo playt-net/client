@@ -12,18 +12,32 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: "npm"
           check-latest: true
+
       - name: Install Dependencies
         run: npm ci
+
+      - name: Generate types
+        run: npm run generate
+
       - name: Run typechecks
         run: npm run typecheck
+
       - name: Run linter
-        run: npm run format --aggregate-output
+        run: npm run lint --aggregate-output
+
+      - name: Build
+        run: npm run build
+
+      - name: Run tests
+        run: npm test
+
       - name: Check if any files got edited
         run: |
           if [ -n "$(git status --porcelain)" ]; then
@@ -31,7 +45,3 @@ jobs:
             git --no-pager diff
             exit 1;
           fi
-      - name: Build
-        run: npm run build
-      - name: Run tests
-        run: npm test

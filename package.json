@@ -8,15 +8,8 @@
 	},
 	"author": "PLAYT.net AG",
 	"license": "MIT",
-	"keywords": [
-		"fetch",
-		"client",
-		"playt"
-	],
-	"files": [
-		"src",
-		"dist"
-	],
+	"keywords": ["fetch", "client", "playt"],
+	"files": ["src", "dist"],
 	"exports": {
 		".": {
 			"types": "./dist/index.d.mts",
@@ -45,7 +38,7 @@
 		"generate": "openapi-typescript https://staging.clashparadise.io/api/docs --output src/types.mts",
 		"test": "jest",
 		"typecheck": "tsc",
-		"format": "biome check --write"
+		"lint": "biome check --write"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.20.7",
