@@ -2,27 +2,18 @@
 	"compilerOptions": {
 		"esModuleInterop": true,
 		"skipLibCheck": true,
-
 		"lib": ["dom", "dom.iterable", "esnext"],
-
 		"resolveJsonModule": true,
 		"module": "esnext",
 		"moduleResolution": "node",
 		"allowJs": true,
-
 		"declaration": true,
 		"emitDeclarationOnly": true,
 		"inlineSourceMap": false,
 		"outDir": "./dist",
 		"target": "esnext",
-
 		"strict": true,
 		"noFallthroughCasesInSwitch": true
-	},
-	"ts-node": {
-		"compilerOptions": {
-			"module": "CommonJS"
-		}
 	},
 	"include": ["src/**/*"]
 }

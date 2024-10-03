@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/browser";
 import { CaptureConsole } from "@sentry/integrations";
-import { Fetcher } from "./fetcher/fetcher.mjs";
-import type { FetchConfig } from "./fetcher/types.mjs";
+import { Fetcher } from "openapi-typescript-fetch";
+import type { FetchConfig } from "openapi-typescript-fetch/types";
 import type { operations, paths } from "./types.mjs";
 import { normalizeEnvironmentName } from "./utils.mjs";
 

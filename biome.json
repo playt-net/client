@@ -6,7 +6,7 @@
 		"useIgnoreFile": false
 	},
 	"files": {
-		"ignoreUnknown": false,
+		"ignoreUnknown": true,
 		"ignore": []
 	},
 	"formatter": {
@@ -21,9 +21,7 @@
 		"rules": {
 			"recommended": true
 		},
-		"ignore": [
-			"src/types.mts"
-		]
+		"ignore": ["src/types.mts", "dist"]
 	},
 	"javascript": {
 		"formatter": {

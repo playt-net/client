@@ -1,12 +1,11 @@
-import { ApiError, Fetcher } from "./fetcher/index.mjs";
-
 import { CaptureConsole } from "@sentry/integrations";
 import * as Sentry from "@sentry/node";
-import type { FetchConfig } from "./fetcher/types.mjs";
 import type { paths } from "./types.mjs";
 import { normalizeEnvironmentName } from "./utils.mjs";
+import { Fetcher } from "openapi-typescript-fetch";
+import type { ApiError, FetchConfig } from "openapi-typescript-fetch/types";
 
-export { ApiError };
+export type { ApiError };
 export type { paths };
 
 const PlaytApiClient = ({
