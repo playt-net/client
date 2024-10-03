@@ -20,7 +20,7 @@ When you want to connect an application to our API you must generate an API Key 
 
 You can then use the client as follows:
 
-```js
+```ts
 import PlaytApiClient from "@playt/client";
 
 // Create a new client with API Key and optional API URL
@@ -37,7 +37,7 @@ await apiClient.initialize({
 
 For a web-based game, you also need to load the browser client in the browser when the user is playing the game. Among other optional features, it tracks user inputs for cheat detection using [Anybrain](https://anybrain.gg/). Use the browser client as follows:
 
-````ts
+```ts
 import PlaytBrowserClient from "@playt/client/browser";
 
 const browserClient = PlaytBrowserClient({
@@ -81,7 +81,7 @@ const { ok, data, status, statusMessage } = await client.submitScore({
   score: 1000,
   finalSnapshot: true,
 });
-````
+```
 
 ## Development
 
