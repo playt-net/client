@@ -4,6 +4,24 @@
  */
 
 export interface paths {
+  '/api/status/email_primary': {
+    get: operations['status-email_primary'];
+  };
+  '/api/status/email_secondary': {
+    get: operations['status-email_secondary'];
+  };
+  '/api/status/events': {
+    get: operations['status-events'];
+  };
+  '/api/status/database': {
+    get: operations['status-database'];
+  };
+  '/api/status/queues': {
+    get: operations['status-queues'];
+  };
+  '/api/status/dlq': {
+    get: operations['status-dlq'];
+  };
   '/api/games/self/sentry-config': {
     get: operations['sentryConfigOwnGame'];
   };
@@ -17,13 +35,13 @@ export interface paths {
     /** The score depends on the game and should be an accumulated score of the user at a given time. Previously submitted scores will be ignored when a player has surrendered or is timed out. Submitting a final score or surrendering will finalize the match for the given player and no subsequent updates can be posted. */
     post: operations['addScore'];
   };
+  '/api/user/settings': {
+    /** Used to mirror settings like the mute state of the game back to the platform */
+    post: operations['updateSettings'];
+  };
   '/api/anybrain/info': {
     /** To be used by external anti-cheat service anybrain */
     get: operations['playerInfo'];
-  };
-  '/api/matches/{matchId}': {
-    /** Only for compatibility with legacy clients that read anti-cheat data directly from the match instead of from the game metadata endpoints. */
-    get: operations['antiCheatCredentials'];
   };
   '/api/matches/quit': {
     /** If the quitGame value is true, the iframe with the game will be closed */
@@ -58,6 +76,78 @@ export interface components {
 }
 
 export interface operations {
+  'status-email_primary': {
+    parameters: {};
+    responses: {
+      /** Successful response */
+      200: {
+        content: {
+          'application/json': boolean;
+        };
+      };
+      default: components['responses']['error'];
+    };
+  };
+  'status-email_secondary': {
+    parameters: {};
+    responses: {
+      /** Successful response */
+      200: {
+        content: {
+          'application/json': boolean;
+        };
+      };
+      default: components['responses']['error'];
+    };
+  };
+  'status-events': {
+    parameters: {};
+    responses: {
+      /** Successful response */
+      200: {
+        content: {
+          'application/json': boolean;
+        };
+      };
+      default: components['responses']['error'];
+    };
+  };
+  'status-database': {
+    parameters: {};
+    responses: {
+      /** Successful response */
+      200: {
+        content: {
+          'application/json': boolean;
+        };
+      };
+      default: components['responses']['error'];
+    };
+  };
+  'status-queues': {
+    parameters: {};
+    responses: {
+      /** Successful response */
+      200: {
+        content: {
+          'application/json': boolean;
+        };
+      };
+      default: components['responses']['error'];
+    };
+  };
+  'status-dlq': {
+    parameters: {};
+    responses: {
+      /** Successful response */
+      200: {
+        content: {
+          'application/json': boolean;
+        };
+      };
+      default: components['responses']['error'];
+    };
+  };
   sentryConfigOwnGame: {
     parameters: {};
     responses: {
@@ -160,10 +250,7 @@ export interface operations {
       /** Successful response */
       200: {
         content: {
-          'application/json': {
-            /** @enum {string} */
-            message: 'success' | 'surrender' | 'final-score';
-          };
+          'application/json': unknown;
         };
       };
       default: components['responses']['error'];
@@ -176,6 +263,27 @@ export interface operations {
           finalSnapshot?: boolean;
           surrender?: boolean;
           timestamp?: string;
+        };
+      };
+    };
+  };
+  /** Used to mirror settings like the mute state of the game back to the platform */
+  updateSettings: {
+    parameters: {};
+    responses: {
+      /** Successful response */
+      200: {
+        content: {
+          'application/json': unknown;
+        };
+      };
+      default: components['responses']['error'];
+    };
+    requestBody: {
+      content: {
+        'application/json': {
+          playerToken: string;
+          mute: boolean;
         };
       };
     };
@@ -194,32 +302,6 @@ export interface operations {
           'application/json': {
             userId: string;
             matchId: string;
-          };
-        };
-      };
-      default: components['responses']['error'];
-    };
-  };
-  /** Only for compatibility with legacy clients that read anti-cheat data directly from the match instead of from the game metadata endpoints. */
-  antiCheatCredentials: {
-    parameters: {
-      path: {
-        matchId: string;
-      };
-    };
-    responses: {
-      /** Successful response */
-      200: {
-        content: {
-          'application/json': {
-            id: string;
-            game: {
-              gameId: string;
-              antiCheat: {
-                gameKey: string;
-                gameSecret: string;
-              };
-            };
           };
         };
       };
@@ -304,12 +386,10 @@ export interface operations {
             }[];
             /** @enum {string} */
             status: 'running' | 'finished' | 'cancelled';
-            /** Format: date-time */
-            dueDate: string;
             matchTier: {
               playerCount: number;
               /** @enum {string} */
-              type: 'match' | 'tournament' | 'tutorial';
+              type: 'match' | 'tutorial';
             };
             difficulty: Partial<Partial<Partial<0> & Partial<1>> & Partial<2>> &
               Partial<3>;
