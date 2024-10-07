@@ -30,6 +30,6 @@ jobs:
         run: npm test
 
       - name: Publish npm package
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${{secrets.npm_token}}" > ~/.npmrc
-          npm publish --access public
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
