@@ -1,75 +1,65 @@
 {
-  "name": "@playt/client",
-  "version": "9.2.0",
-  "description": "A client for the PLAYT API",
-  "engines": {
-    "node": ">= 16.0.0",
-    "npm": ">= 8.0.0"
-  },
-  "author": "PLAYT.net AG",
-  "license": "MIT",
-  "keywords": [
-    "fetch",
-    "client",
-    "playt"
-  ],
-  "files": [
-    "src",
-    "dist"
-  ],
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.mts",
-      "import": "./dist/index.mjs",
-      "default": "./dist/index.mjs"
-    },
-    "./browser": {
-      "types": "./dist/browser.d.mts",
-      "import": "./dist/browser.mjs",
-      "default": "./dist/browser.mjs"
-    }
-  },
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.mts",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/playt-net/client"
-  },
-  "bugs": {
-    "url": "https://github.com/playt-net/client/issues"
-  },
-  "homepage": "https://github.com/playt-net/client#readme",
-  "scripts": {
-    "clean": "rimraf './dist'",
-    "build": "npm run clean && npm run typecheck && babel src -d dist --extensions .mts --out-file-extension .mjs",
-    "generate": "openapi-typescript https://staging.clashparadise.io/api/docs --output src/types.mts --prettier-config .prettierrc.json",
-    "test": "jest",
-    "typecheck": "tsc"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.20.7",
-    "@babel/preset-env": "^7.20.2",
-    "@babel/preset-typescript": "^7.18.6",
-    "@types/jest": "^29.4.0",
-    "@types/node": "^18.11.18",
-    "@typescript-eslint/eslint-plugin": "^5.30.6",
-    "@typescript-eslint/parser": "^5.30.6",
-    "babel-plugin-transform-inline-environment-variables": "^0.4.4",
-    "eslint": "^8.20.0",
-    "eslint-config-prettier": "^8.5.0",
-    "jest": "^29.4.3",
-    "node-fetch": "^3.2.9",
-    "openapi-typescript": "^5.4.1",
-    "prettier": "^2.7.1",
-    "rimraf": "^3.0.2",
-    "ts-node": "^10.9.1",
-    "typescript": "~4.9.4"
-  },
-  "dependencies": {
-    "@playt/anybrain-sdk": "^1.2.0",
-    "@sentry/browser": "^7.118.0",
-    "@sentry/integrations": "^7.118.0",
-    "@sentry/node": "^7.118.0",
-    "slugify": "^1.6.6"
-  }
+	"name": "@playt/client",
+	"version": "9.2.0",
+	"description": "A client for the PLAYT API",
+	"engines": {
+		"node": ">= 16.0.0",
+		"npm": ">= 8.0.0"
+	},
+	"author": "PLAYT.net AG",
+	"license": "MIT",
+	"keywords": ["fetch", "client", "playt"],
+	"files": ["src", "dist"],
+	"exports": {
+		".": {
+			"types": "./dist/index.d.mts",
+			"import": "./dist/index.mjs",
+			"default": "./dist/index.mjs"
+		},
+		"./browser": {
+			"types": "./dist/browser.d.mts",
+			"import": "./dist/browser.mjs",
+			"default": "./dist/browser.mjs"
+		}
+	},
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.mts",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/playt-net/client"
+	},
+	"bugs": {
+		"url": "https://github.com/playt-net/client/issues"
+	},
+	"homepage": "https://github.com/playt-net/client#readme",
+	"scripts": {
+		"clean": "rimraf './dist'",
+		"build": "npm run clean && npm run typecheck && babel src -d dist --extensions .mts --out-file-extension .mjs",
+		"generate": "openapi-typescript https://staging.clashparadise.io/api/docs --output src/types.mts",
+		"test": "jest",
+		"typecheck": "tsc",
+		"lint": "biome check --write"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.25.7",
+		"@babel/preset-env": "^7.25.7",
+		"@babel/preset-typescript": "^7.25.7",
+		"@biomejs/biome": "1.9.3",
+		"@types/jest": "^29.5.13",
+		"@types/node": "^18.19.54",
+		"babel-plugin-transform-inline-environment-variables": "^0.4.4",
+		"jest": "^29.7.0",
+		"node-fetch": "^3.3.2",
+		"openapi-typescript": "^6.7.6",
+		"openapi-typescript-fetch": "^2.0.0",
+		"rimraf": "^6.0.1",
+		"typescript": "~5.6.2"
+	},
+	"dependencies": {
+		"@playt/anybrain-sdk": "^1.2.0",
+		"@sentry/browser": "^7.119.0",
+		"@sentry/integrations": "^7.119.0",
+		"@sentry/node": "^7.119.0",
+		"slugify": "^1.6.6"
+	}
 }

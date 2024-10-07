@@ -20,16 +20,16 @@ When you want to connect an application to our API you must generate an API Key 
 
 You can then use the client as follows:
 
-```js
-import PlaytApiClient from '@playt/client';
+```ts
+import PlaytApiClient from "@playt/client";
 
 // Create a new client with API Key and optional API URL
 const apiClient = PlaytApiClient({
-  apiUrl: '<API_URL>',
-  apiKey: '<API_KEY>',
+  apiUrl: "<API_URL>",
+  apiKey: "<API_KEY>",
 });
 await apiClient.initialize({
-  gameVersion: '<Ideally SemVer number of your game>',
+  gameVersion: "<Ideally SemVer number of your game>",
 });
 ```
 
@@ -37,28 +37,34 @@ await apiClient.initialize({
 
 For a web-based game, you also need to load the browser client in the browser when the user is playing the game. Among other optional features, it tracks user inputs for cheat detection using [Anybrain](https://anybrain.gg/). Use the browser client as follows:
 
-```js
-import PlaytBrowserClient from '@playt/client/browser';
+```ts
+import PlaytBrowserClient from "@playt/client/browser";
 
 const browserClient = PlaytBrowserClient({
-  gameId: '<usually from iframe query param>',
-  apiUrl: '<API_URL>',
+  gameId: "<usually from iframe query param>",
+  apiUrl: "<API_URL>",
+  playerToken: "<usually from iframe query param>",
 });
 await browserClient.initialize({
-  gameVersion: '<Ideally SemVer number of your game>',
+  gameVersion: "<Ideally SemVer number of your game>",
 });
 
 // When the game starts
-await browserClient.startMatch('<USER_ID>', '<MATCH_ID>', '<PLAYER_TOKEN>');
+await browserClient.startMatch("<USER_ID>", "<MATCH_ID>");
 
 // When the game ends
 await browserClient.stopMatch();
 
 // When you want to report a fatal error in the game, which should be sent to the platform
-await browserClient.reportError('Fatal error message');
+await browserClient.reportError("Fatal error message");
 await browserClient.reportError({
-  message: 'Fatal error message',
-  stack: 'Error stack',
+  message: "Fatal error message",
+  stack: "Error stack",
+});
+
+// When you want to update the players settings
+await browserClient.updatePlayerSettings({
+  mute: true,
 });
 ```
 
@@ -71,7 +77,7 @@ Example
 ```ts
 // Submits a score
 const { ok, data, status, statusMessage } = await client.submitScore({
-  playerToken: 'PLAYER_TOKEN',
+  playerToken: "PLAYER_TOKEN",
   score: 1000,
   finalSnapshot: true,
 });

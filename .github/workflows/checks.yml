@@ -1,12 +1,15 @@
-name: Node.js Publish Package
+name: Node.js Test and Build
 
 on:
-  release:
-    types: [created]
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-  publish-npm:
+  build:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
 
@@ -20,8 +23,14 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - name: Generate types
+        run: npm run generate
+
       - name: Run typechecks
         run: npm run typecheck
+
+      - name: Run linter
+        run: npm run lint --aggregate-output
 
       - name: Build
         run: npm run build
@@ -29,7 +38,10 @@ jobs:
       - name: Run tests
         run: npm test
 
-      - name: Publish npm package
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+      - name: Check if any files got edited
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git status
+            git --no-pager diff
+            exit 1;
+          fi
