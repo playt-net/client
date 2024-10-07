@@ -8,15 +8,8 @@
 	},
 	"author": "PLAYT.net AG",
 	"license": "MIT",
-	"keywords": [
-		"fetch",
-		"client",
-		"playt"
-	],
-	"files": [
-		"src",
-		"dist"
-	],
+	"keywords": ["fetch", "client", "playt"],
+	"files": ["src", "dist"],
 	"exports": {
 		".": {
 			"types": "./dist/index.d.mts",
@@ -42,7 +35,7 @@
 	"scripts": {
 		"clean": "rimraf './dist'",
 		"build": "npm run clean && npm run typecheck && babel src -d dist --extensions .mts --out-file-extension .mjs",
-		"generate": "openapi-typescript https://staging.clashparadise.io/api/docs --output src/types.mts",
+		"generate": "openapi-typescript https://staging.clashparadise.io/api/docs --output src/types.mts && npm run lint",
 		"test": "jest",
 		"typecheck": "tsc",
 		"lint": "biome check --write"

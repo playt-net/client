@@ -304,7 +304,10 @@ export interface operations {
 			/** @description Successful response */
 			200: {
 				content: {
-					"application/json": unknown;
+					"application/json": {
+						/** @enum {string} */
+						success: "true";
+					};
 				};
 			};
 			default: components["responses"]["error"];
@@ -327,7 +330,10 @@ export interface operations {
 			/** @description Successful response */
 			200: {
 				content: {
-					"application/json": unknown;
+					"application/json": {
+						/** @enum {string} */
+						success: "true";
+					};
 				};
 			};
 			default: components["responses"]["error"];
