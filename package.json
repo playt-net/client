@@ -8,15 +8,8 @@
 	},
 	"author": "PLAYT.net AG",
 	"license": "MIT",
-	"keywords": [
-		"fetch",
-		"client",
-		"playt"
-	],
-	"files": [
-		"src",
-		"dist"
-	],
+	"keywords": ["fetch", "client", "playt"],
+	"files": ["src", "dist"],
 	"exports": {
 		".": {
 			"types": "./dist/index.d.mts",

@@ -14,13 +14,23 @@ const PlaytBrowserClient = ({
 	apiUrl: string;
 	playerToken: string;
 }) => {
+
+	let baseUrl: string;
+	try {
+		const url = new URL(apiUrl);
+		baseUrl = url.origin;
+	} catch (e: unknown) {
+		throw new Error(`Invalid API URL: ${apiUrl}`);
+	}
+
 	const fetcher = Fetcher.for<paths>();
 	const config: FetchConfig = {
-		baseUrl: apiUrl,
+		baseUrl,
 		use: [],
 		init: {
 			headers: {
 				"User-Agent": `playt-browser-client/${process.env.npm_package_version}`,
+				"Content-Type": "application/json",
 			},
 		},
 	};
@@ -98,7 +108,7 @@ const PlaytBrowserClient = ({
 	};
 
 	const reportFatalError = async (error: unknown) => {
-		window.parent.postMessage({ type: "error", error }, new URL(apiUrl).origin);
+		window.parent.postMessage({ type: "error", error }, baseUrl);
 		console.warn("Reporting error:", error);
 	};
 
