@@ -14,7 +14,6 @@ const PlaytBrowserClient = ({
 	apiUrl: string;
 	playerToken: string;
 }) => {
-
 	let baseUrl: string;
 	try {
 		const url = new URL(apiUrl);

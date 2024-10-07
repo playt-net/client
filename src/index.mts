@@ -1,7 +1,7 @@
 import { CaptureConsole } from "@sentry/integrations";
 import * as Sentry from "@sentry/node";
-import { Fetcher } from "openapi-typescript-fetch";
-import type { ApiError, FetchConfig } from "openapi-typescript-fetch/types";
+import { type ApiError, Fetcher } from "openapi-typescript-fetch";
+import type { FetchConfig } from "openapi-typescript-fetch/types";
 import type { paths } from "./types.mjs";
 import { normalizeEnvironmentName } from "./utils.mjs";
 

@@ -1,3 +1,4 @@
+import { expect, it } from "vitest";
 import { normalizeEnvironmentName } from "./utils.mjs";
 
 it("normalizes production to something reasonable", () => {

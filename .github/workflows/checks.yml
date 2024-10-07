@@ -36,7 +36,7 @@ jobs:
         run: npm run build
 
       - name: Run tests
-        run: npm test
+        run: npm test -- --run
 
       - name: Check if any files got edited
         run: |
