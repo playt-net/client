@@ -1,6 +1,6 @@
 {
 	"name": "@playt/client",
-	"version": "10.0.3",
+	"version": "10.0.4",
 	"description": "A client for the PLAYT API",
 	"engines": {
 		"node": ">= 16.0.0",
@@ -45,7 +45,8 @@
 		"generate": "openapi-typescript https://staging.clashparadise.io/api/docs --output src/types.mts && npm run lint",
 		"test": "jest",
 		"typecheck": "tsc",
-		"lint": "biome check --write"
+		"lint": "biome check --write",
+		"prepublish": "npm run build"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.25.7",
