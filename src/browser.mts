@@ -30,7 +30,6 @@ const PlaytBrowserClient = ({
 		init: {
 			headers: {
 				"User-Agent": `playt-browser-client/${process.env.npm_package_version}`,
-				"Content-Type": "application/json",
 			},
 		},
 	};
