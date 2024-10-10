@@ -83,6 +83,9 @@ const PlaytApiClient = ({
 		submitTutorialScore: submitScoreWithTimestamp,
 		submitReplay,
 		getReplay,
+		/**
+		 * @deprecated quitMatch should be called from the browser as it is faster and more reliable
+		 */
 		quitMatch,
 	};
 };
