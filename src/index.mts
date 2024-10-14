@@ -1,7 +1,8 @@
 import { CaptureConsole } from "@sentry/integrations";
 import * as Sentry from "@sentry/node";
-import { type ApiError, Fetcher } from "openapi-typescript-fetch";
+import { ApiError, Fetcher } from "openapi-typescript-fetch";
 import type { FetchConfig } from "openapi-typescript-fetch/types";
+import pRetry from "p-retry";
 import type { paths } from "./types.mjs";
 import { normalizeEnvironmentName } from "./utils.mjs";
 
@@ -11,10 +12,33 @@ export type { paths };
 const PlaytApiClient = ({
 	apiKey,
 	apiUrl,
+	retries = 5,
 }: {
 	apiKey: string;
 	apiUrl: string;
+	retries?: number;
 }) => {
+	// biome-ignore lint/suspicious/noExplicitAny: Any promise is fine to be extended
+	const retry = <P extends Promise<any>>(p: P) => {
+		return pRetry(
+			async () => {
+				const result = await p;
+				return result;
+			},
+			{
+				retries,
+				onFailedAttempt: (error) => {
+					if (error.attemptNumber > 1) {
+						console.warn(
+							`Fetch ${error.attemptNumber} failed with code '${error.message}'. There are ${error.retriesLeft} retries left.`,
+						);
+					}
+				},
+				shouldRetry: (error) =>
+					error instanceof ApiError && error.status >= 500,
+			},
+		);
+	};
 	const fetcher = Fetcher.for<paths>();
 	const config: FetchConfig = {
 		baseUrl: apiUrl,
@@ -32,10 +56,9 @@ const PlaytApiClient = ({
 	fetcher.configure(config);
 
 	const initialize = async ({ gameVersion }: { gameVersion: string }) => {
-		const sentryConfigResp = await fetcher
-			.path("/api/games/self/sentry-config")
-			.method("get")
-			.create()({});
+		const sentryConfigResp = await retry(
+			fetcher.path("/api/games/self/sentry-config").method("get").create()({}),
+		);
 		if (!sentryConfigResp.ok) {
 			console.error(
 				"Failed to fetch Sentry config, error tracking will not work",
@@ -75,14 +98,18 @@ const PlaytApiClient = ({
 	return {
 		initialize,
 		fetcher,
-		searchMatch,
-		submitScore: submitScoreWithTimestamp,
+		searchMatch: (...args: Parameters<typeof searchMatch>) =>
+			retry(searchMatch(...args)),
+		submitScore: (...args: Parameters<typeof submitScore>) =>
+			retry(submitScore(...args)),
 		/**
 		 * @deprecated Use submitScore instead
 		 */
 		submitTutorialScore: submitScoreWithTimestamp,
-		submitReplay,
-		getReplay,
+		submitReplay: (...args: Parameters<typeof submitReplay>) =>
+			retry(submitReplay(...args)),
+		getReplay: (...args: Parameters<typeof getReplay>) =>
+			retry(getReplay(...args)),
 		/**
 		 * @deprecated quitMatch should be called from the browser as it is faster and more reliable
 		 */

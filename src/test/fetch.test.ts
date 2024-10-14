@@ -1,11 +1,12 @@
 import "./fetch-polyfill.mjs";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import PlaytApiClient from "../index.mjs";
 
 const client = PlaytApiClient({
 	apiKey: "INVALID",
 	apiUrl: "https://staging.clashparadise.io",
+	retries: 1,
 });
 const {
 	searchMatch,
