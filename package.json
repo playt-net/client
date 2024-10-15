@@ -8,15 +8,8 @@
 	},
 	"author": "PLAYT.net AG",
 	"license": "MIT",
-	"keywords": [
-		"fetch",
-		"client",
-		"playt"
-	],
-	"files": [
-		"src",
-		"dist"
-	],
+	"keywords": ["fetch", "client", "playt"],
+	"files": ["src", "dist"],
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
@@ -74,6 +67,7 @@
 		"@sentry/browser": "^7.119.0",
 		"@sentry/integrations": "^7.119.0",
 		"@sentry/node": "^7.119.0",
+		"p-queue": "^8.0.1",
 		"slugify": "^1.6.6"
 	}
 }

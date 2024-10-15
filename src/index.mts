@@ -2,11 +2,28 @@ import { CaptureConsole } from "@sentry/integrations";
 import * as Sentry from "@sentry/node";
 import { type ApiError, Fetcher } from "openapi-typescript-fetch";
 import type { FetchConfig } from "openapi-typescript-fetch/types";
+import PQueue from "p-queue";
 import type { paths } from "./types.mjs";
 import { normalizeEnvironmentName } from "./utils.mjs";
 
 export type { ApiError };
 export type { paths };
+
+const scoreQueue = new PQueue({
+	concurrency: 1,
+	timeout: 1000,
+	throwOnTimeout: true,
+});
+
+scoreQueue.on("idle", () => {
+	console.info("[score-queue]: drained");
+});
+
+scoreQueue.on("add", () => {
+	if (scoreQueue.size > 100) {
+		console.warn(`[score-queue]: ${scoreQueue.size} waiting for submission`);
+	}
+});
 
 const PlaytApiClient = ({
 	apiKey,
@@ -67,10 +84,12 @@ const PlaytApiClient = ({
 	const submitReplay = fetcher.path("/api/replays").method("post").create();
 	const getReplay = fetcher.path("/api/replays").method("get").create();
 
-	const submitScoreWithTimestamp = ({
+	const submitScoreWithTimestamp = async ({
 		timestamp = new Date().toISOString(),
 		...args
-	}: Parameters<typeof submitScore>[0]) => submitScore({ timestamp, ...args });
+	}: Parameters<typeof submitScore>[0]) => {
+		return scoreQueue.add(() => submitScore({ timestamp, ...args }));
+	};
 
 	return {
 		initialize,

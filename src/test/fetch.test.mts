@@ -1,4 +1,3 @@
-import "./fetch-polyfill.mjs";
 import { describe, expect, it } from "vitest";
 
 import PlaytApiClient from "../index.mjs";
