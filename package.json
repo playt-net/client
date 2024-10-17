@@ -57,7 +57,7 @@
 		"test": "vitest",
 		"typecheck": "tsc",
 		"lint": "biome check --write",
-		"prepublishOnly": "npm test && npm run build"
+		"prepublishOnly": "npm test -- --run && npm run build"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.3",
