@@ -122,9 +122,7 @@ const PlaytBrowserClient = ({
 		});
 	};
 
-	const quitMatch = async ({
-		playerToken,
-	}: operations["quitMatch"]["requestBody"]["content"]["application/json"]) => {
+	const quitMatch = async () => {
 		await fetcher.path("/api/matches/quit").method("post").create()({
 			playerToken,
 		});
