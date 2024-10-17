@@ -61,7 +61,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.3",
-		"@types/node": "^18.19.54",
+		"@types/node": "^20.0.0",
 		"openapi-typescript": "^6.7.6",
 		"openapi-typescript-fetch": "^2.0.0",
 		"tsup": "^8.3.0",
