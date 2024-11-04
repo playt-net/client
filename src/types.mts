@@ -409,6 +409,7 @@ export interface operations {
 						player?: {
 							userId: string;
 							avatar: {
+								/** Format: uri */
 								url: string;
 								/** @enum {string} */
 								backgroundColor:
@@ -431,6 +432,7 @@ export interface operations {
 						players: {
 							userId: string;
 							avatar: {
+								/** Format: uri */
 								url: string;
 								/** @enum {string} */
 								backgroundColor:
