@@ -63,7 +63,6 @@ const PlaytApiClient = ({
 		.path("/api/matches/scores")
 		.method("post")
 		.create();
-	const quitMatch = fetcher.path("/api/matches/quit").method("post").create();
 	const submitReplay = fetcher.path("/api/replays").method("post").create();
 	const getReplay = fetcher.path("/api/replays").method("get").create();
 
@@ -83,10 +82,6 @@ const PlaytApiClient = ({
 		submitTutorialScore: submitScoreWithTimestamp,
 		submitReplay,
 		getReplay,
-		/**
-		 * @deprecated quitMatch should be called from the browser as it is faster and more reliable
-		 */
-		quitMatch,
 	};
 };
 export default PlaytApiClient;

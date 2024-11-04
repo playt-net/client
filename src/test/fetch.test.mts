@@ -8,7 +8,6 @@ const client = PlaytApiClient({
 });
 const {
 	searchMatch,
-	quitMatch,
 	submitScore,
 	submitTutorialScore,
 	submitReplay,
@@ -21,17 +20,6 @@ const {
 describe("fetch", () => {
 	it("searchMatch", async () => {
 		const promise = searchMatch({
-			playerToken: "unknown",
-		});
-		await expect(promise).rejects.toThrowError(
-			expect.objectContaining({
-				status: 401,
-				statusText: "Unauthorized",
-			}),
-		);
-	});
-	it("quitMatch", async () => {
-		const promise = quitMatch({
 			playerToken: "unknown",
 		});
 		await expect(promise).rejects.toThrowError(
