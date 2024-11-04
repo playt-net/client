@@ -76,10 +76,6 @@ const PlaytApiClient = ({
 		fetcher,
 		searchMatch,
 		submitScore: submitScoreWithTimestamp,
-		/**
-		 * @deprecated Use submitScore instead
-		 */
-		submitTutorialScore: submitScoreWithTimestamp,
 		submitReplay,
 		getReplay,
 	};
