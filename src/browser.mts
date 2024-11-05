@@ -130,6 +130,13 @@ const PlaytBrowserClient = ({
 		window.parent.postMessage({ type: "quit" }, baseUrl);
 	};
 
+	const getAvatar = async () => {
+		const result = await fetcher.path("/api/avatar/{playerToken}").method("get").create()({
+			playerToken,
+		});
+		return result.data
+	}
+
 	return {
 		initialize,
 		startMatch,
@@ -137,6 +144,7 @@ const PlaytBrowserClient = ({
 		reportFatalError,
 		updatePlayerSettings,
 		quitMatch,
+		getAvatar,
 	};
 };
 
