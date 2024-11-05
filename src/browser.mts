@@ -126,6 +126,8 @@ const PlaytBrowserClient = ({
 		await fetcher.path("/api/matches/quit").method("post").create()({
 			playerToken,
 		});
+
+		window.parent.postMessage({ type: "quit" }, baseUrl);
 	};
 
 	return {
