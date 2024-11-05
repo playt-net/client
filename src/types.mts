@@ -84,6 +84,10 @@ export interface paths {
 		 */
 		post: operations["addReplay"];
 	};
+	"/api/avatar/{playerToken}": {
+		/** Retrieves the avatar-url for a player */
+		get: operations["avatar"];
+	};
 }
 
 export type webhooks = Record<string, never>;
@@ -506,6 +510,23 @@ export interface operations {
 					"application/json": {
 						replayId: string;
 					};
+				};
+			};
+			default: components["responses"]["error"];
+		};
+	};
+	/** Retrieves the avatar-url for a player */
+	avatar: {
+		parameters: {
+			path: {
+				playerToken: string;
+			};
+		};
+		responses: {
+			/** @description Successful response */
+			200: {
+				content: {
+					"application/json": string;
 				};
 			};
 			default: components["responses"]["error"];
