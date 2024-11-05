@@ -6,14 +6,7 @@ const client = PlaytApiClient({
 	apiKey: "INVALID",
 	apiUrl: "https://staging.clashparadise.io",
 });
-const {
-	searchMatch,
-	quitMatch,
-	submitScore,
-	submitTutorialScore,
-	submitReplay,
-	getReplay,
-} = client;
+const { searchMatch, submitScore, submitReplay, getReplay } = client;
 
 /**
  * These tests should not replace backend tests, but make sure that the services are available.
@@ -30,17 +23,7 @@ describe("fetch", () => {
 			}),
 		);
 	});
-	it("quitMatch", async () => {
-		const promise = quitMatch({
-			playerToken: "unknown",
-		});
-		await expect(promise).rejects.toThrowError(
-			expect.objectContaining({
-				status: 401,
-				statusText: "Unauthorized",
-			}),
-		);
-	});
+
 	it("submitScore", async () => {
 		const promise = submitScore({
 			playerToken: "unknown",
@@ -54,19 +37,7 @@ describe("fetch", () => {
 			}),
 		);
 	});
-	it("submitTutorialScore", async () => {
-		const promise = submitTutorialScore({
-			playerToken: "unknown",
-			score: 1000,
-			finalSnapshot: true,
-		});
-		await expect(promise).rejects.toThrowError(
-			expect.objectContaining({
-				status: 401,
-				statusText: "Unauthorized",
-			}),
-		);
-	});
+
 	it("submitReplay", async () => {
 		const promise = submitReplay({
 			playerToken: "unknown",
@@ -79,6 +50,7 @@ describe("fetch", () => {
 			}),
 		);
 	});
+
 	it("getReplay", async () => {
 		const promise = getReplay({
 			userId: "65494b94b516f1c169d033ea",

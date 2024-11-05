@@ -105,7 +105,7 @@ const PlaytBrowserClient = ({
 		return AnybrainStopSDK();
 	};
 
-	const reportFatalError = async (error: unknown) => {
+	const reportFatalError = (error: unknown) => {
 		window.parent.postMessage({ type: "error", error }, baseUrl);
 		console.warn("Reporting error:", error);
 	};
