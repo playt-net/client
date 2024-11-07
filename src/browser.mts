@@ -131,11 +131,14 @@ const PlaytBrowserClient = ({
 	};
 
 	const getAvatar = async () => {
-		const result = await fetcher.path("/api/avatar/{playerToken}").method("get").create()({
+		const result = await fetcher
+			.path("/api/avatar/{playerToken}")
+			.method("get")
+			.create()({
 			playerToken,
 		});
-		return result.data
-	}
+		return result.data;
+	};
 
 	return {
 		initialize,

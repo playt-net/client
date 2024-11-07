@@ -4,30 +4,6 @@
  */
 
 export interface paths {
-	"/api/status/email_primary": {
-		/** Get the status of the primary email service */
-		get: operations["status-email_primary"];
-	};
-	"/api/status/email_secondary": {
-		/** Get the status of the secondary email service */
-		get: operations["status-email_secondary"];
-	};
-	"/api/status/events": {
-		/** Get the status of the events service */
-		get: operations["status-events"];
-	};
-	"/api/status/database": {
-		/** Get the status of the database */
-		get: operations["status-database"];
-	};
-	"/api/status/queues": {
-		/** Get the status of the queues */
-		get: operations["status-queues"];
-	};
-	"/api/status/dlq": {
-		/** Get the status of the DLQ */
-		get: operations["status-dlq"];
-	};
 	"/api/games/self/sentry-config": {
 		/** Get sentry config for the game associated with your API key */
 		get: operations["sentryConfigOwnGame"];
@@ -119,78 +95,6 @@ export type $defs = Record<string, never>;
 export type external = Record<string, never>;
 
 export interface operations {
-	/** Get the status of the primary email service */
-	"status-email_primary": {
-		responses: {
-			/** @description Successful response */
-			200: {
-				content: {
-					"application/json": boolean;
-				};
-			};
-			default: components["responses"]["error"];
-		};
-	};
-	/** Get the status of the secondary email service */
-	"status-email_secondary": {
-		responses: {
-			/** @description Successful response */
-			200: {
-				content: {
-					"application/json": boolean;
-				};
-			};
-			default: components["responses"]["error"];
-		};
-	};
-	/** Get the status of the events service */
-	"status-events": {
-		responses: {
-			/** @description Successful response */
-			200: {
-				content: {
-					"application/json": boolean;
-				};
-			};
-			default: components["responses"]["error"];
-		};
-	};
-	/** Get the status of the database */
-	"status-database": {
-		responses: {
-			/** @description Successful response */
-			200: {
-				content: {
-					"application/json": boolean;
-				};
-			};
-			default: components["responses"]["error"];
-		};
-	};
-	/** Get the status of the queues */
-	"status-queues": {
-		responses: {
-			/** @description Successful response */
-			200: {
-				content: {
-					"application/json": boolean;
-				};
-			};
-			default: components["responses"]["error"];
-		};
-	};
-	/** Get the status of the DLQ */
-	"status-dlq": {
-		responses: {
-			/** @description Successful response */
-			200: {
-				content: {
-					"application/json": boolean;
-				};
-			};
-			default: components["responses"]["error"];
-		};
-	};
 	/** Get sentry config for the game associated with your API key */
 	sentryConfigOwnGame: {
 		responses: {
@@ -526,7 +430,19 @@ export interface operations {
 			/** @description Successful response */
 			200: {
 				content: {
-					"application/json": string;
+					"application/json": {
+						/** Format: uri */
+						url: string;
+						/** @enum {string} */
+						backgroundColor:
+							| "#FFAA7A"
+							| "#A9FF94"
+							| "#D694FF"
+							| "#94BFFF"
+							| "#7EFFD1"
+							| "#FFDB7E"
+							| "#FF7E7E";
+					};
 				};
 			};
 			default: components["responses"]["error"];
