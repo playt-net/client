@@ -123,11 +123,11 @@ const PlaytBrowserClient = ({
 	};
 
 	const quitMatch = async () => {
-		await fetcher.path("/api/matches/quit").method("post").create()({
+		const quitPromise = fetcher.path("/api/matches/quit").method("post").create()({
 			playerToken,
 		});
-
-		window.parent.postMessage({ type: "quit" }, baseUrl);
+		void window.parent.postMessage({ type: "quit" }, baseUrl);
+		await quitPromise;
 	};
 
 	const getAvatar = async () => {
@@ -135,8 +135,8 @@ const PlaytBrowserClient = ({
 			.path("/api/avatar/{playerToken}")
 			.method("get")
 			.create()({
-			playerToken,
-		});
+				playerToken,
+			});
 		return result.data;
 	};
 
