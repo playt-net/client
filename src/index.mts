@@ -69,7 +69,9 @@ const PlaytApiClient = ({
 	const submitScoreWithTimestamp = ({
 		timestamp = new Date().toISOString(),
 		...args
-	}: Parameters<typeof submitScore>[0]) => submitScore({ timestamp, ...args });
+	}: Omit<Parameters<typeof submitScore>[0], "timestamp"> & {
+		timestamp?: string;
+	}) => submitScore({ timestamp, ...args });
 
 	return {
 		initialize,

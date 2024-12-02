@@ -204,7 +204,8 @@ export interface operations {
 					score: number;
 					finalSnapshot?: boolean;
 					surrender?: boolean;
-					timestamp?: string;
+					/** Format: date-time */
+					timestamp: string;
 				};
 			};
 		};
