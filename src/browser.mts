@@ -5,6 +5,8 @@ import type { FetchConfig } from "openapi-typescript-fetch/types";
 import type { operations, paths } from "./types.mjs";
 import { normalizeEnvironmentName } from "./utils.mjs";
 
+const PLAYT_CLIENT_ID = `playt-browser-client/${process.env.npm_package_version}`;
+
 const PlaytBrowserClient = ({
 	gameId,
 	apiUrl,
@@ -28,7 +30,7 @@ const PlaytBrowserClient = ({
 		use: [],
 		init: {
 			headers: {
-				"User-Agent": `playt-browser-client/${process.env.npm_package_version}`,
+				"User-Agent": PLAYT_CLIENT_ID,
 			},
 		},
 	};
@@ -106,7 +108,10 @@ const PlaytBrowserClient = ({
 	};
 
 	const reportFatalError = (error: unknown) => {
-		window.parent.postMessage({ type: "error", error }, baseUrl);
+		window.parent.postMessage(
+			{ PLAYT_CLIENT_ID, type: "error", error },
+			baseUrl,
+		);
 		console.warn("Reporting error:", error);
 	};
 
@@ -123,10 +128,13 @@ const PlaytBrowserClient = ({
 	};
 
 	const quitMatch = async () => {
-		const quitPromise = fetcher.path("/api/matches/quit").method("post").create()({
+		const quitPromise = fetcher
+			.path("/api/matches/quit")
+			.method("post")
+			.create()({
 			playerToken,
 		});
-		void window.parent.postMessage({ type: "quit" }, baseUrl);
+		void window.parent.postMessage({ PLAYT_CLIENT_ID, type: "quit" }, baseUrl);
 		await quitPromise;
 	};
 
@@ -135,8 +143,8 @@ const PlaytBrowserClient = ({
 			.path("/api/avatar/{playerToken}")
 			.method("get")
 			.create()({
-				playerToken,
-			});
+			playerToken,
+		});
 		return result.data;
 	};
 
