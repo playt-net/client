@@ -53,7 +53,7 @@
 		"prepublishOnly": "npm test -- --run && npm run build"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.9.3",
+		"@biomejs/biome": "1.9.4",
 		"@types/node": "^18.19.54",
 		"openapi-typescript": "^6.7.6",
 		"openapi-typescript-fetch": "^2.0.0",
