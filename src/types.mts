@@ -336,6 +336,7 @@ export interface operations {
 								/** Format: date-time */
 								timestamp: string;
 							}[];
+							finalScore?: number;
 							replayId?: string;
 						};
 						players: {
@@ -359,6 +360,7 @@ export interface operations {
 								/** Format: date-time */
 								timestamp: string;
 							}[];
+							finalScore?: number;
 							replayId?: string;
 						}[];
 						/** @enum {string} */
