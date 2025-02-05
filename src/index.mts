@@ -73,11 +73,18 @@ const PlaytApiClient = ({
 		timestamp?: string;
 	}) => submitScore({ timestamp, ...args });
 
+	const submitAchievements = (payload: {
+		achievements: `achievement-${number}`[];
+		playerToken: string;
+	}) =>
+		fetcher.path("/api/matches/achievements").method("post").create()(payload);
+
 	return {
 		initialize,
 		fetcher,
 		searchMatch,
 		submitScore: submitScoreWithTimestamp,
+		submitAchievements,
 		submitReplay,
 		getReplay,
 	};

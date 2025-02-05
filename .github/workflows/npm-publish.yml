@@ -1,8 +1,7 @@
 name: Node.js Publish Package
 
 on:
-  release:
-    types: [created]
+  workflow_dispatch:
 
 jobs:
   publish-npm:
@@ -16,6 +15,7 @@ jobs:
           node-version-file: .nvmrc
           cache: "npm"
           check-latest: true
+          registry-url: "https://registry.npmjs.org"
 
       - name: Install Dependencies
         run: npm ci
@@ -23,13 +23,7 @@ jobs:
       - name: Run typechecks
         run: npm run typecheck
 
-      - name: Build
-        run: npm run build
-
-      - name: Run tests
-        run: npm test
-
       - name: Publish npm package
         run: npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -23,6 +23,13 @@ export interface paths {
 		 */
 		post: operations["addScore"];
 	};
+	"/api/matches/achievements": {
+		/**
+		 * Adds an achievement for a player
+		 * @description Achievements can be used to track player progress and unlock rewards. The game-specific achievements are defined by the game and should be documented by the game.
+		 */
+		post: operations["addAchievements"];
+	};
 	"/api/user/settings": {
 		/**
 		 * Updates the settings of a user
@@ -206,6 +213,32 @@ export interface operations {
 					surrender?: boolean;
 					/** Format: date-time */
 					timestamp: string;
+				};
+			};
+		};
+		responses: {
+			/** @description Successful response */
+			200: {
+				content: {
+					"application/json": {
+						/** @enum {string} */
+						success: "true";
+					};
+				};
+			};
+			default: components["responses"]["error"];
+		};
+	};
+	/**
+	 * Adds an achievement for a player
+	 * @description Achievements can be used to track player progress and unlock rewards. The game-specific achievements are defined by the game and should be documented by the game.
+	 */
+	addAchievements: {
+		requestBody: {
+			content: {
+				"application/json": {
+					playerToken: string;
+					achievements: string[];
 				};
 			};
 		};

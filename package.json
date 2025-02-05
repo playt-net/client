@@ -1,6 +1,6 @@
 {
 	"name": "@playt/client",
-	"version": "11.2.0",
+	"version": "11.3.0",
 	"description": "A client for the PLAYT API",
 	"engines": {
 		"node": ">= 16.0.0",
@@ -8,15 +8,8 @@
 	},
 	"author": "PLAYT.net AG",
 	"license": "MIT",
-	"keywords": [
-		"fetch",
-		"client",
-		"playt"
-	],
-	"files": [
-		"src",
-		"dist"
-	],
+	"keywords": ["fetch", "client", "playt"],
+	"files": ["src", "dist"],
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
