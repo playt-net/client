@@ -64,8 +64,8 @@
 	},
 	"dependencies": {
 		"@playt/anybrain-sdk": "^1.2.0",
-		"@sentry/browser": "^7.119.0",
+		"@sentry/browser": "^9.0.0",
 		"@sentry/integrations": "^7.119.0",
-		"@sentry/node": "^7.119.0"
+		"@sentry/node": "^9.0.0"
 	}
 }
