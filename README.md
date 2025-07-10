@@ -1,12 +1,17 @@
 # PLAYT Client
 
-An API client for PLAYT, written in Typescript.
+An API client for the PLAYT [Clash Paradise](https://clashparadise.io/) platform, written in Typescript.
 
-## Features
+## Prerequisites
 
-- Support authentication
-- Full support for all endpoints
-- Fully typed request and response objects
+The platform requires the following assumptions about games to hold true, from most fundamental to most disposable. If your game cannot accommodate one of the latter ones, please contact us to talk about a solution.
+
+1. Games must be fair to every player as to not constitute gambling. Any randomness/non-determinism must be seeded with the match id so that it is the same for all players.
+2. Game logic must be run server-side for security reasons. We (PLAYT) do have some built-in prevention of cheats such as botting. But for sufficient baseline security, the client must only submit inputs and let the server execute logic and calculate scores, otherwise it is too easy to simply submit some score that has nothing to do with the actual player inputs made.
+3. Only asynchronous non-interactive games are supported, meaning the the players' actions cannot influence each other. This is because the platform does not force players into the game after a match has been made, but gives them a certain time frame to actually join.
+4. Games can recover from bad network conditions and full page reloads.
+5. Games have a single-player tutorial mode.
+6. Matches take no longer than a few (~3) minutes. Additionally, players may be allowed to pause the game once for a maximum of a few minutes.
 
 ## Usage
 
@@ -16,7 +21,7 @@ npm install @playt/client
 
 ### API Client
 
-When you want to connect an application to our API you must generate an API Key first.
+To connect your game server to our API, you must generate an API Key first.
 
 You can then use the client as follows:
 
@@ -33,13 +38,36 @@ await apiClient.initialize({
 });
 ```
 
+The API is documented on [Swagger](https://clashparadise.io/devs/docs) and [OpenAPI](https://clashparadise.io/api/docs). The client is generated from the OpenAPI specification and is fully typed.
+The client is the easiest but not the only way to consume our API. If your game server is e.g. not written in TypeScript/JavaScript, contact us for a different solution.
+Authorized endpoints are only accessible by your server-side API client using the API key, while unauthorized endpoints can also be consumed client-side, perhaps using a secret `playerToken` to identify the player.
+
+Your game server will usually need to make at least the following calls:
+
+```ts
+// When a player connects, to retrieve or refresh the data to construct the match they are joining
+const { ok, data, status, statusMessage } = await client.searchMatch({
+  playerToken: "<usually from your game UI's iframe query param>",
+});
+
+// When a player increases their score or finishes or times out
+const { ok, data, status, statusMessage } = await client.submitScore({
+  playerToken: "<usually from your game UI's iframe query param>",
+  score: 1000,
+  finalSnapshot: true, // false if a player has increased their score but is still playing, true if a player finishes or times out
+});
+```
+
+There is also a `submitReplay` and `getReplay` functionality that can be used to store replays and later show a ghost of the player to someone else.
+
 ### Browser Client
 
-For a web-based game, you also need to load the browser client in the browser when the user is playing the game. Among other optional features, it tracks user inputs for cheat detection using [Anybrain](https://anybrain.gg/). Use the browser client as follows:
+For a web-based game, you also need to load the browser client in the browser when the user is playing the game. It tracks user inputs for cheat detection using [Anybrain](https://anybrain.gg/), as well as capturing errors for automated tracking using [Sentry](https://sentry.io). Use the browser client as follows:
 
 ```ts
 import PlaytBrowserClient from "@playt/client/browser";
 
+// Do this as early as possible
 const browserClient = PlaytBrowserClient({
   gameId: "<usually from iframe query param>",
   apiUrl: "<API_URL>",
@@ -49,37 +77,25 @@ await browserClient.initialize({
   gameVersion: "<Ideally SemVer number of your game>",
 });
 
-// When the game starts
+// When the match starts (e.g. after a countdown), before the first user input
 await browserClient.startMatch("<USER_ID>", "<MATCH_ID>");
 
-// When the game ends
+// When the game ends (e.g. when transitioning to the end screen), after the last user input
 await browserClient.stopMatch();
 
-// When you want to report a fatal error in the game, which should be sent to the platform
+// When the user has nothing left to do and should be redirected away from the game
+await browserClient.quitMatch();
+
+// Optional: If you want to report a fatal error in the game, which should be sent to the platform
 await browserClient.reportError("Fatal error message");
 await browserClient.reportError({
   message: "Fatal error message",
   stack: "Error stack",
 });
 
-// When you want to update the players settings
+// Optional: If the player changes any settings, persist them
 await browserClient.updatePlayerSettings({
   mute: true,
-});
-```
-
-## API
-
-The API is documented on [Swagger](https://clashparadise.io/devs/docs) and [OpenAPI](https://clashparadise.io/api/docs). The client is generated from the OpenAPI specification and is fully typed.
-
-Example
-
-```ts
-// Submits a score
-const { ok, data, status, statusMessage } = await client.submitScore({
-  playerToken: "PLAYER_TOKEN",
-  score: 1000,
-  finalSnapshot: true,
 });
 ```
 
