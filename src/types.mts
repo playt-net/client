@@ -403,6 +403,15 @@ export interface operations {
 							/** @enum {string} */
 							type: "match" | "tutorial";
 						};
+						seasons: (
+							| "halloween"
+							| "valentines"
+							| "winter"
+							| "eggHunt"
+							| "hanamiEnding"
+							| "hanami"
+							| "spring"
+						)[];
 						difficulty: ((0 | 1) | 2) | 3;
 					};
 				};
